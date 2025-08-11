@@ -7,12 +7,14 @@ import Notes from './pages/Notes';
 import Calendar from './pages/Calendar';
 import Journal from './pages/Journal';
 import Todo from './pages/Todo';
+import SignupLogin from './pages/SignupLogin';
 
 function App() {
   return (
     <>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<SignupLogin />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/todo" element={<Todo />} />
           <Route path="/pomodoro" element={<Pomodoro />} />
           <Route path="/habit-tracker" element={<HabitTracker />} />
