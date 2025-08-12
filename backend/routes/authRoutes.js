@@ -36,16 +36,19 @@ router.post("/register", async (req, res) => {
 // Login
 router.post("/login", async (req, res) => {
   try {
-    const { email, password } = req.body;
-    if (!email || !password)
+    const { emailOrUsername, password } = req.body;
+    if (!emailOrUsername || !password) {
       return res.status(400).json({ message: "Email and password are required" });
+    }
 
+    // Search by email OR name
     const user = await User.findOne({
-  $or: [
-    { email: req.body.emailOrUsername },
-    { username: req.body.emailOrUsername }
-  ]
-});
+      $or: [
+        { email: emailOrUsername },
+        { name: emailOrUsername } // FIX: changed 'username' to 'name'
+      ]
+    });
+
     if (user && await user.matchPassword(password)) {
       res.json({
         _id: user._id,
@@ -54,13 +57,14 @@ router.post("/login", async (req, res) => {
         token: generateToken(user._id)
       });
     } else {
-      res.status(401).json({ message: "Invalid email or password" });
+      res.status(401).json({ message: "Invalid email/username or password" });
     }
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });
   }
 });
+
 
 // Protected route to get current user
 router.get("/me", protect, (req, res) => {
