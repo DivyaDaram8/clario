@@ -40,7 +40,12 @@ router.post("/login", async (req, res) => {
     if (!email || !password)
       return res.status(400).json({ message: "Email and password are required" });
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({
+  $or: [
+    { email: req.body.emailOrUsername },
+    { username: req.body.emailOrUsername }
+  ]
+});
     if (user && await user.matchPassword(password)) {
       res.json({
         _id: user._id,
