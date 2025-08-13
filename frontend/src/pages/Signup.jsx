@@ -4,8 +4,13 @@ import axios from "axios";
 import "../styles/Auth.css";
 
 const Signup = () => {
-    const navigate = useNavigate();
-  const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const navigate = useNavigate();
+  const [form, setForm] = useState({
+    name: "",
+    username: "",
+    email: "",
+    password: ""
+  });
   const [message, setMessage] = useState("");
 
   const handleChange = (e) => {
@@ -29,9 +34,38 @@ const Signup = () => {
       <div className="auth-card">
         <h2>Create Account</h2>
         <form onSubmit={handleSubmit}>
-          <input type="text" name="name" placeholder="Name" value={form.name} onChange={handleChange} required />
-          <input type="email" name="email" placeholder="Email" value={form.email} onChange={handleChange} required />
-          <input type="password" name="password" placeholder="Password" value={form.password} onChange={handleChange} required />
+          <input
+            type="text"
+            name="name"
+            placeholder="Full Name"
+            value={form.name}
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="text"
+            name="username"
+            placeholder="Username"
+            value={form.username}
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={form.email}
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={form.password}
+            onChange={handleChange}
+            required
+          />
           <button type="submit">Sign Up</button>
         </form>
         {message && <div className="message">{message}</div>}
