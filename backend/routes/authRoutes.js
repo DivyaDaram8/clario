@@ -12,18 +12,19 @@ const generateToken = (id) => {
 // Register
 router.post("/register", async (req, res) => {
   try {
-    const { name, email, password } = req.body;
-    if (!name || !email || !password)
-      return res.status(400).json({ message: "Name, email and password are required" });
+    const { name, username, email, password } = req.body;
+    if (!name || !username || !email || !password)
+      return res.status(400).json({ message: "Name, username, email and password are required" });
 
-    const existing = await User.findOne({ email });
-    if (existing) return res.status(400).json({ message: "User already exists" });
+    const existingUser = await User.findOne({ $or: [{ email }, { username }] });
+    if (existingUser) return res.status(400).json({ message: "Email or username already exists" });
 
-    const user = await User.create({ name, email, password });
+    const user = await User.create({ name, username, email, password });
 
     res.status(201).json({
       _id: user._id,
       name: user.name,
+      username: user.username,
       email: user.email,
       token: generateToken(user._id)
     });
@@ -33,19 +34,18 @@ router.post("/register", async (req, res) => {
   }
 });
 
+
 // Login
 router.post("/login", async (req, res) => {
   try {
     const { emailOrUsername, password } = req.body;
-    if (!emailOrUsername || !password) {
-      return res.status(400).json({ message: "Email and password are required" });
-    }
+    if (!emailOrUsername || !password)
+      return res.status(400).json({ message: "Email/Username and password are required" });
 
-    // Search by email OR name
     const user = await User.findOne({
       $or: [
         { email: emailOrUsername },
-        { name: emailOrUsername } // FIX: changed 'username' to 'name'
+        { username: emailOrUsername }
       ]
     });
 
@@ -53,6 +53,7 @@ router.post("/login", async (req, res) => {
       res.json({
         _id: user._id,
         name: user.name,
+        username: user.username,
         email: user.email,
         token: generateToken(user._id)
       });
