@@ -1,10 +1,12 @@
 import React from 'react'
-import Navbar from '../layout/Navbar'
+import NavbarLeft from '../layout/NavbarLeft';
+import NavbarTop from '../layout/NavbarTop';
 
 function Home() {
   return (
     <>
-        <Navbar />
+        <NavbarLeft />
+        <NavbarTop />
     </>
   )
 }
