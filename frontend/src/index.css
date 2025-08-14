@@ -1,3 +1,15 @@
 @import "tailwindcss";
 
 
+.scrollable-grid::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollable-grid::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 4px;
+}
+
+.scrollable-grid::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
