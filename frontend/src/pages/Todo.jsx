@@ -4,13 +4,13 @@ import NavbarTop from "../layout/NavbarTop";
 
 function Todo() {
     return (
-        <div>
+        <>
             <NavbarLeft />
             <NavbarTop />
-            <h1 className="text-4xl font-bold text-center text-blue-600 my-4">
+            <h1 className="text-4xl font-bold text-center text-blue-600 my-4 mt-26">
                 My To-Do List 
             </h1>
-        </div>
+        </>
     )
 };
 
