@@ -27,6 +27,11 @@ function extractEmojisFromTiptap(content) {
 // Journal Schema
 const JournalSchema = new mongoose.Schema(
   {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true, // ✅ every journal must belong to a user
+    },
     title: {
       type: String,
       default: "", // empty by default
@@ -68,9 +73,18 @@ const JournalSchema = new mongoose.Schema(
       type: [String],
       default: [],
     },
+    // ✅ Explicit date field (normalized to midnight)
+      date: {
+      type: Date,
+      unique: true, // one journal per user per date
+      required: true,
+    },
   },
   { timestamps: true } // createdAt & updatedAt
 );
+
+// Unique index: one journal per user per date
+JournalSchema.index({ userId: 1, date: 1 }, { unique: true });
 
 // Pre-save hook to extract emojis from Tiptap JSON
 JournalSchema.pre("save", function (next) {

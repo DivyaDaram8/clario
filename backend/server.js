@@ -15,6 +15,7 @@ app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/notes", noteRoutes);
 app.use("/api/pomodoro", require("./routes/pomodoroRoutes"));
 app.use("/api/todos", require("./routes/todoRoutes"));
+app.use("/api/journal", require("./routes/journalRoutes"));
 
 const PORT = process.env.PORT || 5000;
 
