@@ -127,3 +127,27 @@ exports.reorderTasks = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+
+// Get All Tasks by Date
+exports.getTasksByDate = async (req, res) => {
+  try {
+    const { date } = req.query;
+    if (!date) return res.status(400).json({ message: "Date is required" });
+
+    // Normalize to start/end of the day
+    const start = new Date(date);
+    start.setHours(0, 0, 0, 0);
+    const end = new Date(date);
+    end.setHours(23, 59, 59, 999);
+
+    const tasks = await Task.find({
+      createdBy: req.user._id,
+      createdAt: { $gte: start, $lte: end }
+    }).sort({ orderIndex: 1 });
+
+    res.json(tasks);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

@@ -1,43 +1,35 @@
-// import React from "react";
-// import { Calendar } from "lucide-react";
+import React from "react";
 
-// function DateBar() {
-//   const today = new Date();
-//   const yesterday = new Date(today); yesterday.setDate(today.getDate() - 1);
-//   const tomorrow = new Date(today); tomorrow.setDate(today.getDate() + 1);
-
-//   const dates = [yesterday, today, tomorrow];
-
-//   return (
-//     <div className="flex items-center gap-4 border-b pb-2">
-//       {dates.map((d, i) => (
-//         <button
-//           key={i}
-//           className={`px-3 py-1 rounded-md ${
-//             d.toDateString() === today.toDateString()
-//               ? "bg-blue-500 text-white"
-//               : "text-gray-700 hover:bg-gray-100"
-//           }`}
-//         >
-//           {d.getDate()}
-//         </button>
-//       ))}
-//       <button className="ml-auto p-2 hover:bg-gray-100 rounded-md">
-//         <Calendar className="h-5 w-5 text-gray-700" />
-//       </button>
-//     </div>
-//   );
-// }
-
-// export default DateBar;
-
-
-import React from 'react'
-
-function DateBar() {
-  return (
-    <div>DateBar</div>
-  )
+function shortDate(offset = 0) {
+  const d = new Date();
+  d.setDate(d.getDate() + offset);
+  return d.toISOString().slice(0,10);
 }
 
-export default DateBar
+export default function DateBar({ selectedDate, onSelect }) {
+  return (
+    <div className="flex items-center gap-3 p-3 bg-white/3 rounded-xl">
+      {[ -1, 0, 1 ].map(off => {
+        const d = new Date();
+        d.setDate(d.getDate() + off);
+        const label = off === 0 ? "Today" : (off === -1 ? "Yesterday" : "Tomorrow");
+        const dateStr = shortDate(off);
+        return (
+          <button
+            key={off}
+            onClick={() => onSelect(dateStr)}
+            className={`px-3 py-1 rounded-lg ${selectedDate === dateStr ? "bg-indigo-600 text-white" : "text-gray-200 hover:bg-white/5"}`}
+          >{label} · {d.getDate()}</button>
+        );
+      })}
+
+      <button
+        className="ml-3 px-3 py-1 rounded-lg text-gray-200 hover:bg-white/5"
+        onClick={() => {
+          const pick = prompt("Enter date YYYY-MM-DD"); // minimal; replace with a datepicker component if desired
+          if (pick) onSelect(pick);
+        }}
+      >📅 Pick</button>
+    </div>
+  );
+}

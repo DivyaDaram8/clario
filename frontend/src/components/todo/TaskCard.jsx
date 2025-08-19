@@ -1,112 +1,24 @@
-// import React, { useState } from "react";
-// import { apiRequest } from "../../api";
+import React from "react";
 
-// function TaskCard({ task, setTasks }) {
-//   const [editing, setEditing] = useState(false);
-//   const [name, setName] = useState(task.name);
-//   const [priority, setPriority] = useState(task.priority);
-//   const [description, setDescription] = useState(task.description || "");
-
-//   const handleSave = async () => {
-//     try {
-//       const updated = await apiRequest(`/todos/tasks/${task._id}`, "PUT", {
-//         name,
-//         priority,
-//         description
-//       });
-//       setTasks(prev =>
-//         prev.map(t => (t._id === task._id ? updated : t))
-//       );
-//       setEditing(false);
-//     } catch (err) {
-//       console.error(err.message);
-//     }
-//   };
-
-//   return (
-//     <div className="bg-white shadow rounded-md px-3 py-2 mb-2 text-sm flex flex-col">
-//       {editing ? (
-//         <>
-//           <input
-//             className="border p-1 mb-1 text-sm rounded"
-//             value={name}
-//             onChange={e => setName(e.target.value)}
-//           />
-//           <select
-//             className="border p-1 mb-1 text-sm rounded"
-//             value={priority}
-//             onChange={e => setPriority(e.target.value)}
-//           >
-//             <option value="High">High</option>
-//             <option value="Medium">Medium</option>
-//             <option value="Low">Low</option>
-//           </select>
-//           <textarea
-//             className="border p-1 mb-1 text-sm rounded"
-//             value={description}
-//             onChange={e => setDescription(e.target.value)}
-//             placeholder="Description..."
-//           />
-//           <div className="flex justify-end gap-2">
-//             <button
-//               className="px-2 py-1 bg-green-500 text-white rounded"
-//               onClick={handleSave}
-//             >
-//               Save
-//             </button>
-//             <button
-//               className="px-2 py-1 bg-gray-300 rounded"
-//               onClick={() => setEditing(false)}
-//             >
-//               Cancel
-//             </button>
-//           </div>
-//         </>
-//       ) : (
-//         <div className="flex justify-between items-center">
-//           <span className={`${task.completed ? "line-through text-gray-400" : ""}`}>
-//             {task.name}
-//           </span>
-//           <div className="flex gap-2 items-center">
-//             <span
-//               className={`px-1 rounded text-xs ${
-//                 priority === "High" ? "text-red-600" :
-//                 priority === "Medium" ? "text-orange-600" : "text-green-600"
-//               }`}
-//             >
-//               {priority}
-//             </span>
-//             <input
-//               type="checkbox"
-//               checked={task.completed}
-//               onChange={async () => {
-//                 const updated = await apiRequest(`/todos/tasks/${task._id}`, "PUT", {
-//                   completed: !task.completed
-//                 });
-//                 setTasks(prev => prev.map(t => t._id === task._id ? updated : t));
-//               }}
-//             />
-//             <button
-//               className="text-blue-500 text-xs"
-//               onClick={() => setEditing(true)}
-//             >
-//               Edit
-//             </button>
-//           </div>
-//         </div>
-//       )}
-//     </div>
-//   );
-// }
-
-// export default TaskCard;
-
-import React from 'react'
-
-function TaskCard() {
+export default function TaskCard({ task, onToggleDone, onEdit }) {
   return (
-    <div>TaskCard</div>
-  )
+    <div className="bg-white/5 p-3 rounded-xl shadow-sm hover:shadow-md cursor-grab select-none">
+      <div className="flex items-start justify-between gap-2">
+        <div>
+          <div className="text-sm font-semibold">{task.name}</div>
+          {task.description && <div className="text-xs text-gray-300 mt-1 line-clamp-2">{task.description}</div>}
+          <div className="text-xs mt-2 flex gap-2">
+            <span className={`px-2 py-1 rounded-full text-[11px] ${task.priority === "High" ? "bg-rose-600" : task.priority === "Medium" ? "bg-yellow-500" : "bg-green-500"}`}>{task.priority}</span>
+            <span className="text-gray-400">{task.orderIndex != null ? `#${task.orderIndex+1}` : ""}</span>
+          </div>
+        </div>
+        <div className="flex flex-col items-end gap-2">
+          <button onClick={() => onToggleDone(task)} className={`px-2 py-1 rounded ${task.completed ? "bg-green-600" : "bg-white/5"}`}>
+            {task.completed ? "✓" : "○"}
+          </button>
+          <button onClick={() => onEdit(task)} className="text-xs text-gray-300">Edit</button>
+        </div>
+      </div>
+    </div>
+  );
 }
-
-export default TaskCard

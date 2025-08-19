@@ -1,80 +1,54 @@
-// import React, { useEffect, useState } from "react";
-// import NavbarLeft from "../layout/NavbarLeft";
-// import NavbarTop from "../layout/NavbarTop";
-// import BigCard from "../components/todo/BigCard";
-// import { apiRequest } from "../api";
+import React, { useState } from "react";
+import useTodos from "../hooks/useTodos";
+import NavbarLeft from "../layout/NavbarLeft";
+import NavbarTop from "../layout/NavbarTop";
+import AddCategoryModal from "../components/todo/AddCategoryModal";
+import AddTaskModal from "../components/todo/AddTaskModal";
+import TodoBoard from "../components/todo/TodoBoard";
 
-// function Todo() {
-//   const [categories, setCategories] = useState([]);
-//   const [tasks, setTasks] = useState([]);
-//   const [loading, setLoading] = useState(false);
+export default function Todo() {
+  const todos = useTodos();
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [catModalOpen, setCatModalOpen] = useState(false);
+  const [taskModalOpen, setTaskModalOpen] = useState(false);
 
-//   useEffect(() => {
-//     fetchData();
-//   }, []);
-
-//   const fetchData = async () => {
-//     try {
-//       setLoading(true);
-
-//       // 1️⃣ Fetch categories
-//       const cats = await apiRequest("/todos/categories");
-//       setCategories(cats);
-
-//       // 2️⃣ Fetch tasks for each category in parallel
-//       const taskPromises = cats.map(cat =>
-//         apiRequest(`/todos/categories/${cat._id}/tasks`)
-//       );
-//       const tasksArrays = await Promise.all(taskPromises);
-//       setTasks(tasksArrays.flat()); // merge all tasks into a single array
-
-//     } catch (err) {
-//       console.error("Error fetching data:", err.message);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   // Add new category
-//   const handleAddCategory = async (name) => {
-//     if (!name.trim()) return;
-//     try {
-//       const category = await apiRequest("/todos/categories", "POST", { name });
-//       setCategories([...categories, category]);
-//     } catch (err) {
-//       console.error("Error creating category:", err.message);
-//     }
-//   };
-
-//   return (
-//     <div className="flex min-h-screen bg-gray-50">
-//       {/* <NavbarLeft /> */}
-//       <div className="flex-1 flex flex-col">
-//         {/* <NavbarTop /> */}
-//         <main className="p-6 overflow-hidden">
-//           {loading ? (
-//             <p className="text-center text-gray-500">Loading...</p>
-//           ) : (
-//             <BigCard
-//               categories={categories}
-//               tasks={tasks}
-//               onAddCategory={handleAddCategory}
-//             />
-//           )}
-//         </main>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default Todo;
-
-import React from 'react'
-
-function Todo() {
   return (
-    <div>Todo</div>
-  )
-}
+    <>
+      <NavbarLeft />
+      <NavbarTop />
 
-export default Todo
+      <div className="min-h-screen bg-gray-100 text-gray-900 pl-20 pt-20 p-6">
+        <TodoBoard
+          todos={todos}
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+          onAddCategory={() => setCatModalOpen(true)}
+          onAddTask={() => setTaskModalOpen(true)}
+        />
+
+        {/* Modals */}
+        <AddCategoryModal
+          open={catModalOpen}
+          onClose={() => setCatModalOpen(false)}
+          onCreate={async (payload) => {
+            await todos.createCategory(payload);
+            setCatModalOpen(false);
+          }}
+        />
+
+        <AddTaskModal
+          open={taskModalOpen}
+          onClose={() => setTaskModalOpen(false)}
+          onCreate={async (payload) => {
+            const targetCat =
+              selectedCategory || (todos.categories[0] && todos.categories[0]._id);
+            if (!targetCat) return alert("Create a category first");
+            await todos.createTask(targetCat, payload);
+            setTaskModalOpen(false);
+          }}
+          categoryId={selectedCategory}
+        />
+      </div>
+    </>
+  );
+}

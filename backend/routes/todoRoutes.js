@@ -16,4 +16,8 @@ router.delete("/tasks/:id", protect, todoController.deleteTask);
 // Reorder tasks inside a category
 router.put("/categories/:categoryId/tasks/reorder", protect, todoController.reorderTasks);
 
+// Get tasks by specific date
+router.get("/tasks", protect, todoController.getTasksByDate);
+
+
 module.exports = router;
