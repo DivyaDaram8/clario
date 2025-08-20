@@ -30,24 +30,36 @@ exports.getCategories = async (req, res) => {
 
 // ---------------- Task Controllers ----------------
 
-// Create Task inside Category
+// Create Task inside Category (with taskDate)
 exports.createTask = async (req, res) => {
   try {
     const { categoryId } = req.params;
 
-    // ensure category belongs to user
     const category = await Category.findOne({ _id: categoryId, createdBy: req.user._id });
     if (!category) return res.status(404).json({ message: "Category not found" });
 
-    const taskCount = await Task.countDocuments({ category: categoryId });
+    // Use provided date or default to today
+    const taskDate = req.body.taskDate ? new Date(req.body.taskDate) : new Date();
+    taskDate.setHours(0, 0, 0, 0);
+
+    if (isNaN(taskDate.getTime())) {
+      return res.status(400).json({ message: "Invalid taskDate" });
+    }
+
+    const taskCount = await Task.countDocuments({
+      category: categoryId,
+      createdBy: req.user._id,
+      taskDate
+    });
 
     const task = await Task.create({
       name: req.body.name || "Untitled Task",
       description: req.body.description || "",
       priority: req.body.priority || "Medium",
       category: categoryId,
-      orderIndex: taskCount, // append at bottom
-      createdBy: req.user._id
+      orderIndex: taskCount,
+      createdBy: req.user._id,
+      taskDate
     });
 
     res.status(201).json(task);
@@ -56,16 +68,28 @@ exports.createTask = async (req, res) => {
   }
 };
 
-// Get All Tasks for a Category
+
+// Get All Tasks for a Category (for a given date)
 exports.getTasksByCategory = async (req, res) => {
   try {
     const { categoryId } = req.params;
+    const { date } = req.query;
 
     const category = await Category.findOne({ _id: categoryId, createdBy: req.user._id });
     if (!category) return res.status(404).json({ message: "Category not found" });
 
-    const tasks = await Task.find({ category: categoryId, createdBy: req.user._id })
-      .sort({ priority: 1, orderIndex: 1 });
+    if (!date) return res.status(400).json({ message: "Date is required" });
+
+    const start = new Date(date);
+    start.setHours(0, 0, 0, 0);
+    const end = new Date(date);
+    end.setHours(23, 59, 59, 999);
+
+    const tasks = await Task.find({
+      category: categoryId,
+      createdBy: req.user._id,
+      taskDate: { $gte: start, $lte: end }
+    }).sort({ priority: 1, orderIndex: 1 });
 
     res.json(tasks);
   } catch (err) {
@@ -105,19 +129,22 @@ exports.deleteTask = async (req, res) => {
   }
 };
 
-// Reorder Tasks (Drag & Drop)
+// Reorder Tasks within Category & Date
 exports.reorderTasks = async (req, res) => {
   try {
     const { categoryId } = req.params;
-    const { tasks } = req.body; // array of { id, orderIndex }
+    const { tasks, date } = req.body; // array of { id, orderIndex }
 
-    // ensure category belongs to user
     const category = await Category.findOne({ _id: categoryId, createdBy: req.user._id });
     if (!category) return res.status(404).json({ message: "Category not found" });
+    if (!date) return res.status(400).json({ message: "Date is required" });
+
+    const taskDate = new Date(date);
+    taskDate.setHours(0, 0, 0, 0);
 
     for (let t of tasks) {
       await Task.findOneAndUpdate(
-        { _id: t.id, category: categoryId, createdBy: req.user._id },
+        { _id: t.id, category: categoryId, createdBy: req.user._id, taskDate },
         { orderIndex: t.orderIndex }
       );
     }
@@ -129,13 +156,12 @@ exports.reorderTasks = async (req, res) => {
 };
 
 
-// Get All Tasks by Date
+// Get All Tasks by Date (across all categories)
 exports.getTasksByDate = async (req, res) => {
   try {
     const { date } = req.query;
     if (!date) return res.status(400).json({ message: "Date is required" });
 
-    // Normalize to start/end of the day
     const start = new Date(date);
     start.setHours(0, 0, 0, 0);
     const end = new Date(date);
@@ -143,10 +169,32 @@ exports.getTasksByDate = async (req, res) => {
 
     const tasks = await Task.find({
       createdBy: req.user._id,
-      createdAt: { $gte: start, $lte: end }
+      taskDate: { $gte: start, $lte: end }
     }).sort({ orderIndex: 1 });
 
     res.json(tasks);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
+// Delete Category (and optionally its tasks)
+exports.deleteCategory = async (req, res) => {
+  try {
+    const category = await Category.findOneAndDelete({
+      _id: req.params.id,
+      createdBy: req.user._id,
+    });
+
+    if (!category) {
+      return res.status(404).json({ message: "Category not found" });
+    }
+
+    // Delete all tasks inside this category too (cascade delete)
+    await Task.deleteMany({ category: req.params.id, createdBy: req.user._id });
+
+    res.json({ message: "Category and its tasks deleted successfully" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

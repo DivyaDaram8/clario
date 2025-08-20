@@ -36,18 +36,24 @@ export default function Todo() {
           }}
         />
 
-        <AddTaskModal
-          open={taskModalOpen}
-          onClose={() => setTaskModalOpen(false)}
-          onCreate={async (payload) => {
-            const targetCat =
-              selectedCategory || (todos.categories[0] && todos.categories[0]._id);
-            if (!targetCat) return alert("Create a category first");
-            await todos.createTask(targetCat, payload);
-            setTaskModalOpen(false);
-          }}
-          categoryId={selectedCategory}
-        />
+          <AddTaskModal
+  open={taskModalOpen}
+  onClose={() => {
+    setTaskModalOpen(false);
+    setSelectedCategory(null); // clear active border on cancel
+  }}
+  onCreate={async (payload) => {
+    const targetCat =
+      selectedCategory || (todos.categories[0] && todos.categories[0]._id);
+    if (!targetCat) return alert("Create a category first");
+    await todos.createTask(targetCat, payload);
+    setTaskModalOpen(false);
+    setSelectedCategory(null); // clear active border after create
+  }}
+  categoryId={selectedCategory}
+  categories={todos.categories} 
+/>
+
       </div>
     </>
   );

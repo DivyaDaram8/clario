@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Trash2 } from "lucide-react"; // import delete icon
 
 export default function CategoryBar({
   categories = [],
@@ -7,6 +8,7 @@ export default function CategoryBar({
   selectedId,
   onOpenAdd,
   onOpenTaskModal,
+  onDeleteCategory, // 👈 new prop
 }) {
   const [open, setOpen] = useState(false);
 
@@ -53,21 +55,36 @@ export default function CategoryBar({
                 </div>
               ) : (
                 categories.map((cat) => (
-                  <button
+                  <div
                     key={cat._id}
-                    onClick={() => handleTaskOpen(cat._id)}
-                    className={`flex items-center gap-2 p-2 rounded-lg text-white w-full text-sm transition hover:scale-[1.02] focus:outline-none focus:ring-0 ${
-                      selectedId === cat._id ? "ring-2 ring-indigo-400" : ""
-                    }`}
+                    className="flex items-center justify-between gap-2 p-2 rounded-lg text-white text-sm transition hover:scale-[1.02]"
                     style={{
                       backgroundColor: cat.color || "#6366f1", // fallback indigo
                     }}
                   >
-                    <span className="w-8 h-8 flex items-center justify-center rounded-md bg-black/20">
-                      {cat.icon || cat.name[0]}
-                    </span>
-                    <span className="truncate">{cat.name}</span>
-                  </button>
+                    {/* Category Button */}
+                    <button
+                      onClick={() => handleTaskOpen(cat._id)}
+                      className={`flex items-center gap-2 flex-1 text-left focus:outline-none ${
+                        selectedId === cat._id ? "ring-2 ring-indigo-400 rounded-lg" : ""
+                      }`}
+                    >
+                      <span className="w-8 h-8 flex items-center justify-center rounded-md bg-black/20">
+                        {cat.icon || cat.name[0]}
+                      </span>
+                      <span className="truncate">{cat.name}</span>
+                    </button>
+
+                    {/* Delete Button */}
+                    <button
+  onClick={() => onDeleteCategory?.(cat._id)}
+  className="p-1 rounded-md hover:bg-red-500/20 text-red-300 hover:text-red-500 transition"
+  title="Delete category"
+>
+  <Trash2 size={16} />
+</button>
+
+                  </div>
                 ))
               )}
 

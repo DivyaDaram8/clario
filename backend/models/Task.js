@@ -12,7 +12,8 @@ const taskSchema = new mongoose.Schema({
   orderIndex: { type: Number, default: 0 }, // For drag & drop ordering
   completed: { type: Boolean, default: false },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  createdAt: { type: Date, default: Date.now }
+  createdAt: { type: Date, default: Date.now },
+  taskDate: { type: Date, required: true }
 });
 
 module.exports = mongoose.model("Task", taskSchema);
