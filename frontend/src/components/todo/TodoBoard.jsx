@@ -14,7 +14,7 @@ export default function TodoBoard({
     <div className="flex w-full h-[calc(100vh-80px)] gap-6">
       {/* Category Sidebar */}
       <div className="w-64 flex-shrink-0">
-       {/* added deleteCategory support */}
+        {/* added deleteCategory support */}
 <CategoryBar
   categories={todos.categories}
   selectedId={selectedCategory}
@@ -22,7 +22,7 @@ export default function TodoBoard({
   onOpenAdd={onAddCategory}
   onOpenTaskModal={(id) => {
     setSelectedCategory(id);
-    onAddTask();
+    onAddTask(); // opens modal
   }}
   onDeleteCategory={todos.deleteCategory}
 />
@@ -43,15 +43,18 @@ export default function TodoBoard({
             categories={todos.categories}
             tasksByCategory={todos.tasksByCategory}
             onToggleDone={async (task) => {
-              await todos.updateTask(task._id, {
-                completed: !task.completed,
-              });
+              await todos.updateTask(task._id, { completed: !task.completed });
             }}
             onEdit={(task) => {
-              const name = prompt("Edit title", task.name);
-              if (name) todos.updateTask(task._id, { name });
+              // Find the category ID for this task
+              const categoryId = todos.categories.find(cat => 
+                todos.tasksByCategory[cat._id]?.some(t => t._id === task._id)
+              )?._id;
+              setSelectedCategory(categoryId);
+              onAddTask(task); // pass task into modal
             }}
             onReorder={(catId, newArr) => todos.reorder(catId, newArr)}
+            onDelete={(task, categoryId) => todos.deleteTask(task._id, categoryId)}
           />
         </div>
       </div>

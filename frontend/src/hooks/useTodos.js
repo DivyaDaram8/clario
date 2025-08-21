@@ -1,58 +1,66 @@
 import { useState, useEffect, useCallback } from "react";
 import { apiRequest } from "../api";
+import { PRIORITY_ORDER } from "../utils/priority"; // make sure it's exported
+
+// helper: sort tasks by completed, priority, orderIndex
+function sortTasks(tasks = []) {
+  return [...tasks].sort((a, b) => {
+    if (a.completed !== b.completed) return a.completed ? 1 : -1;
+    if (PRIORITY_ORDER[a.priority] !== PRIORITY_ORDER[b.priority]) {
+      return PRIORITY_ORDER[a.priority] - PRIORITY_ORDER[b.priority];
+    }
+    return (a.orderIndex || 0) - (b.orderIndex || 0);
+  });
+}
 
 export default function useTodos() {
   const [categories, setCategories] = useState([]);
   const [tasksByCategory, setTasksByCategory] = useState({});
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().slice(0,10));
+  const [selectedDate, setSelectedDate] = useState(
+    new Date().toISOString().slice(0, 10)
+  );
   const [loading, setLoading] = useState(false);
 
-  // Load categories
-  const loadCategories = useCallback(async () => {
-    const res = await apiRequest("/todos/categories");
-    setCategories(res);
-  }, []);
-
-  // Load tasks for selected date
+  // load categories + tasks
   const loadTasksForDate = useCallback(async (date = selectedDate) => {
     setLoading(true);
     try {
-      const categoriesRes = await apiRequest("/todos/categories");
-      setCategories(categoriesRes);
+      const cats = await apiRequest("/todos/categories");
+      setCategories(cats);
 
-      const promises = categoriesRes.map(c =>
+      const promises = cats.map((c) =>
         apiRequest(`/todos/categories/${c._id}/tasks?date=${date}`)
-          .then(tasks => ({ catId: c._id, tasks }))
+          .then((tasks) => ({ catId: c._id, tasks }))
           .catch(() => ({ catId: c._id, tasks: [] }))
       );
 
       const results = await Promise.all(promises);
       const map = {};
-      results.forEach(r => {
-        const sorted = [...r.tasks].sort((a,b)=>{
-          if(a.completed !== b.completed) return a.completed ? 1 : -1;
-          return (a.orderIndex || 0) - (b.orderIndex || 0);
-        });
-        map[r.catId] = sorted;
+      results.forEach((r) => {
+        map[r.catId] = sortTasks(r.tasks);
       });
       setTasksByCategory(map);
-    } finally { setLoading(false); }
+    } finally {
+      setLoading(false);
+    }
   }, [selectedDate]);
 
-  useEffect(() => { loadTasksForDate(selectedDate); }, [loadTasksForDate, selectedDate]);
+  useEffect(() => {
+    loadTasksForDate(selectedDate);
+  }, [loadTasksForDate, selectedDate]);
 
-  // CRUD functions
+  // CRUD
   async function createCategory(payload) {
     const cat = await apiRequest("/todos/categories", "POST", payload);
-    setCategories(prev => [cat, ...prev]);
-    setTasksByCategory(prev => ({ ...prev, [cat._id]: [] }));
+    setCategories((prev) => [cat, ...prev]);
+    setTasksByCategory((prev) => ({ ...prev, [cat._id]: [] }));
     return cat;
   }
 
   async function deleteCategory(categoryId) {
     await apiRequest(`/todos/categories/${categoryId}`, "DELETE");
-    setCategories(prev => prev.filter(c => c._id !== categoryId));
-    setTasksByCategory(prev => {
+    setCategories((prev) => prev.filter((c) => c._id !== categoryId));
+    setTasksByCategory((prev) => {
       const newMap = { ...prev };
       delete newMap[categoryId];
       return newMap;
@@ -60,29 +68,24 @@ export default function useTodos() {
   }
 
   async function createTask(categoryId, payload) {
-    const task = await apiRequest(`/todos/categories/${categoryId}/tasks`, "POST", payload);
-    setTasksByCategory(prev => {
+    const task = await apiRequest(
+      `/todos/categories/${categoryId}/tasks`,
+      "POST",
+      payload
+    );
+    setTasksByCategory((prev) => {
       const arr = prev[categoryId] ? [...prev[categoryId], task] : [task];
-      const sorted = arr.sort((a,b)=>{
-        if(a.completed !== b.completed) return a.completed ? 1 : -1;
-        return (a.orderIndex || 0) - (b.orderIndex || 0);
-      });
-      return { ...prev, [categoryId]: sorted };
+      return { ...prev, [categoryId]: sortTasks(arr) };
     });
     return task;
   }
 
   async function updateTask(taskId, payload) {
     const updated = await apiRequest(`/todos/tasks/${taskId}`, "PUT", payload);
-    setTasksByCategory(prev => {
+    setTasksByCategory((prev) => {
       const newMap = {};
       for (const k in prev) {
-        let arr = prev[k].map(t => t._id === updated._id ? updated : t);
-        arr = arr.sort((a,b)=>{
-          if(a.completed !== b.completed) return a.completed ? 1 : -1;
-          return (a.orderIndex || 0) - (b.orderIndex || 0);
-        });
-        newMap[k] = arr;
+        newMap[k] = sortTasks(prev[k].map((t) => (t._id === taskId ? updated : t)));
       }
       return newMap;
     });
@@ -91,22 +94,42 @@ export default function useTodos() {
 
   async function deleteTask(taskId, categoryId) {
     await apiRequest(`/todos/tasks/${taskId}`, "DELETE");
-    setTasksByCategory(prev => {
-      const arr = prev[categoryId].filter(t => t._id !== taskId)
-        .map((t,i)=>({...t, orderIndex:i}));
-      return { ...prev, [categoryId]: arr };
+    setTasksByCategory((prev) => {
+      const arr = prev[categoryId]?.filter((t) => t._id !== taskId) || [];
+      const updatedArr = arr.map((t, i) => ({ ...t, orderIndex: i }));
+      return { ...prev, [categoryId]: sortTasks(updatedArr) };
     });
   }
 
-  async function reorder(categoryId, newOrderArray) {
-    setTasksByCategory(prev => ({ ...prev, [categoryId]: [...newOrderArray] }));
-    const ops = newOrderArray.map((t,i)=>({id:t._id, orderIndex:i}));
-    await apiRequest(`/todos/categories/${categoryId}/tasks/reorder`, "PUT", { tasks: ops });
-  }
+const reorder = async (categoryId, newArr) => {
+  // update state immediately so UI feels snappy
+  setTasksByCategory(prev => ({
+    ...prev,
+    [categoryId]: newArr
+  }));
+
+  // prepare payload for backend
+  const ops = newArr.map((t, i) => ({ id: t._id, orderIndex: i }));
+
+  // send to backend
+  await apiRequest(
+    `/todos/categories/${categoryId}/tasks/reorder`,
+    "PUT",
+    { tasks: ops, date: selectedDate }   // ✅ include date
+  );
+};
 
   return {
-    categories, tasksByCategory, selectedDate, setSelectedDate,
-    loading, createCategory, deleteCategory, createTask,
-    updateTask, deleteTask, reorder
+    categories,
+    tasksByCategory,
+    selectedDate,
+    setSelectedDate,
+    loading,
+    createCategory,
+    deleteCategory,
+    createTask,
+    updateTask,
+    deleteTask,
+    reorder,
   };
 }

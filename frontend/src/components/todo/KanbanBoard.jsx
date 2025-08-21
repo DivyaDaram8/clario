@@ -48,7 +48,8 @@ export default function KanbanBoard({
                   task={t}
                   onToggleDone={onToggleDone}
                   onEdit={onEdit}
-                  onDelete={task=>onDelete(task, cat._id)}
+                 onDelete={task => onDelete(task, cat._id)}
+
                 />
               </div>
             ))}

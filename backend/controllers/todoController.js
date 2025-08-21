@@ -133,7 +133,7 @@ exports.deleteTask = async (req, res) => {
 exports.reorderTasks = async (req, res) => {
   try {
     const { categoryId } = req.params;
-    const { tasks, date } = req.body; // array of { id, orderIndex }
+    const { tasks, date } = req.body; // array of { id, orderIndex, priority }
 
     const category = await Category.findOne({ _id: categoryId, createdBy: req.user._id });
     if (!category) return res.status(404).json({ message: "Category not found" });
@@ -144,7 +144,13 @@ exports.reorderTasks = async (req, res) => {
 
     for (let t of tasks) {
       await Task.findOneAndUpdate(
-        { _id: t.id, category: categoryId, createdBy: req.user._id, taskDate },
+        {
+          _id: t.id,
+          category: categoryId,
+          createdBy: req.user._id,
+          taskDate,
+          priority: t.priority   // ✅ ensures only within group
+        },
         { orderIndex: t.orderIndex }
       );
     }
@@ -154,6 +160,7 @@ exports.reorderTasks = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
 
 
 // Get All Tasks by Date (across all categories)
