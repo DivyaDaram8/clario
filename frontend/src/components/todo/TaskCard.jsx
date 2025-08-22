@@ -4,11 +4,10 @@ import { Edit, Trash2 } from "lucide-react";
 export default function TaskCard({ task, onToggleDone, onEdit, onDelete }) {
   return (
     <div
-      className={`relative bg-white/5 p-4 rounded-xl shadow-sm hover:shadow-md select-none border-l-4 
+      className={`relative bg-white/5 p-4 rounded-xl shadow-sm hover:shadow-md select-none border-l-4 group
         ${task.priority === "High" ? "border-rose-600" 
           : task.priority === "Medium" ? "border-yellow-500" 
           : "border-green-500"}`}
-      title={task.description || ""}
     >
       <div className="flex items-center justify-between gap-3">
         {/* Left side: Checkbox + Title */}
@@ -22,20 +21,14 @@ export default function TaskCard({ task, onToggleDone, onEdit, onDelete }) {
             {task.completed && <span className="text-white text-xs">✓</span>}
           </button>
 
-          {/* Title & description */}
+          {/* Title */}
           <div className="flex flex-col">
             <span
-              className={`text-sm font-semibold ${
-                task.completed ? "line-through text-gray-400" : "text-white"
-              }`}
+              className={`text-sm font-semibold transition-colors
+                ${task.completed ? "line-through text-gray-400" : "text-sky-400"}`}
             >
-              {task.name}
+              {task.name || "Untitled Task"}
             </span>
-            {task.description && (
-              <span className="text-xs text-gray-300 line-clamp-1">
-                {task.description}
-              </span>
-            )}
           </div>
         </div>
 
@@ -51,14 +44,26 @@ export default function TaskCard({ task, onToggleDone, onEdit, onDelete }) {
             <Edit size={16} />
           </button>
           <button
-  onClick={() => onDelete(task)}
-  className="text-red-400 hover:text-red-500"
->
-  <Trash2 size={16} />
-</button>
-
+            onClick={() => onDelete(task)}
+            className="text-red-400 hover:text-red-500"
+          >
+            <Trash2 size={16} />
+          </button>
         </div>
       </div>
+
+      {/* Floating description tooltip (Google Dev style) */}
+      {task.description && (
+        <div
+          className="absolute left-1/2 -translate-x-1/2 top-full mt-2 
+                     hidden group-hover:block z-50 w-max max-w-xs
+                     bg-gray-800 text-white text-xs px-3 py-2 rounded-md shadow-lg
+                     border border-gray-700
+                     animate-fadeIn"
+        >
+          {task.description}
+        </div>
+      )}
     </div>
   );
 }

@@ -105,22 +105,28 @@ async function createTask(categoryId, payload) {
   }
 
 const reorder = async (categoryId, newArr) => {
-  // update state immediately so UI feels snappy
+  // Update local state immediately
   setTasksByCategory(prev => ({
     ...prev,
-    [categoryId]: newArr
+    [categoryId]: sortTasks(newArr) // keeps priority > orderIndex
   }));
 
-  // prepare payload for backend
-  const ops = newArr.map((t, i) => ({ id: t._id, orderIndex: i }));
+  // Prepare payload for backend
+  const ops = newArr
+    .filter(t => t.priority) // send only tasks that exist
+    .map(t => ({
+      id: t._id,
+      orderIndex: t.orderIndex,
+      priority: t.priority
+    }));
 
-  // send to backend
   await apiRequest(
     `/todos/categories/${categoryId}/tasks/reorder`,
     "PUT",
-    { tasks: ops, date: selectedDate }   // ✅ include date
+    { tasks: ops, date: selectedDate }
   );
 };
+
 
   return {
     categories,

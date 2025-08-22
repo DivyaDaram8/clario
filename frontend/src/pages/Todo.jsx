@@ -48,7 +48,6 @@ export default function Todo() {
         }}
       />
 
-      {/* Task Modal */}
 <AddTaskModal
   open={taskModalOpen}
   task={editingTask}
@@ -59,28 +58,33 @@ export default function Todo() {
     setEditingTask(null);
     setSelectedCategory(null);
   }}
-onCreate={async (payload) => {
-  const targetCat = selectedCategory || todos.categories[0]?._id;
-  if (!targetCat) return alert("Create a category first");
+  onCreate={async (payload) => {
+    const targetCat = selectedCategory || todos.categories[0]?._id;
+    if (!targetCat) return alert("Create a category first");
 
-const todayStr = new Date().toISOString().slice(0, 10);
-if (todos.selectedDate < todayStr) {
-  alert("You cannot create tasks for past dates 🚫");
-  return;
-}
+    const todayStr = new Date().toISOString().slice(0, 10);
+    if (todos.selectedDate < todayStr) {
+      alert("You cannot create tasks for past dates 🚫");
+      return;
+    }
 
+    await todos.createTask(targetCat, {
+      ...payload,
+      taskDate: new Date(todos.selectedDate),
+    });
 
-  await todos.createTask(targetCat, {
-    ...payload,
-    taskDate: new Date(todos.selectedDate),  // ✅ use selectedDate
-  });
-
-  setTaskModalOpen(false);
-  setEditingTask(null);
-  setSelectedCategory(null);
-}}
-
+    setTaskModalOpen(false);
+    setEditingTask(null);
+    setSelectedCategory(null);
+  }}
+  onUpdate={async (taskId, payload) => {
+    await todos.updateTask(taskId, payload);
+    setTaskModalOpen(false);
+    setEditingTask(null);
+    setSelectedCategory(null);
+  }}
 />
+
 
 
     </>

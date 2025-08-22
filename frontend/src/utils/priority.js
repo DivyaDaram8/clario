@@ -1,4 +1,3 @@
-// map priority to sort order
 export const PRIORITY_ORDER = { High: 0, Medium: 1, Low: 2 };
 
 export function sortTasks(tasks = []) {

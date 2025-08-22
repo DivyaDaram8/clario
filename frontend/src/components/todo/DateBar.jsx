@@ -95,9 +95,6 @@ export default function DateBar({ selectedDate, onSelect }) {
     }`
   }
 />
-
-
-
             </div>
           )}
         </div>
