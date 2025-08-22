@@ -1,9 +1,15 @@
-import React from 'react'
+// src/pages/Journal.jsx
+import JournalBoard from "../components/journal/JournalBoard";
+import NavbarLeft from "../layout/NavbarLeft";
+import NavbarTop from "../layout/NavbarTop";
 
-function Journal() {
+export default function Journal() {
   return (
-    <div>Journal</div>
-  )
+    <div className="flex flex-col h-screen">
+      {/* top navbar here if you have */}
+      <NavbarLeft />
+      <NavbarTop />
+      <JournalBoard />
+    </div>
+  );
 }
-
-export default Journal;
