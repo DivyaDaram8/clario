@@ -19,7 +19,7 @@ export default function Todo() {
     <>
       {/* Fixed layout wrapper */}
       <div className="todo-page">
-        <NavbarTop />
+        {/* <NavbarTop /> */}
         <div className="todo-container">
           <NavbarLeft />
           <div className="todo-content">
@@ -49,31 +49,39 @@ export default function Todo() {
       />
 
       {/* Task Modal */}
-      <AddTaskModal
+<AddTaskModal
   open={taskModalOpen}
   task={editingTask}
-  categoryId={selectedCategory}          // ✅ pass selected category
-  categories={todos.categories}          // ✅ pass categories
+  categoryId={selectedCategory}
+  categories={todos.categories}
   onClose={() => {
     setTaskModalOpen(false);
     setEditingTask(null);
     setSelectedCategory(null);
   }}
-  onCreate={async (payload) => {
-    const targetCat = selectedCategory || todos.categories[0]?._id;  // ✅ fixed indexing bug
-    if (!targetCat) return alert("Create a category first");
-    await todos.createTask(targetCat, payload);
-    setTaskModalOpen(false);
-    setEditingTask(null);
-    setSelectedCategory(null);
-  }}
-  onUpdate={async (id, payload) => {
-    await todos.updateTask(id, payload);
-    setTaskModalOpen(false);
-    setEditingTask(null);
-    setSelectedCategory(null);
-  }}
+onCreate={async (payload) => {
+  const targetCat = selectedCategory || todos.categories[0]?._id;
+  if (!targetCat) return alert("Create a category first");
+
+const todayStr = new Date().toISOString().slice(0, 10);
+if (todos.selectedDate < todayStr) {
+  alert("You cannot create tasks for past dates 🚫");
+  return;
+}
+
+
+  await todos.createTask(targetCat, {
+    ...payload,
+    taskDate: new Date(todos.selectedDate),  // ✅ use selectedDate
+  });
+
+  setTaskModalOpen(false);
+  setEditingTask(null);
+  setSelectedCategory(null);
+}}
+
 />
+
 
     </>
   );

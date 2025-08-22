@@ -67,18 +67,21 @@ export default function useTodos() {
     });
   }
 
-  async function createTask(categoryId, payload) {
-    const task = await apiRequest(
-      `/todos/categories/${categoryId}/tasks`,
-      "POST",
-      payload
-    );
-    setTasksByCategory((prev) => {
-      const arr = prev[categoryId] ? [...prev[categoryId], task] : [task];
-      return { ...prev, [categoryId]: sortTasks(arr) };
-    });
-    return task;
-  }
+async function createTask(categoryId, payload) {
+  const task = await apiRequest(
+    `/todos/categories/${categoryId}/tasks`,
+    "POST",
+    { ...payload, taskDate: new Date(selectedDate) }  // ✅ correct
+  );
+
+  setTasksByCategory((prev) => {
+    const arr = prev[categoryId] ? [...prev[categoryId], task] : [task];
+    return { ...prev, [categoryId]: sortTasks(arr) };
+  });
+  return task;
+}
+
+
 
   async function updateTask(taskId, payload) {
     const updated = await apiRequest(`/todos/tasks/${taskId}`, "PUT", payload);

@@ -33,25 +33,32 @@ export default function DateBar({ selectedDate, onSelect }) {
     <div className="w-full flex justify-center">
       <div className="flex items-center gap-4 px-6 py-3 bg-white rounded-xl shadow-md border border-gray-200 w-full max-w-2xl justify-center">
         {buttons.map(({ label, offset }) => {
-          const d = new Date();
-          d.setDate(d.getDate() + offset);
-          const dateStr = shortDate(offset);
+  const d = new Date();
+  d.setDate(d.getDate() + offset);
+  const dateStr = shortDate(offset);
 
-          return (
-            <button
-              key={label}
-              onClick={() => onSelect(dateStr)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition 
-                ${
-                  selectedDate === dateStr
-                    ? "bg-indigo-600 text-white shadow"
-                    : "text-gray-700 hover:bg-indigo-50"
-                }`}
-            >
-              {label} · {d.getDate()}
-            </button>
-          );
-        })}
+  // ✅ block past
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const isPast = dateStr < todayStr;
+
+  return (
+<button
+  key={label}
+  onClick={() => onSelect(dateStr)}  // ✅ always works now
+  className={`px-4 py-2 rounded-lg text-sm font-medium transition 
+    ${selectedDate === dateStr
+      ? "bg-indigo-600 text-white shadow"
+      : "text-gray-700 hover:bg-indigo-50"
+    }`}
+>
+  {label} · {d.getDate()}
+</button>
+
+
+
+  );
+})}
+
 
         {/* Calendar Picker */}
         <div className="relative" ref={calendarRef}>
@@ -68,25 +75,29 @@ export default function DateBar({ selectedDate, onSelect }) {
                 w-[340px] bg-white border border-gray-200
                 rounded-2xl shadow-2xl z-50 p-4 animate-[fadeIn_0.2s_ease-out]"
             >
-              <DatePicker
-                inline
-                selected={selectedDate ? new Date(selectedDate) : new Date()}
-                onChange={(date) => {
-                  if (date) {
-                    onSelect(date.toISOString().slice(0, 10));
-                    setShowCalendar(false);
-                  }
-                }}
-                calendarClassName="custom-calendar"
-                dayClassName={(d) =>
-                  `custom-day ${
-                    selectedDate &&
-                    new Date(selectedDate).toDateString() === d.toDateString()
-                      ? "custom-day-selected"
-                      : ""
-                  }`
-                }
-              />
+<DatePicker
+  inline
+  selected={selectedDate ? new Date(selectedDate) : new Date()}
+  onChange={(date) => {
+    if (date) {
+      const pickedStr = date.toISOString().slice(0, 10);
+      onSelect(pickedStr);   // ✅ always update, past/future both
+      setShowCalendar(false);
+    }
+  }}
+  calendarClassName="custom-calendar"
+  dayClassName={(d) =>
+    `custom-day ${
+      selectedDate &&
+      new Date(selectedDate).toDateString() === d.toDateString()
+        ? "custom-day-selected"
+        : ""
+    }`
+  }
+/>
+
+
+
             </div>
           )}
         </div>

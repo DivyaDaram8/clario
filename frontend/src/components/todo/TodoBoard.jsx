@@ -22,10 +22,18 @@ export default function TodoBoard({
   onOpenAdd={onAddCategory}
   onOpenTaskModal={(id) => {
     setSelectedCategory(id);
-    onAddTask(); // opens modal
+
+    const todayStr = new Date().toISOString().slice(0, 10);
+    if (todos.selectedDate < todayStr) {
+      alert("You cannot add tasks to past dates 🚫");
+      return;
+    }
+
+    onAddTask(); // ✅ only opens if today/future
   }}
   onDeleteCategory={todos.deleteCategory}
 />
+
 
       </div>
 
