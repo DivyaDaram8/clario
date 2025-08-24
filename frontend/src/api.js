@@ -18,14 +18,3 @@ export const apiRequest = async (endpoint, method = "GET", data = null) => {
   return result;
 };
 
-// -------------------------
-// 📝 Journal API Helpers
-// -------------------------
-
-// Get journal by date (ex: "2025-08-22")
-export const getJournalByDate = (date) =>
-  apiRequest(`/journals/${date}`, "GET");
-
-// Save or update a journal entry
-export const saveJournal = (date, content) =>
-  apiRequest(`/journals/${date}`, "POST", { content });
