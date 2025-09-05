@@ -1,18 +1,26 @@
-import { useState } from "react";
+import JournalBoard from "../components/journal/JournalBoard";
 import NavbarLeft from "../layout/NavbarLeft";
 import NavbarTop from "../layout/NavbarTop";
+import "../styles/journal.css";
 
 export default function Journal() {
-  const [selectedDate, setSelectedDate] = useState(
-    new Date().toISOString().slice(0, 10) // default: today
-  );
-
   return (
-    <div>
-      <NavbarTop />
+    <div className="journal-page">
+      {/* Left Navbar */}
       <NavbarLeft />
-      <div className="main-content">
-        <h1>Journal</h1>
+
+      <div className="journal-main">
+        {/* Top Navbar */}
+        <div className="journal-topbar">
+          <NavbarTop />
+        </div>
+
+        {/* Main Content */}
+        <div className="journal-content">
+          <div className="journal-card">
+            <JournalBoard/>
+          </div>
+        </div>
       </div>
     </div>
   );
