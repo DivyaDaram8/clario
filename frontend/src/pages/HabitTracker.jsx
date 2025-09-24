@@ -1,9 +1,9 @@
 import React from 'react'
 
-function HabitTracker() {
+function Journal() {
   return (
-    <div>HabitTracker</div>
+    <div>Journal</div>
   )
 }
 
-export default HabitTracker;
+export default Journal;

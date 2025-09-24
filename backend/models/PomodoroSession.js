@@ -1,36 +1,66 @@
+// models/PomodoroSession.js
 const mongoose = require("mongoose");
 
-const PomodoroSessionSchema = new mongoose.Schema(
-  {
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true, index: true },
-    category: { type: String, default: "General", trim: true },
-
-    // planned values (minutes)
-    plannedFocus: { type: Number, required: true, min: 1, max: 180 },
-    plannedBreak: { type: Number, default: 0, min: 0, max: 60 },
-
-    // actuals
-    focusMinutes: { type: Number, default: 0, min: 0 },
-    breakMinutes: { type: Number, default: 0, min: 0 },
-
-    type: {
-      type: String,
-      enum: ["focus", "short-break", "long-break"],
-      default: "focus",
-    },
-
-    status: {
-      type: String,
-      enum: ["in-progress", "completed", "interrupted", "skipped"],
-      default: "in-progress",
-    },
-
-    startTime: { type: Date, required: true },
-    endTime: { type: Date },
-
-    notes: { type: String, trim: true, maxlength: 500 },
+const pomodoroSessionSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true
   },
-  { timestamps: true }
-);
+  categoryId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "PomodoroCategory",
+    required: true
+  },
+  categoryName: {
+    type: String,
+    required: true
+  },
+  sessionType: {
+    type: String,
+    enum: ['pomodoro', 'shortBreak', 'longBreak'],
+    required: true
+  },
+  plannedDuration: {
+    type: Number,
+    required: true // in minutes
+  },
+  actualDuration: {
+    type: Number,
+    required: true // in minutes
+  },
+  isCompleted: {
+    type: Boolean,
+    default: false
+  },
+  startTime: {
+    type: Date,
+    required: true
+  },
+  endTime: {
+    type: Date,
+    required: true
+  },
+  wasSkipped: {
+    type: Boolean,
+    default: false
+  },
+  cycleNumber: {
+    type: Number,
+    default: 1 // Which cycle in the pomodoro sequence (1-4)
+  },
+  date: {
+    type: Date,
+    default: function() {
+      return new Date(this.startTime).setHours(0, 0, 0, 0);
+    }
+  }
+}, {
+  timestamps: true
+});
 
-module.exports = mongoose.model("PomodoroSession", PomodoroSessionSchema);
+// Index for efficient querying
+pomodoroSessionSchema.index({ userId: 1, date: -1 });
+pomodoroSessionSchema.index({ userId: 1, categoryId: 1 });
+
+module.exports = mongoose.model("PomodoroSession", pomodoroSessionSchema);
