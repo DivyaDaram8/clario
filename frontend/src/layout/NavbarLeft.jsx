@@ -3,8 +3,7 @@ import {
   FaHouse, 
   FaClock, 
   FaListCheck, 
-  FaNoteSticky, 
-  FaCalendarDays, 
+  FaNoteSticky,  
   FaBook, 
   FaList 
 } from "react-icons/fa6";
@@ -15,7 +14,6 @@ export default function NavbarLeft() {
     { to: "/pomodoro", icon: <FaClock />, label: "Pomodoro" },
     { to: "/habit-tracker", icon: <FaList />, label: "Habit Tracker" },
     { to: "/notes", icon: <FaNoteSticky />, label: "Quick Notes" },
-    { to: "/calendar", icon: <FaCalendarDays />, label: "Calendar" },
     { to: "/journal", icon: <FaBook />, label: "Journal" },
     { to: "/todo", icon: <FaListCheck />, label: "Todo" },
   ];
