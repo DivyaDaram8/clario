@@ -9,6 +9,7 @@ import Todo from './pages/Todo';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
 import LandingPage from './pages/LandingPage';
+import ExpenseTracker from './pages/ExpenseTracker';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           <Route path="/habit-tracker" element={<HabitTracker />} />
           <Route path="/notes" element={<Notes />} />
           <Route path="/journal" element={<Journal />} />
+          <Route path="/expense-tracker" element={<ExpenseTracker />} />
         </Routes>
     </>
   );

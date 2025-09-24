@@ -5,7 +5,8 @@ import {
   FaListCheck, 
   FaNoteSticky,  
   FaBook, 
-  FaList 
+  FaList,
+  FaWallet,
 } from "react-icons/fa6";
 
 export default function NavbarLeft() {
@@ -16,6 +17,7 @@ export default function NavbarLeft() {
     { to: "/notes", icon: <FaNoteSticky />, label: "Quick Notes" },
     { to: "/journal", icon: <FaBook />, label: "Journal" },
     { to: "/todo", icon: <FaListCheck />, label: "Todo" },
+    { to: "/expense-tracker", icon: <FaWallet />, label: "Expense Tracker" },
   ];
 
   return (

@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
 
-body {
+/* body {
   background: linear-gradient(135deg, #f0f4f8, #d9e4ec);
   font-family: 'Inter', sans-serif;
   color: #1a1a1a;
@@ -9,7 +9,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-}
+} */
 
 .auth-container {
   display: flex;
