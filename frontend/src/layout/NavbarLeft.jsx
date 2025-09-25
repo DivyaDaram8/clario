@@ -11,7 +11,7 @@ import {
 
 export default function NavbarLeft() {
   const navItems = [
-    { to: "/", icon: <FaHouse />, label: "Home" },
+    { to: "/home", icon: <FaHouse />, label: "Home" },
     { to: "/pomodoro", icon: <FaClock />, label: "Pomodoro" },
     { to: "/habit-tracker", icon: <FaList />, label: "Habit Tracker" },
     { to: "/notes", icon: <FaNoteSticky />, label: "Quick Notes" },
