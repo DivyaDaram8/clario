@@ -1,6 +1,6 @@
 // server.js (Updated)
-const noteRoutes = require("./routes/noteRoutes");
-const pomodoroRoutes = require("./routes/PomodoroRoutes");
+// const noteRoutes = require("./routes/noteRoutes");
+// const pomodoroRoutes = require("./routes/PomodoroRoutes");
 
 // server.js
 const express = require("express");

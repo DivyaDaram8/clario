@@ -6,7 +6,7 @@
 
 
 .scrollable-grid::-webkit-scrollbar {
-  width: 8px;
+  width: 4px;
 }
 
 .scrollable-grid::-webkit-scrollbar-thumb {
