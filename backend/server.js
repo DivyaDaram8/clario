@@ -22,6 +22,7 @@ app.use("/api/todos", require("./routes/todoRoutes"));
 app.use("/api/journal", require("./routes/journalRoutes"));
 app.use("/api/expenses", require("./routes/expenseRoutes"));
 app.use("/api/pomodoro", require("./routes/PomodoroRoutes"));
+// app.use("/api/summarizer", require("./routes/summarizerRoutes"));
 
 
 

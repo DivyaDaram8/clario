@@ -10,6 +10,7 @@ import Signup from './pages/Signup';
 import Login from './pages/Login';
 import LandingPage from './pages/LandingPage';
 import ExpenseTracker from './pages/ExpenseTracker';
+import Summarizer from './pages/Summarizer';
 
 function App() {
   return (

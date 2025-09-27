@@ -20,8 +20,6 @@ export default function NavbarLeft() {
     { to: "/todo", icon: <FaListCheck />, label: "Todo" },
     { to: "/expense-tracker", icon: <FaWallet />, label: "Expense Tracker" },
     { to: "/summarizer", icon: <FaAlignLeft />, label: "Summarizer" },
-    { to: "/summarizer", icon: <FaAlignLeft />, label: "Summarizer" },
-
   ];
 
   return (
