@@ -7,6 +7,7 @@ import {
   FaBook, 
   FaList,
   FaWallet,
+  FaAlignLeft
 } from "react-icons/fa6";
 
 export default function NavbarLeft() {
@@ -18,6 +19,9 @@ export default function NavbarLeft() {
     { to: "/journal", icon: <FaBook />, label: "Journal" },
     { to: "/todo", icon: <FaListCheck />, label: "Todo" },
     { to: "/expense-tracker", icon: <FaWallet />, label: "Expense Tracker" },
+    { to: "/summarizer", icon: <FaAlignLeft />, label: "Summarizer" },
+    { to: "/summarizer", icon: <FaAlignLeft />, label: "Summarizer" },
+
   ];
 
   return (

@@ -25,6 +25,7 @@ function App() {
           <Route path="/notes" element={<Notes />} />
           <Route path="/journal" element={<Journal />} />
           <Route path="/expense-tracker" element={<ExpenseTracker />} />
+          <Route path="/summarizer" element={<Summarizer />} />
         </Routes>
     </>
   );
