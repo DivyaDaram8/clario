@@ -11,6 +11,7 @@ import Login from './pages/Login';
 import LandingPage from './pages/LandingPage';
 import ExpenseTracker from './pages/ExpenseTracker';
 import Summarizer from './pages/Summarizer';
+import Books from './pages/Books';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/journal" element={<Journal />} />
           <Route path="/expense-tracker" element={<ExpenseTracker />} />
           <Route path="/summarizer" element={<Summarizer />} />
+          <Route path="/books" element={<Books />} />
         </Routes>
     </>
   );
