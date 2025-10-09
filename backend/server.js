@@ -19,7 +19,7 @@ app.use(express.json());
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/notes", require("./routes/noteRoutes"));
 app.use("/api/todos", require("./routes/todoRoutes"));
-app.use("/api/journal", require("./routes/journalRoutes"));
+// app.use("/api/journal", require("./routes/journalRoutes"));
 app.use("/api/expenses", require("./routes/expenseRoutes"));
 app.use("/api/pomodoro", require("./routes/PomodoroRoutes"));
 // app.use("/api/summarizer", require("./routes/summarizerRoutes"));
