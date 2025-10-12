@@ -1,14 +1,15 @@
 const express = require("express");
 const multer = require("multer");
 const { summarizeText, summarizeDocs } = require("../controllers/summarizerController");
+const { protect } = require("../middleware/authMiddleware");
 
 const router = express.Router();
 const upload = multer({ dest: "uploads/" });
 
-// Text summarization
-router.post("/", summarizeText);
+// Text summarization - protected
+router.post("/", protect, summarizeText);
 
-// Document summarization
-router.post("/docs", upload.single("file"), summarizeDocs);
+// Document summarization - protected
+router.post("/docs", protect, upload.single("file"), summarizeDocs);
 
 module.exports = router;
