@@ -11,6 +11,8 @@ import LandingPage from './pages/LandingPage';
 import ExpenseTracker from './pages/ExpenseTracker';
 import Summarizers from './pages/Summarizers';
 import Books from './pages/Books';
+import Profile from './pages/Profile';
+
 
 function App() {
   return (
@@ -27,6 +29,7 @@ function App() {
           <Route path="/expense-tracker" element={<ExpenseTracker />} />
           <Route path="/summarizer" element={<Summarizers />} />
           <Route path="/books" element={<Books />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
     </>
   );

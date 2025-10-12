@@ -1,10 +1,10 @@
-// NavbarTop.jsx
 import { useState } from "react";
-import { FaUserCircle } from "react-icons/fa";
-import { FaPlay, FaPause } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { FaUserCircle, FaPlay, FaPause } from "react-icons/fa";
 
 export default function NavbarTop() {
   const [isPlaying, setIsPlaying] = useState(false);
+  const navigate = useNavigate(); // for navigation
 
   return (
     <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
@@ -19,7 +19,10 @@ export default function NavbarTop() {
         "
       >
         {/* Left: Brand */}
-        <div className="text-white font-semibold tracking-wide text-lg cursor-pointer">
+        <div
+          onClick={() => navigate("/home")}
+          className="text-white font-semibold tracking-wide text-lg cursor-pointer hover:text-gray-300"
+        >
           clario
         </div>
 
@@ -37,7 +40,10 @@ export default function NavbarTop() {
         </div>
 
         {/* Right: Profile Icon */}
-        <div className="text-white cursor-pointer hover:text-gray-300 transition-colors">
+        <div
+          onClick={() => navigate("/profile")} // avigate to profile page
+          className="text-white cursor-pointer hover:text-gray-300 transition-colors"
+        >
           <FaUserCircle size={28} />
         </div>
       </div>

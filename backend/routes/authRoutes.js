@@ -66,6 +66,29 @@ router.post("/login", async (req, res) => {
   }
 });
 
+// routes/userRoutes.js
+router.put("/change-password", protect, async (req, res) => {
+  try {
+    const { oldPassword, newPassword } = req.body;
+
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const isMatch = await user.matchPassword(oldPassword);
+    if (!isMatch)
+      return res.status(400).json({ message: "Old password is incorrect" });
+
+    user.password = newPassword;
+    await user.save();
+
+    res.json({ message: "Password changed successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+
 
 // Protected route to get current user
 router.get("/me", protect, (req, res) => {
