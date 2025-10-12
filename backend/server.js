@@ -26,6 +26,7 @@ app.use("/api/pomodoro", require("./routes/PomodoroRoutes"));
 
 app.use('/api/books', require('./routes/bookRoutes'));
 app.use('/api/userProgress', require('./routes/userProgressRoutes'));
+app.use('/api/summarizer', require('./routes/summarizerRoutes'));
 
 
 
