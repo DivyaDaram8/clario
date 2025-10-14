@@ -14,6 +14,7 @@ import Books from './pages/Books';
 import Profile from './pages/Profile';
 
 
+
 function App() {
   return (
     <>
@@ -30,6 +31,7 @@ function App() {
           <Route path="/summarizer" element={<Summarizers />} />
           <Route path="/books" element={<Books />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/habit-tracker" element={<HabitTracker />} />
         </Routes>
     </>
   );
