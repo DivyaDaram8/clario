@@ -13,6 +13,7 @@ import Summarizers from './pages/Summarizers';
 import Books from './pages/Books';
 import Profile from './pages/Profile';
 import Journal from './pages/Journal';
+import BrainGames from './pages/BrainGames';
 
 
 
@@ -34,6 +35,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/habit-tracker" element={<HabitTracker />} />
           <Route path="/journal" element={<Journal />} />
+          <Route path="/brain-games" element={<BrainGames />} />
         </Routes>
     </>
   );
