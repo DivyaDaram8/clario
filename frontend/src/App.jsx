@@ -14,7 +14,7 @@ import Books from './pages/Books';
 import Profile from './pages/Profile';
 import Journal from './pages/Journal';
 import BrainGames from './pages/BrainGames';
-
+import Chatbot from './pages/Chatbot';
 
 
 function App() {
@@ -33,10 +33,11 @@ function App() {
           <Route path="/summarizer" element={<Summarizers />} />
           <Route path="/books" element={<Books />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/habit-tracker" element={<HabitTracker />} />
           <Route path="/journal" element={<Journal />} />
           <Route path="/brain-games" element={<BrainGames />} />
+       
         </Routes>
+           <Chatbot />
     </>
   );
 }
