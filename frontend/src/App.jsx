@@ -12,6 +12,7 @@ import ExpenseTracker from './pages/ExpenseTracker';
 import Summarizers from './pages/Summarizers';
 import Books from './pages/Books';
 import Profile from './pages/Profile';
+import Journal from './pages/Journal';
 
 
 
@@ -32,6 +33,7 @@ function App() {
           <Route path="/books" element={<Books />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/habit-tracker" element={<HabitTracker />} />
+          <Route path="/journal" element={<Journal />} />
         </Routes>
     </>
   );

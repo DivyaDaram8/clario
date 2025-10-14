@@ -1,0 +1,1106 @@
+/* Journal Component Styles with Enhanced Glassmorphism */
+
+.jo-container {
+ min-height: 100vh;
+ background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+ padding: 90px 20px 20px 20px;
+ font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+ position: relative;
+}
+
+.jo-main-wrapper {
+ max-width: 1250px;
+ margin: 0 auto;
+ display: flex;
+ flex-direction: column;
+ gap: 10px;
+ height: calc(100vh - 120px);
+}
+
+
+
+/* Notification Toast - Glassy Theme */
+.jo-notification {
+ position: fixed;
+ top: 20px;
+ right: 20px;
+ padding: 16px 24px;
+ border-radius: 16px;
+ background: rgba(255, 255, 255, 0.25);
+ backdrop-filter: blur(20px);
+ border: 1px solid rgba(255, 255, 255, 0.3);
+ box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+ z-index: 9999;
+ animation: slideInRight 0.3s ease, fadeOut 0.3s ease 2.7s;
+ font-weight: 600;
+ display: flex;
+ align-items: center;
+ gap: 10px;
+ color: white;
+}
+
+.jo-notification-success {
+ border-left: 4px solid #10B981;
+}
+
+.jo-notification-error {
+ border-left: 4px solid #EF4444;
+}
+
+.jo-notification-success::before {
+ content: '✓';
+ font-size: 20px;
+ color: #10B981;
+}
+
+.jo-notification-error::before {
+ content: '⚠';
+ font-size: 20px;
+ color: #EF4444;
+}
+
+@keyframes slideInRight {
+ from {
+   transform: translateX(400px);
+   opacity: 0;
+ }
+ to {
+   transform: translateX(0);
+   opacity: 1;
+ }
+}
+
+@keyframes fadeOut {
+ to {
+   opacity: 0;
+   transform: translateX(400px);
+ }
+}
+
+/* Enhanced Glassmorphism Effect */
+.jo-glass {
+ background: rgba(255, 255, 255, 0.15);
+ backdrop-filter: blur(10px);
+ border-radius: 20px;
+ border: 1px solid rgba(255, 255, 255, 0.2);
+ box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
+
+.jo-glass-modal {
+ background: rgba(255, 255, 255, 0.2);
+ backdrop-filter: blur(25px);
+ border-radius: 24px;
+ border: 1px solid rgba(255, 255, 255, 0.3);
+ box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+ color: white;
+}
+
+.jo-glass-select {
+ background: rgba(255, 255, 255, 0.2);
+ backdrop-filter: blur(10px);
+ border: 1px solid rgba(255, 255, 255, 0.3);
+ color: white;
+}
+
+/* Navbar */
+.jo-navbar {
+ padding: 15px 30px;
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ flex-shrink: 0;
+}
+
+.jo-navbar-section {
+ display: flex;
+ gap: 15px;
+ align-items: center;
+}
+
+.jo-icon-btn {
+ background: rgba(255, 255, 255, 0.2);
+ border: 1px solid rgba(255, 255, 255, 0.3);
+ border-radius: 12px;
+ padding: 10px 15px;
+ cursor: pointer;
+ transition: all 0.3s ease;
+ color: white;
+ font-size: 20px;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ position: relative;
+}
+
+.jo-icon-btn:hover {
+ background: rgba(255, 255, 255, 0.35);
+ transform: translateY(-2px);
+ box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.jo-streak-btn {
+ gap: 8px;
+ padding: 10px 20px;
+}
+
+.jo-streak-number {
+ font-size: 16px;
+ font-weight: 700;
+ color: white;
+}
+
+.jo-navigation {
+ display: flex;
+ gap: 10px;
+ align-items: center;
+}
+
+.jo-nav-btn {
+ background: rgba(255, 255, 255, 0.2);
+ border: 1px solid rgba(255, 255, 255, 0.3);
+ border-radius: 10px;
+ padding: 8px 20px;
+ color: white;
+ cursor: pointer;
+ transition: all 0.3s ease;
+ font-size: 14px;
+ font-weight: 500;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ gap: 2px;
+}
+
+.jo-nav-date {
+ font-size: 14px;
+ font-weight: 500;
+}
+
+.jo-today-label {
+ font-size: 10px;
+ font-weight: 600;
+ color: rgba(255, 255, 255, 0.8);
+ text-transform: uppercase;
+ letter-spacing: 0.5px;
+}
+
+.jo-nav-btn:hover {
+ background: rgba(255, 255, 255, 0.35);
+ transform: scale(1.05);
+}
+
+.jo-nav-btn.active {
+ background: rgba(255, 255, 255, 0.4);
+ font-weight: 600;
+ box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.jo-arrow-btn {
+ background: rgba(255, 255, 255, 0.2);
+ border: 1px solid rgba(255, 255, 255, 0.3);
+ border-radius: 50%;
+ width: 35px;
+ height: 35px;
+ cursor: pointer;
+ transition: all 0.3s ease;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ color: white;
+}
+
+.jo-arrow-btn:hover {
+ background: rgba(255, 255, 255, 0.35);
+ transform: scale(1.1);
+}
+
+/* Journal Content Area */
+.jo-content-wrapper {
+ flex: 1;
+ display: flex;
+ flex-direction: column;
+ overflow: hidden;
+}
+
+.jo-journal-header {
+ padding: 20px 30px;
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+ flex-shrink: 0;
+}
+
+.jo-date-display {
+ color: white;
+ font-size: 24px;
+ font-weight: 600;
+}
+
+.jo-mood-dropdown {
+ position: relative;
+}
+
+.jo-dropdown-btn {
+ background: rgba(255, 255, 255, 0.15);
+ border: 1px solid rgba(255, 255, 255, 0.3);
+ border-radius: 10px;
+ padding: 10px 20px;
+ color: white;
+ cursor: pointer;
+ transition: all 0.3s ease;
+ display: flex;
+ align-items: center;
+ gap: 10px;
+ min-width: 200px;
+ justify-content: space-between;
+ backdrop-filter: blur(10px);
+}
+
+.jo-dropdown-btn:hover {
+ background: rgba(255, 255, 255, 0.25);
+}
+
+.jo-dropdown-menu {
+ position: absolute;
+ top: calc(100% + 5px);
+ right: 0;
+ background: rgba(255, 255, 255, 0.15);
+ backdrop-filter: blur(25px);
+ border-radius: 16px;
+ border: 1px solid rgba(255, 255, 255, 0.3);
+ padding: 10px;
+ min-width: 250px;
+ box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+ z-index: 1000;
+ max-height: 400px;
+ overflow-y: auto;
+}
+
+.jo-dropdown-item {
+ padding: 12px 15px;
+ border-radius: 10px;
+ transition: all 0.2s ease;
+ color: white;
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ font-weight: 500;
+}
+
+.jo-category-name {
+ flex: 1;
+ cursor: pointer;
+}
+
+.jo-dropdown-item:hover {
+ background: rgba(255, 255, 255, 0.25);
+}
+
+.jo-add-category-btn {
+ cursor: pointer;
+ text-align: center;
+ font-weight: 600;
+}
+
+.jo-add-category-btn:hover {
+ transform: translateX(3px);
+}
+
+.jo-dropdown-divider {
+ height: 1px;
+ background: rgba(255, 255, 255, 0.3);
+ margin: 10px 0;
+}
+
+.jo-add-category,
+.jo-edit-category {
+ display: flex;
+ gap: 5px;
+ padding: 5px;
+ align-items: center;
+}
+
+.jo-category-input {
+ flex: 1;
+ padding: 8px 12px;
+ border: 1px solid rgba(255, 255, 255, 0.3);
+ border-radius: 8px;
+ font-size: 14px;
+ outline: none;
+ transition: all 0.2s ease;
+ background: rgba(255, 255, 255, 0.2);
+ color: white;
+}
+
+.jo-category-input::placeholder {
+ color: rgba(255, 255, 255, 0.6);
+}
+
+.jo-category-input:focus {
+ border-color: rgba(255, 255, 255, 0.6);
+ box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+}
+
+.jo-add-btn {
+ background: rgba(255, 255, 255, 0.3);
+ color: white;
+ border: 1px solid rgba(255, 255, 255, 0.4);
+ padding: 8px 15px;
+ border-radius: 8px;
+ cursor: pointer;
+ transition: all 0.2s ease;
+ font-size: 14px;
+ font-weight: 600;
+}
+
+.jo-add-btn:hover {
+ background: rgba(255, 255, 255, 0.4);
+ transform: scale(1.05);
+}
+
+.jo-category-actions {
+ display: flex;
+ gap: 5px;
+}
+
+.jo-edit-btn,
+.jo-delete-btn,
+.jo-save-cat-btn,
+.jo-cancel-cat-btn {
+ background: rgba(255, 255, 255, 0.2);
+ border: 1px solid rgba(255, 255, 255, 0.3);
+ cursor: pointer;
+ padding: 5px 8px;
+ border-radius: 6px;
+ transition: all 0.2s ease;
+ color: white;
+ font-size: 14px;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+}
+
+.jo-edit-btn:hover {
+ background: rgba(102, 126, 234, 0.4);
+}
+
+.jo-delete-btn:hover,
+.jo-cancel-cat-btn:hover {
+ background: rgba(239, 68, 68, 0.4);
+}
+
+.jo-save-cat-btn:hover {
+ background: rgba(16, 185, 129, 0.4);
+}
+
+/* Editor Area */
+.jo-editor-container {
+ flex: 1;
+ overflow-y: auto;
+ padding: 30px;
+}
+
+.jo-editor {
+ min-height: 100%;
+ color: white;
+ font-size: 16px;
+ line-height: 1.8;
+ outline: none;
+ white-space: pre-wrap;
+ word-wrap: break-word;
+}
+
+.jo-editor:empty:before {
+ content: attr(data-placeholder);
+ color: rgba(255, 255, 255, 0.5);
+ font-style: italic;
+}
+
+/* Fix for bullet and numbered lists */
+.jo-editor ul,
+.jo-editor ol {
+ padding-left: 30px;
+ margin: 10px 0;
+ color: white;
+}
+
+.jo-editor ul li {
+ list-style-type: disc;
+ list-style-position: outside;
+ margin: 5px 0;
+ color: white;
+ display: list-item;
+}
+
+.jo-editor ol li {
+ list-style-type: decimal;
+ list-style-position: outside;
+ margin: 5px 0;
+ color: white;
+ display: list-item;
+}
+
+.jo-editor li::marker {
+ color: white;
+}
+
+/* Toolbar */
+.jo-toolbar {
+ padding: 15px 30px;
+ display: flex;
+ gap: 10px;
+ border-top: 1px solid rgba(255, 255, 255, 0.2);
+ flex-wrap: wrap;
+ flex-shrink: 0;
+ align-items: center;
+}
+
+.jo-tool-btn {
+ background: rgba(255, 255, 255, 0.2);
+ border: 1px solid rgba(255, 255, 255, 0.3);
+ border-radius: 8px;
+ padding: 8px 12px;
+ color: white;
+ cursor: pointer;
+ transition: all 0.3s ease;
+ font-size: 14px;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ font-weight: 600;
+}
+
+.jo-tool-btn:hover {
+ background: rgba(255, 255, 255, 0.35);
+ transform: scale(1.05);
+}
+
+.jo-tool-btn.active {
+ background: rgba(255, 255, 255, 0.5);
+ border-color: rgba(255, 255, 255, 0.6);
+ box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+.jo-tool-select {
+ background: rgba(255, 255, 255, 0.15);
+ backdrop-filter: blur(10px);
+ border: 1px solid rgba(255, 255, 255, 0.3);
+ border-radius: 8px;
+ padding: 8px 12px;
+ color: white;
+ cursor: pointer;
+ transition: all 0.3s ease;
+ outline: none;
+ font-weight: 500;
+}
+
+.jo-tool-select option {
+ background: rgba(102, 126, 234, 0.95);
+ color: white;
+ padding: 8px;
+}
+
+.jo-tool-select:hover {
+ background: rgba(255, 255, 255, 0.25);
+}
+
+/* Color Picker Dropdown */
+.jo-color-picker-dropdown {
+ position: absolute;
+ bottom: 50px;
+ right: 0;
+ padding: 15px;
+ border-radius: 12px;
+ z-index: 1000;
+ min-width: 240px;
+ background: rgba(255, 255, 255, 0.15);
+ backdrop-filter: blur(25px);
+ border: 1px solid rgba(255, 255, 255, 0.3);
+ box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.jo-color-picker-header {
+ color: white;
+ font-weight: 600;
+ margin-bottom: 10px;
+ font-size: 14px;
+}
+
+.jo-color-grid {
+ display: grid;
+ grid-template-columns: repeat(5, 1fr);
+ gap: 8px;
+ margin-bottom: 10px;
+}
+
+.jo-color-option {
+ width: 36px;
+ height: 36px;
+ border-radius: 8px;
+ cursor: pointer;
+ transition: all 0.2s ease;
+ border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.jo-color-option:hover {
+ transform: scale(1.15);
+ box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.jo-remove-format-btn {
+ width: 100%;
+ background: rgba(239, 68, 68, 0.3);
+ color: white;
+ border: 1px solid rgba(239, 68, 68, 0.5);
+ padding: 8px;
+ border-radius: 8px;
+ cursor: pointer;
+ transition: all 0.2s ease;
+ font-size: 13px;
+ font-weight: 600;
+}
+
+.jo-remove-format-btn:hover {
+ background: rgba(239, 68, 68, 0.5);
+ transform: scale(1.02);
+}
+
+/* Emoji Picker */
+.jo-emoji-picker {
+ position: absolute;
+ bottom: 50px;
+ right: 0;
+ padding: 15px;
+ border-radius: 12px;
+ z-index: 1000;
+ max-width: 300px;
+ background: rgba(255, 255, 255, 0.15);
+ backdrop-filter: blur(25px);
+ border: 1px solid rgba(255, 255, 255, 0.3);
+ box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+ max-height: 280px;
+ overflow-y: auto;
+}
+
+.jo-emoji-grid {
+ display: grid;
+ grid-template-columns: repeat(6, 1fr);
+ gap: 8px;
+}
+
+.jo-emoji-btn {
+ background: rgba(255, 255, 255, 0.2);
+ border: 1px solid rgba(255, 255, 255, 0.3);
+ border-radius: 8px;
+ padding: 8px;
+ font-size: 22px;
+ cursor: pointer;
+ transition: all 0.2s ease;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ width: 40px;
+ height: 40px;
+}
+
+.jo-emoji-btn:hover {
+ background: rgba(255, 255, 255, 0.4);
+ transform: scale(1.2);
+}
+
+/* Save Button */
+.jo-save-btn {
+ background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.2) 100%);
+ border: 1px solid rgba(255, 255, 255, 0.5);
+ border-radius: 10px;
+ padding: 10px 30px;
+ color: white;
+ cursor: pointer;
+ transition: all 0.3s ease;
+ font-weight: 600;
+ margin-left: auto;
+}
+
+.jo-save-btn:hover {
+ transform: translateY(-2px);
+ box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+ background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.3) 100%);
+}
+
+/* Modal/Popup - Smaller and optimized */
+
+/* Modal/Popup - Smaller and optimized */
+.jo-modal-overlay {
+ position: fixed;
+ top: 0;
+ left: 0;
+ right: 0;
+ bottom: 0;
+ background: rgba(0, 0, 0, 0.7);
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ z-index: 2000;
+ animation: fadeIn 0.2s ease;
+ padding: 20px;
+}
+
+@keyframes fadeIn {
+ from {
+   opacity: 0;
+ }
+ to {
+   opacity: 1;
+ }
+}
+
+.jo-modal {
+ padding: 25px;
+ max-width: 550px;
+ width: 90%;
+ max-height: 85vh;
+ overflow-y: auto;
+ animation: slideUp 0.3s ease;
+ display: flex;
+ flex-direction: column;
+}
+
+.jo-theme-modal {
+ max-width: 450px;
+ max-height: auto;
+ overflow: visible;
+}
+
+.jo-date-modal {
+ max-width: 450px;
+ max-height: auto;
+ overflow: visible;
+}
+
+.jo-streak-modal {
+ max-width: 480px;
+ max-height: auto;
+ overflow: visible;
+}
+
+.jo-stats-modal {
+ max-width: 500px;
+ max-height: 85vh;
+ overflow-y: auto;
+}
+
+@keyframes slideUp {
+ from {
+   transform: translateY(30px);
+   opacity: 0;
+ }
+ to {
+   transform: translateY(0);
+   opacity: 1;
+ }
+}
+
+.jo-modal-header {
+ display: flex;
+ justify-content: space-between;
+ align-items: flex-start;
+ margin-bottom: 20px;
+}
+
+.jo-modal-title {
+ font-size: 24px;
+ font-weight: 700;
+ color: white;
+ margin: 0;
+}
+
+.jo-streak-count {
+ font-size: 16px;
+ color: rgba(255, 255, 255, 0.9);
+ font-weight: 600;
+ margin-top: 5px;
+}
+
+.jo-close-btn {
+ background: rgba(255, 255, 255, 0.2);
+ border: 1px solid rgba(255, 255, 255, 0.3);
+ font-size: 24px;
+ cursor: pointer;
+ color: white;
+ transition: all 0.2s ease;
+ border-radius: 50%;
+ width: 36px;
+ height: 36px;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ line-height: 1;
+}
+
+.jo-close-btn:hover {
+ background: rgba(255, 255, 255, 0.3);
+ transform: rotate(90deg);
+}
+
+/* Month Navigation */
+.jo-month-navigation {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ margin-bottom: 15px;
+ background: rgba(255, 255, 255, 0.15);
+ padding: 12px 16px;
+ border-radius: 12px;
+ border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.jo-month-nav-btn {
+ background: rgba(255, 255, 255, 0.2);
+ border: 1px solid rgba(255, 255, 255, 0.3);
+ border-radius: 50%;
+ width: 36px;
+ height: 36px;
+ cursor: pointer;
+ transition: all 0.2s ease;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ color: white;
+}
+
+.jo-month-nav-btn:hover {
+ background: rgba(255, 255, 255, 0.3);
+ transform: scale(1.1);
+}
+
+.jo-month-display {
+ font-size: 18px;
+ font-weight: 600;
+ color: white;
+}
+
+/* Calendar */
+.jo-calendar {
+ display: grid;
+ grid-template-columns: repeat(7, 1fr);
+ gap: 8px;
+ margin-top: 15px;
+ transition: opacity 0.3s ease;
+}
+
+.jo-calendar.jo-loading {
+ opacity: 0.5;
+ pointer-events: none;
+}
+
+.jo-calendar-header {
+ text-align: center;
+ font-weight: 700;
+ color: white;
+ padding: 8px;
+ font-size: 13px;
+}
+
+.jo-calendar-day {
+ aspect-ratio: 1;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ border-radius: 10px;
+ cursor: pointer;
+ transition: all 0.2s ease;
+ position: relative;
+ background: rgba(255, 255, 255, 0.15);
+ font-weight: 500;
+ color: white;
+ font-size: 15px;
+ border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.jo-calendar-day:hover {
+ background: rgba(255, 255, 255, 0.3);
+ transform: scale(1.08);
+}
+
+.jo-calendar-day.has-entry {
+ background: rgba(255, 255, 255, 0.3);
+ font-weight: 700;
+ box-shadow: 0 2px 8px rgba(255, 255, 255, 0.3);
+}
+
+.jo-calendar-day.is-today {
+ background: rgba(255, 215, 0, 0.4);
+ font-weight: 700;
+ border: 2px solid rgba(255, 215, 0, 0.8);
+ box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+ animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+ 0%, 100% {
+   box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+ }
+ 50% {
+   box-shadow: 0 0 25px rgba(255, 215, 0, 0.7);
+ }
+}
+
+.jo-fire-emoji {
+ position: absolute;
+ top: 2px;
+ right: 2px;
+ font-size: 14px;
+ animation: flicker 1.5s infinite;
+}
+
+@keyframes flicker {
+ 0%, 100% {
+   transform: scale(1);
+ }
+ 50% {
+   transform: scale(1.1);
+ }
+}
+
+/* Statistics */
+.jo-stats-container {
+ color: white;
+ transition: opacity 0.3s ease;
+}
+
+.jo-stats-container.jo-loading {
+ opacity: 0.5;
+ pointer-events: none;
+}
+
+.jo-stats-section {
+ margin-bottom: 25px;
+}
+
+.jo-total-entries {
+ font-size: 18px;
+ font-weight: 600;
+ color: white;
+ text-align: center;
+ padding: 12px;
+ background: rgba(255, 255, 255, 0.15);
+ border-radius: 12px;
+ border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.jo-stats-title {
+ font-size: 18px;
+ font-weight: 600;
+ margin-bottom: 12px;
+ color: white;
+}
+
+.jo-chart-container {
+ max-width: 350px;
+ margin: 0 auto;
+}
+
+.jo-no-data {
+ text-align: center;
+ padding: 30px;
+ color: rgba(255, 255, 255, 0.7);
+ font-size: 15px;
+}
+
+.jo-memorable-list {
+ list-style: none;
+ padding: 0;
+}
+
+.jo-memorable-item {
+ padding: 12px 16px;
+ background: rgba(255, 255, 255, 0.15);
+ border-radius: 10px;
+ margin-bottom: 8px;
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ transition: all 0.2s ease;
+ border: 1px solid rgba(255, 255, 255, 0.2);
+ font-size: 14px;
+}
+
+.jo-memorable-item:hover {
+ background: rgba(255, 255, 255, 0.25);
+ transform: translateX(5px);
+}
+
+.jo-memorable-badge {
+ background: rgba(255, 255, 255, 0.3);
+ color: white;
+ padding: 4px 12px;
+ border-radius: 16px;
+ font-size: 13px;
+ font-weight: 600;
+ border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+/* Theme Color Picker */
+.jo-theme-colors {
+ display: flex;
+ gap: 15px;
+ flex-wrap: wrap;
+ margin: 20px 0;
+ justify-content: center;
+}
+
+.jo-theme-color {
+ width: 55px;
+ height: 55px;
+ border-radius: 50%;
+ cursor: pointer;
+ transition: all 0.3s ease;
+ border: 3px solid transparent;
+ box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.jo-theme-color:hover {
+ transform: scale(1.15);
+ box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.jo-theme-color.selected {
+ border-color: white;
+ box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+ transform: scale(1.1);
+}
+
+.jo-theme-save-btn {
+ width: 100%;
+ background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.2) 100%);
+ border: 1px solid rgba(255, 255, 255, 0.5);
+ border-radius: 12px;
+ padding: 14px 30px;
+ color: white;
+ cursor: pointer;
+ transition: all 0.3s ease;
+ font-weight: 600;
+ font-size: 15px;
+ margin-top: 10px;
+}
+
+.jo-theme-save-btn:hover {
+ transform: translateY(-2px);
+ box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+ background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.3) 100%);
+}
+
+/* Scrollbar Styling */
+.jo-editor-container::-webkit-scrollbar,
+.jo-dropdown-menu::-webkit-scrollbar,
+.jo-modal::-webkit-scrollbar,
+.jo-emoji-picker::-webkit-scrollbar,
+.jo-color-picker-dropdown::-webkit-scrollbar {
+ width: 6px;
+}
+
+.jo-editor-container::-webkit-scrollbar-track,
+.jo-dropdown-menu::-webkit-scrollbar-track,
+.jo-modal::-webkit-scrollbar-track,
+.jo-emoji-picker::-webkit-scrollbar-track,
+.jo-color-picker-dropdown::-webkit-scrollbar-track {
+ background: rgba(255, 255, 255, 0.1);
+ border-radius: 10px;
+}
+
+.jo-editor-container::-webkit-scrollbar-thumb,
+.jo-dropdown-menu::-webkit-scrollbar-thumb,
+.jo-modal::-webkit-scrollbar-thumb,
+.jo-emoji-picker::-webkit-scrollbar-thumb,
+.jo-color-picker-dropdown::-webkit-scrollbar-thumb {
+ background: rgba(255, 255, 255, 0.3);
+ border-radius: 10px;
+}
+
+.jo-editor-container::-webkit-scrollbar-thumb:hover,
+.jo-dropdown-menu::-webkit-scrollbar-thumb:hover,
+.jo-modal::-webkit-scrollbar-thumb:hover,
+.jo-emoji-picker::-webkit-scrollbar-thumb:hover,
+.jo-color-picker-dropdown::-webkit-scrollbar-thumb:hover {
+ background: rgba(255, 255, 255, 0.5);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+ .jo-container {
+   padding: 30px 15px 15px 15px;
+ }
+
+ .jo-navbar {
+   padding: 10px 15px;
+ }
+
+ .jo-navbar-section {
+   gap: 8px;
+ }
+
+ .jo-navigation {
+   gap: 5px;
+ }
+
+ .jo-nav-btn {
+   padding: 6px 12px;
+   font-size: 12px;
+ }
+
+ .jo-date-display {
+   font-size: 18px;
+ }
+
+ .jo-modal {
+   padding: 20px;
+   width: 95%;
+ }
+
+ .jo-modal-title {
+   font-size: 20px;
+ }
+
+ .jo-calendar {
+   gap: 5px;
+ }
+
+ .jo-calendar-day {
+   font-size: 13px;
+ }
+
+ .jo-toolbar {
+   gap: 8px;
+   padding: 12px 15px;
+ }
+
+ .jo-tool-btn {
+   padding: 6px 10px;
+ }
+
+ .jo-emoji-picker {
+   max-width: 260px;
+ }
+
+ .jo-emoji-grid {
+   grid-template-columns: repeat(5, 1fr);
+ }
+
+ .jo-theme-colors {
+   gap: 12px;
+ }
+
+ .jo-theme-color {
+   width: 45px;
+   height: 45px;
+ }
+
+ .jo-color-picker-dropdown {
+   min-width: 200px;
+ }
+
+ .jo-color-grid {
+   grid-template-columns: repeat(4, 1fr);
+ }
+}
