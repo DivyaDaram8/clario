@@ -5,7 +5,7 @@ import NavbarLeft from "../layout/NavbarLeft";
 import NavbarTop from "../layout/NavbarTop";
 import { apiRequest } from "../api";
 import { PRIORITY_ORDER } from "../utils/priority";
-import "../styles/todo.css";
+import "../styles/Todo.css";
 
 /* -----------------------
   UTILITY: Sort Tasks

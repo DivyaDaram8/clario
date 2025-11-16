@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, Lock, LogOut, User, Mail, Eye, EyeOff, CheckCircle2, XCircle, Zap } from 'lucide-react';
-import "../styles/profile.css";
+import "../styles/Profile.css";
 
 const API_URL = "http://localhost:5000/api";
 
