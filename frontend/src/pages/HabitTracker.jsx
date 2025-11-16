@@ -5,6 +5,7 @@ import NavbarLeft from "../layout/NavbarLeft";
 import NavbarTop from "../layout/NavbarTop";
 import { Edit2, Trash2 } from 'lucide-react';
 
+
 const HabitTracker = () => {
   const [habits, setHabits] = useState([]);
   const [newHabitName, setNewHabitName] = useState('');
@@ -21,12 +22,14 @@ const HabitTracker = () => {
   const [loading, setLoading] = useState(true);
   const [confirmDialog, setConfirmDialog] = useState({ show: false, habitId: null, habitName: '' });
 
+
   useEffect(() => {
     fetchHabits();
     const d = new Date();
     d.setHours(0, 0, 0, 0);
     setCurrentDate(d);
   }, []);
+
 
   const toLocalDateString = (d) => {
     const dt = new Date(d);
@@ -36,11 +39,13 @@ const HabitTracker = () => {
     return `${y}-${m}-${day}`;
   };
 
+
   const toLocalMidnight = (d) => {
     const dt = new Date(d);
     dt.setHours(0, 0, 0, 0);
     return dt;
   };
+
 
   // show notification and auto-hide after 3s
   const showNotification = (message, type = 'success') => {
@@ -49,6 +54,7 @@ const HabitTracker = () => {
       setNotification({ message: '', type: '', show: false });
     }, 3000);
   };
+
 
   const fetchHabits = async () => {
     try {
@@ -62,8 +68,10 @@ const HabitTracker = () => {
     }
   };
 
+
   const createHabit = async () => {
     if (!newHabitName.trim()) return;
+
 
     try {
       const newHabit = await apiRequest('/habits', 'POST', { name: newHabitName.trim() });
@@ -76,6 +84,7 @@ const HabitTracker = () => {
     }
   };
 
+
   const updateHabit = async (id, name) => {
     try {
       const updatedHabit = await apiRequest(`/habits/${id}`, 'PUT', { name });
@@ -87,9 +96,11 @@ const HabitTracker = () => {
     }
   };
 
+
   const confirmDelete = (id, name) => {
     setConfirmDialog({ show: true, habitId: id, habitName: name });
   };
+
 
   const deleteHabit = async () => {
     const { habitId } = confirmDialog;
@@ -103,15 +114,18 @@ const HabitTracker = () => {
     }
   };
 
+
   const toggleHabitLog = async (habitId, date) => {
     try {
       const dateStr = toLocalDateString(date);
       const updatedHabit = await apiRequest(`/habits/${habitId}/toggle`, 'POST', { date: dateStr });
       setHabits(habits.map(h => h._id === habitId ? updatedHabit : h));
 
+
       if (selectedHabit && selectedHabit._id === habitId && monthlyStats) {
         await fetchMonthlyStats(habitId, monthlyStats.year, monthlyStats.month);
       }
+
 
       showNotification('Habit updated!');
     } catch (error) {
@@ -119,6 +133,7 @@ const HabitTracker = () => {
       showNotification(msg, 'error');
     }
   };
+
 
   const fetchMonthlyStats = async (habitId, year, month) => {
     try {
@@ -128,6 +143,7 @@ const HabitTracker = () => {
       showNotification('Failed to fetch monthly stats', 'error');
     }
   };
+
 
   const fetchGlobalStats = async () => {
     try {
@@ -139,6 +155,7 @@ const HabitTracker = () => {
     }
   };
 
+
   const openModal = async (habit) => {
     setSelectedHabit(habit);
     const d = new Date();
@@ -148,8 +165,10 @@ const HabitTracker = () => {
     await fetchMonthlyStats(habit._id, d.getFullYear(), d.getMonth() + 1);
   };
 
+
   const navigateMonth = async (direction) => {
     if (!selectedHabit) return;
+
 
     const newDate = new Date(currentDate);
     newDate.setMonth(currentDate.getMonth() + direction);
@@ -158,15 +177,18 @@ const HabitTracker = () => {
     await fetchMonthlyStats(selectedHabit._id, newDate.getFullYear(), newDate.getMonth() + 1);
   };
 
+
   const getWeekDays = (reference = new Date()) => {
     const today = new Date(reference);
     today.setHours(0, 0, 0, 0);
+
 
     const currentDay = today.getDay();
     const mondayOffset = currentDay === 0 ? -6 : 1 - currentDay;
     const monday = new Date(today);
     monday.setDate(today.getDate() + mondayOffset);
     monday.setHours(0, 0, 0, 0);
+
 
     const days = [];
     for (let i = 0; i < 7; i++) {
@@ -178,7 +200,9 @@ const HabitTracker = () => {
     return days;
   };
 
+
   const weekDays = getWeekDays();
+
 
   const isHabitCompleted = (habit, date) => {
     if (!habit.logs || habit.logs.length === 0) return false;
@@ -187,11 +211,13 @@ const HabitTracker = () => {
     return !!(log && log.completed);
   };
 
+
   const canCheckDate = (date) => {
     const d = toLocalMidnight(date);
     const today = toLocalMidnight(new Date());
     return d.getTime() <= today.getTime();
   };
+
 
   const isToday = (date) => {
     const d = toLocalMidnight(date);
@@ -199,34 +225,42 @@ const HabitTracker = () => {
     return d.getTime() === today.getTime();
   };
 
+
   const formatDateDisplay = (date) => {
     return date.getDate();
   };
+
 
   const getDaysInMonth = (year, month) => {
     // month should be 1-12
     return new Date(year, month, 0).getDate();
   };
 
+
   const getMonthCalendar = () => {
     if (!monthlyStats) return [];
+
 
     const year = monthlyStats.year;
     const month = monthlyStats.month;
     const daysInMonth = getDaysInMonth(year, month);
     const firstDay = new Date(year, month - 1, 1).getDay();
 
+
     const calendar = [];
+
 
     for (let i = 0; i < firstDay; i++) {
       calendar.push(null);
     }
+
 
     for (let day = 1; day <= daysInMonth; day++) {
       const date = new Date(year, month - 1, day);
       date.setHours(0, 0, 0, 0);
       const dateStr = toLocalDateString(date);
       const log = monthlyStats.logs.find(l => toLocalDateString(l.date) === dateStr);
+
 
       calendar.push({
         day,
@@ -236,12 +270,15 @@ const HabitTracker = () => {
       });
     }
 
+
     return calendar;
   };
+
 
   if (loading) {
     return <div className="ht-loading">Loading habits...</div>;
   }
+
 
   return (
     <div className="ht-container">
@@ -259,6 +296,7 @@ const HabitTracker = () => {
           </button>
         </div>
       </div>
+
 
       <div className="ht-habits-grid">
         {habits.map((habit) => (
@@ -308,6 +346,7 @@ const HabitTracker = () => {
               )}
             </div>
 
+
             <div className="ht-week-container">
               <div className="ht-week-labels">
                 {weekDays.map((date, index) => (
@@ -337,10 +376,11 @@ const HabitTracker = () => {
               </div>
             </div>
 
+
             <div className="ht-habit-stats">
               <div className="ht-streak">
                 <span className="ht-streak-icon">🔥</span>
-                
+               
                 <span className="ht-streak-number">{habit.currentStreak} days</span>
               </div>
               <button onClick={() => openModal(habit)} className="ht-view-more-btn">
@@ -351,12 +391,14 @@ const HabitTracker = () => {
         ))}
       </div>
 
+
       {habits.length === 0 && (
         <div className="ht-empty-state">
           <h2>No habits yet</h2>
           <p>Create your first habit to get started!</p>
         </div>
       )}
+
 
       {/* Add Habit Modal */}
       {showAddModal && (
@@ -366,6 +408,7 @@ const HabitTracker = () => {
               <h2>Add New Habit</h2>
               <button onClick={() => setShowAddModal(false)} className="ht-close-btn">✕</button>
             </div>
+
 
             <div className="ht-add-habit-form">
               <input
@@ -390,6 +433,7 @@ const HabitTracker = () => {
         </div>
       )}
 
+
       {/* Delete Confirmation Dialog */}
       {confirmDialog.show && (
         <div className="ht-modal-overlay" onClick={() => setConfirmDialog({ show: false, habitId: null, habitName: '' })}>
@@ -400,14 +444,14 @@ const HabitTracker = () => {
                 Are you sure you want to delete "<strong>{confirmDialog.habitName}</strong>"? This action cannot be undone.
               </p>
               <div className="ht-confirm-buttons">
-                <button 
-                  onClick={() => setConfirmDialog({ show: false, habitId: null, habitName: '' })} 
+                <button
+                  onClick={() => setConfirmDialog({ show: false, habitId: null, habitName: '' })}
                   className="ht-confirm-btn ht-confirm-btn-secondary"
                 >
                   Cancel
                 </button>
-                <button 
-                  onClick={deleteHabit} 
+                <button
+                  onClick={deleteHabit}
                   className="ht-confirm-btn ht-confirm-btn-primary"
                 >
                   Delete
@@ -418,6 +462,7 @@ const HabitTracker = () => {
         </div>
       )}
 
+
       {/* Monthly View Modal */}
       {showModal && selectedHabit && (
         <div className="ht-modal-overlay" onClick={() => setShowModal(false)}>
@@ -427,11 +472,13 @@ const HabitTracker = () => {
               <button onClick={() => setShowModal(false)} className="ht-close-btn">✕</button>
             </div>
 
+
             <div className="ht-month-navigation">
               <button onClick={() => navigateMonth(-1)} className="ht-nav-btn">‹</button>
               <h3>{currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</h3>
               <button onClick={() => navigateMonth(1)} className="ht-nav-btn">›</button>
             </div>
+
 
             {monthlyStats && (
               <>
@@ -453,6 +500,7 @@ const HabitTracker = () => {
                     <span>{monthlyStats.longestStreak} days</span>
                   </div>
                 </div>
+
 
                 <div className="ht-calendar">
                   <div className="ht-calendar-header">
@@ -485,6 +533,7 @@ const HabitTracker = () => {
         </div>
       )}
 
+
       {/* Global Stats Modal */}
       {showGlobalStats && globalStats && (
         <div className="ht-modal-overlay" onClick={() => setShowGlobalStats(false)}>
@@ -494,10 +543,12 @@ const HabitTracker = () => {
               <button onClick={() => setShowGlobalStats(false)} className="ht-close-btn">✕</button>
             </div>
 
+
             <div className="ht-global-stats">
               <div className="ht-motivational-message">
                 {globalStats.motivationalMessage}
               </div>
+
 
               <div className="ht-global-overview">
                 <div className="ht-stat-card">
@@ -518,6 +569,7 @@ const HabitTracker = () => {
                 </div>
               </div>
 
+
               <div className="ht-habit-breakdown">
                 <h3>Habit Breakdown</h3>
                 {globalStats.habitDetails.map((habit) => (
@@ -535,6 +587,7 @@ const HabitTracker = () => {
         </div>
       )}
 
+
       {/* Notification */}
       {notification.show && (
         <div className={`ht-notification ${notification.type}`}>
@@ -545,4 +598,10 @@ const HabitTracker = () => {
   );
 };
 
+
 export default HabitTracker;
+
+
+
+
+

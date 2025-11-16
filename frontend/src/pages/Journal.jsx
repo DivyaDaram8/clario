@@ -23,6 +23,7 @@ import '../styles/Journal.css';
 import NavbarLeft from "../layout/NavbarLeft";
 import NavbarTop from "../layout/NavbarTop";
 
+
 const Journal = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [journalContent, setJournalContent] = useState('');
@@ -57,21 +58,27 @@ const Journal = () => {
     justifyRight: false
   });
 
+
   const editorRef = useRef(null);
+
 
   const themeColors = [
     '#3B82F6', '#EF4444', '#10B981', '#F59E0B',
     '#8B5CF6', '#EC4899', '#06B6D4', '#84CC16'
   ];
 
+
   const COLORS = ['#3B82F6', '#EF4444', '#10B981', '#F59E0B', '#8B5CF6', '#EC4899', '#06B6D4', '#84CC16'];
+
 
   const colorOptions = [
     '#000000', '#434343', '#666666', '#999999', '#B7B7B7', '#CCCCCC', '#D9D9D9', '#EFEFEF', '#F3F3F3', '#FFFFFF',
     '#980000', '#FF0000', '#FF9900', '#FFFF00', '#00FF00', '#00FFFF', '#4A86E8', '#0000FF', '#9900FF', '#FF00FF'
   ];
 
+
   const emojis = ['😊', '😂', '🥰', '😍', '🤔', '😎', '🥳', '😴', '😢', '😭', '😡', '🤗', '🙌', '👏', '💪', '🎉', '❤', '💔', '⭐', '✨', '🔥', '💯', '🌈', '☀', '🌙', '⚡'];
+
 
   useEffect(() => {
     fetchMoodCategories();
@@ -79,9 +86,11 @@ const Journal = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+
   useEffect(() => {
     loadJournalEntry(currentDate);
   }, [currentDate]);
+
 
   const fetchMoodCategories = async () => {
     try {
@@ -92,10 +101,12 @@ const Journal = () => {
     }
   };
 
+
   const showNotification = (message, type = 'success') => {
     setNotification({ message, type });
     setTimeout(() => setNotification(null), 3000);
   };
+
 
   const formatDate = (date) => {
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -103,10 +114,12 @@ const Journal = () => {
     return `${days[date.getDay()]}, ${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
   };
 
+
   const formatShortDate = (date) => {
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     return `${months[date.getMonth()]} ${date.getDate()}`;
   };
+
 
   const isToday = (date) => {
     const today = new Date();
@@ -115,6 +128,7 @@ const Journal = () => {
       date.getFullYear() === today.getFullYear();
   };
 
+
   const getDateKey = (date) => {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -122,10 +136,12 @@ const Journal = () => {
     return `${year}-${month}-${day}`;
   };
 
+
   const loadJournalEntry = async (date) => {
     try {
       const dateKey = getDateKey(date);
       const response = await apiRequest(`/journal/entry/${dateKey}`);
+
 
       if (response && response.entry) {
         setJournalContent(response.entry.content || '');
@@ -149,17 +165,21 @@ const Journal = () => {
     }
   };
 
+
   const saveJournalEntry = async () => {
     if (!selectedMood) {
       showNotification('Please select a category', 'error');
       return;
     }
 
+
     const content = editorRef.current ? editorRef.current.innerHTML : journalContent;
+
 
     try {
       const dateToSave = new Date(currentDate);
       dateToSave.setHours(12, 0, 0, 0);
+
 
       await apiRequest('/journal/entry', 'POST', {
         date: dateToSave.toISOString(),
@@ -168,6 +188,7 @@ const Journal = () => {
         moodCategory: selectedMood
       });
 
+
       showNotification('Journal entry saved successfully!', 'success');
       calculateStreak();
     } catch (error) {
@@ -175,10 +196,12 @@ const Journal = () => {
     }
   };
 
+
   const saveTheme = async () => {
     try {
       const dateKey = getDateKey(currentDate);
       const response = await apiRequest(`/journal/entry/${dateKey}`);
+
 
       if (response && response.entry) {
         await apiRequest('/journal/entry', 'POST', {
@@ -188,6 +211,7 @@ const Journal = () => {
           moodCategory: response.entry.moodCategory,
         });
       }
+
 
       setThemeColor(tempThemeColor);
       setShowThemeModal(false);
@@ -200,15 +224,18 @@ const Journal = () => {
     }
   };
 
+
   const navigateDate = (direction) => {
     const newDate = new Date(currentDate);
     newDate.setDate(newDate.getDate() + direction);
     setCurrentDate(newDate);
   };
 
+
   const goToDate = (date) => {
     setCurrentDate(date);
   };
+
 
   const handleDateSelect = (year, month, day) => {
     const newDate = new Date(year, month, day);
@@ -216,8 +243,10 @@ const Journal = () => {
     setShowDatePicker(false);
   };
 
+
   const addCustomCategory = async () => {
     if (!newCategoryName.trim()) return;
+
 
     try {
       const response = await apiRequest('/journal/categories', 'POST', {
@@ -232,8 +261,10 @@ const Journal = () => {
     }
   };
 
+
   const updateMoodCategory = async (categoryId) => {
     if (!editCategoryName.trim()) return;
+
 
     try {
       const response = await apiRequest(`/journal/categories/${categoryId}`, 'PUT', {
@@ -248,8 +279,10 @@ const Journal = () => {
     }
   };
 
+
   const deleteCustomCategory = async (categoryId) => {
     if (!window.confirm('Are you sure you want to delete this category?')) return;
+
 
     try {
       const response = await apiRequest(`/journal/categories/${categoryId}`, 'DELETE');
@@ -260,6 +293,7 @@ const Journal = () => {
     }
   };
 
+
   const applyFormat = (command, value = null) => {
     // Note: document.execCommand is deprecated but still works in many browsers.
     document.execCommand(command, false, value);
@@ -267,15 +301,18 @@ const Journal = () => {
     setTimeout(updateFormatStates, 10);
   };
 
+
   const applyTextColor = (color) => {
     applyFormat('foreColor', color);
     setShowTextColorPicker(false);
   };
 
+
   const applyHighlight = (color) => {
     applyFormat('hiliteColor', color);
     setShowHighlightPicker(false);
   };
+
 
   const removeTextColor = () => {
     // removeFormat is not standardized; fallback to selecting node and clearing styles could be used.
@@ -283,10 +320,12 @@ const Journal = () => {
     setShowTextColorPicker(false);
   };
 
+
   const removeHighlight = () => {
     applyFormat('hiliteColor', 'transparent');
     setShowHighlightPicker(false);
   };
+
 
   const updateFormatStates = () => {
     setFormatStates({
@@ -300,6 +339,7 @@ const Journal = () => {
       justifyRight: document.queryCommandState && document.queryCommandState('justifyRight')
     });
   };
+
 
   const insertEmoji = (emoji) => {
     const selection = window.getSelection();
@@ -315,17 +355,21 @@ const Journal = () => {
     setShowEmojiPicker(false);
   };
 
+
   const calculateStreak = async () => {
     try {
       const now = new Date();
       let streak = 0;
 
+
       for (let i = 0; i <= 365; i++) {
         const checkDate = new Date(now);
         checkDate.setDate(checkDate.getDate() - i);
 
+
         const dateKey = getDateKey(checkDate);
         const response = await apiRequest(`/journal/entry/${dateKey}`);
+
 
         if (response && response.entry) {
           streak++;
@@ -334,11 +378,13 @@ const Journal = () => {
         }
       }
 
+
       setStreakCount(streak);
     } catch (error) {
       console.error('Error calculating streak:', error);
     }
   };
+
 
   const generateStreakData = async (month) => {
     try {
@@ -352,16 +398,19 @@ const Journal = () => {
     }
   };
 
+
   const generateMonthlyStats = async (month) => {
     try {
       const year = month.getFullYear();
       const monthIdx = month.getMonth();
       const response = await apiRequest(`/journal/statistics/${year}/${monthIdx + 1}`);
 
+
       const chartData = Object.entries(response.moodCounts || {}).map(([mood, count]) => ({
         name: mood,
         value: count
       }));
+
 
       return {
         chartData,
@@ -374,11 +423,13 @@ const Journal = () => {
     }
   };
 
+
   const navigateStreakMonth = (direction) => {
     const newMonth = new Date(streakMonth);
     newMonth.setMonth(newMonth.getMonth() + direction);
     setStreakMonth(newMonth);
   };
+
 
   const navigateStatsMonth = (direction) => {
     const newMonth = new Date(statsMonth);
@@ -386,11 +437,13 @@ const Journal = () => {
     setStatsMonth(newMonth);
   };
 
+
   const navigatePickerMonth = (direction, pickerMonth, setPickerMonth) => {
     const newMonth = new Date(pickerMonth);
     newMonth.setMonth(newMonth.getMonth() + direction);
     setPickerMonth(newMonth);
   };
+
 
   const StreakModal = () => {
     const [streakDays, setStreakDays] = useState([]);
@@ -400,8 +453,10 @@ const Journal = () => {
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
 
+
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
 
     useEffect(() => {
       let mounted = true;
@@ -415,6 +470,7 @@ const Journal = () => {
       return () => { mounted = false; };
     }, [streakMonth]);
 
+
     return (
       <div className="jo-modal-overlay" onClick={() => setShowStreakModal(false)}>
         <div className="jo-modal jo-glass-modal jo-streak-modal" onClick={(e) => e.stopPropagation()}>
@@ -426,6 +482,7 @@ const Journal = () => {
             <button className="jo-close-btn" onClick={() => setShowStreakModal(false)}>×</button>
           </div>
 
+
           <div className="jo-month-navigation">
             <button className="jo-month-nav-btn" onClick={() => navigateStreakMonth(-1)}>
               <ChevronLeft size={20} />
@@ -435,6 +492,7 @@ const Journal = () => {
               <ChevronRight size={20} />
             </button>
           </div>
+
 
           <div className={`jo-calendar ${loading ? 'jo-loading' : ''}`}>
             {dayNames.map(day => (
@@ -468,10 +526,12 @@ const Journal = () => {
     );
   };
 
+
   const StatsModal = () => {
     const [stats, setStats] = useState({ chartData: [], memorableDays: [], totalEntries: 0 });
     const [loading, setLoading] = useState(false);
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
 
     useEffect(() => {
       let mounted = true;
@@ -485,6 +545,7 @@ const Journal = () => {
       return () => { mounted = false; };
     }, [statsMonth]);
 
+
     return (
       <div className="jo-modal-overlay" onClick={() => setShowStatsModal(false)}>
         <div className="jo-modal jo-glass-modal jo-stats-modal" onClick={(e) => e.stopPropagation()}>
@@ -492,6 +553,7 @@ const Journal = () => {
             <h2 className="jo-modal-title">Monthly Statistics</h2>
             <button className="jo-close-btn" onClick={() => setShowStatsModal(false)}>×</button>
           </div>
+
 
           <div className="jo-month-navigation">
             <button className="jo-month-nav-btn" onClick={() => navigateStatsMonth(-1)}>
@@ -503,10 +565,12 @@ const Journal = () => {
             </button>
           </div>
 
+
           <div className={`jo-stats-container ${loading ? 'jo-loading' : ''}`}>
             <div className="jo-stats-section">
               <div className="jo-total-entries">Total Entries: {stats.totalEntries}</div>
             </div>
+
 
             {stats.chartData.length > 0 ? (
               <div className="jo-stats-section">
@@ -538,6 +602,7 @@ const Journal = () => {
               <div className="jo-no-data">No entries for this month</div>
             )}
 
+
             {stats.memorableDays.length > 0 && (
               <div className="jo-stats-section">
                 <h3 className="jo-stats-title">Memorable Days</h3>
@@ -557,6 +622,7 @@ const Journal = () => {
     );
   };
 
+
   const DatePickerModal = () => {
     const [pickerMonth, setPickerMonth] = useState(new Date(currentDate));
     const year = pickerMonth.getFullYear();
@@ -564,8 +630,10 @@ const Journal = () => {
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
 
+
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
 
     return (
       <div className="jo-modal-overlay" onClick={() => setShowDatePicker(false)}>
@@ -574,6 +642,7 @@ const Journal = () => {
             <h2 className="jo-modal-title">Select Date</h2>
             <button className="jo-close-btn" onClick={() => setShowDatePicker(false)}>×</button>
           </div>
+
 
           <div className="jo-month-navigation">
             <button className="jo-month-nav-btn" onClick={() => navigatePickerMonth(-1, pickerMonth, setPickerMonth)}>
@@ -584,6 +653,7 @@ const Journal = () => {
               <ChevronRight size={20} />
             </button>
           </div>
+
 
           <div className="jo-calendar">
             {dayNames.map(day => (
@@ -612,6 +682,7 @@ const Journal = () => {
     );
   };
 
+
   const ThemeModal = () => (
     <div className="jo-modal-overlay" onClick={() => setShowThemeModal(false)}>
       <div className="jo-modal jo-glass-modal jo-theme-modal" onClick={(e) => e.stopPropagation()}>
@@ -636,6 +707,7 @@ const Journal = () => {
     </div>
   );
 
+
   const ColorPickerDropdown = ({ colors, onSelect, onRemove, show, title }) => (
     show ? (
       <div className="jo-color-picker-dropdown jo-glass">
@@ -658,6 +730,7 @@ const Journal = () => {
     ) : null
   );
 
+
   const EmojiPicker = () => (
     <div className="jo-emoji-picker jo-glass">
       <div className="jo-emoji-grid">
@@ -675,15 +748,19 @@ const Journal = () => {
     </div>
   );
 
+
   const getVisibleDates = () => {
     const yesterday = new Date(currentDate);
     yesterday.setDate(yesterday.getDate() - 1);
 
+
     const tomorrow = new Date(currentDate);
     tomorrow.setDate(tomorrow.getDate() + 1);
 
+
     return [yesterday, currentDate, tomorrow];
   };
+
 
   return (
     <div className="jo-container">
@@ -693,6 +770,7 @@ const Journal = () => {
         </div>
       )}
 
+
       <div className="jo-main-wrapper">
         <div className="jo-navbar jo-glass">
           <div className="jo-navbar-section">
@@ -701,6 +779,7 @@ const Journal = () => {
               <span className="jo-streak-number">{streakCount}</span>
             </button>
           </div>
+
 
           <div className="jo-navbar-section jo-navigation">
             <button className="jo-arrow-btn" onClick={() => navigateDate(-1)} type="button">
@@ -726,6 +805,7 @@ const Journal = () => {
             </button>
           </div>
 
+
           <div className="jo-navbar-section">
             <button className="jo-icon-btn" onClick={() => { setShowStatsModal(true); setStatsMonth(new Date()); }} title="Statistics" type="button">
               <BarChart3 size={20} />
@@ -735,6 +815,7 @@ const Journal = () => {
             </button>
           </div>
         </div>
+
 
         <div className="jo-content-wrapper jo-glass">
           <div className="jo-journal-header">
@@ -748,6 +829,7 @@ const Journal = () => {
                 <span>{selectedMood || 'How was your day?'}</span>
                 <span>▼</span>
               </button>
+
 
               {showMoodDropdown && (
                 <div className="jo-dropdown-menu jo-glass">
@@ -811,7 +893,9 @@ const Journal = () => {
                     </div>
                   ))}
 
+
                   <div className="jo-dropdown-divider" />
+
 
                   {!showAddCategory ? (
                     <div
@@ -841,6 +925,7 @@ const Journal = () => {
             </div>
           </div>
 
+
           <div className="jo-editor-container">
             <div
               ref={editorRef}
@@ -852,6 +937,7 @@ const Journal = () => {
               onKeyUp={updateFormatStates}
             />
           </div>
+
 
           <div className="jo-toolbar">
             <button
@@ -919,12 +1005,14 @@ const Journal = () => {
               <AlignRight size={16} />
             </button>
 
+
             <select className="jo-tool-select jo-glass-select" onChange={(e) => applyFormat('fontSize', e.target.value)} defaultValue="3">
               <option value="1">Small</option>
               <option value="3">Normal</option>
               <option value="5">Large</option>
               <option value="7">Huge</option>
             </select>
+
 
             <select className="jo-tool-select jo-glass-select" onChange={(e) => applyFormat('fontName', e.target.value)}>
               <option value="Arial">Arial</option>
@@ -933,6 +1021,7 @@ const Journal = () => {
               <option value="Courier New">Courier</option>
               <option value="Verdana">Verdana</option>
             </select>
+
 
             <div style={{ position: 'relative' }}>
               <button
@@ -950,15 +1039,18 @@ const Journal = () => {
               {showEmojiPicker && <EmojiPicker />}
             </div>
 
+
             <button className="jo-save-btn" onClick={saveJournalEntry} type="button">
               Save Entry
             </button>
           </div>
         </div>
 
+
         {/* <NavbarLeft />
         <NavbarTop /> */}
       </div>
+
 
       {showThemeModal && <ThemeModal />}
       {showStreakModal && <StreakModal />}
@@ -968,4 +1060,10 @@ const Journal = () => {
   );
 };
 
+
 export default Journal;
+
+
+
+
+

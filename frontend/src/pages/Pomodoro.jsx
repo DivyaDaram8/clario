@@ -1,10 +1,12 @@
 
+
 import React, { useState, useEffect, useRef } from 'react';
 import { apiRequest } from '../api';
 import '../styles/Pomodoro.css';
 import NavbarLeft from "../layout/NavbarLeft";
 import NavbarTop from "../layout/NavbarTop";
 import { Home, Settings, BarChart3, RotateCcw, Check, X } from 'lucide-react';
+
 
 const Pomodoro = () => {
  const [pomodoroData, setPomodoroData] = useState(null);
@@ -34,12 +36,15 @@ const Pomodoro = () => {
    category: false
  });
 
+
  const intervalRef = useRef(null);
  const notificationTimeoutRef = useRef(null);
+
 
  useEffect(() => {
    loadPomodoroData();
  }, []);
+
 
  const loadPomodoroData = async () => {
    setIsPageLoading(true);
@@ -65,6 +70,7 @@ const Pomodoro = () => {
    }
  };
 
+
  const getCurrentTimeKey = (type) => {
    switch (type) {
      case 'shortBreak': return 'shortBreakTime';
@@ -72,6 +78,7 @@ const Pomodoro = () => {
      default: return 'pomodoroTime';
    }
  };
+
 
  useEffect(() => {
    if (isActive && !isPaused && currentTime > 0) {
@@ -90,11 +97,13 @@ const Pomodoro = () => {
    return () => clearInterval(intervalRef.current);
  }, [isActive, isPaused, currentTime]);
 
+
  useEffect(() => {
    if (isActive && currentTime === 0) {
      completeSession();
    }
  }, [currentTime, isActive]);
+
 
  const updateSessionOnServer = async (updates) => {
    if (!isActive) return;
@@ -105,6 +114,7 @@ const Pomodoro = () => {
    }
  };
 
+
  const handleTimerClick = () => {
    if (!isActive) {
      startSession();
@@ -113,15 +123,17 @@ const Pomodoro = () => {
    }
  };
 
+
  const startSession = async () => {
    setActionLoading(prev => ({ ...prev, start: true }));
    try {
      const timeInSeconds = pomodoroData.settings[getCurrentTimeKey(currentType)] * 60;
-    
+   
      setCurrentTime(timeInSeconds);
      setIsActive(true);
      setIsPaused(false);
      showNotification(`${currentType.charAt(0).toUpperCase() + currentType.slice(1)} started!`);
+
 
      await apiRequest('/pomodoro/session/start', 'POST', {
        sessionType: currentType,
@@ -137,13 +149,15 @@ const Pomodoro = () => {
    }
  };
 
+
  const pauseSession = async () => {
    setActionLoading(prev => ({ ...prev, pause: true }));
    try {
      const newPausedState = !isPaused;
-    
+   
      setIsPaused(newPausedState);
      showNotification(newPausedState ? 'Session paused' : 'Session resumed');
+
 
      await updateSessionOnServer({ isPaused: newPausedState });
    } catch (error) {
@@ -154,6 +168,7 @@ const Pomodoro = () => {
    }
  };
 
+
  const resetSession = async () => {
    setActionLoading(prev => ({ ...prev, reset: true }));
    try {
@@ -161,6 +176,7 @@ const Pomodoro = () => {
      setIsPaused(false);
      setCurrentTime(tempSettings[getCurrentTimeKey(currentType)] * 60);
      showNotification('Session reset');
+
 
      await apiRequest('/pomodoro/session/reset', 'POST');
    } catch (error) {
@@ -170,6 +186,7 @@ const Pomodoro = () => {
    }
  };
 
+
  const completeSession = async () => {
    try {
      const actualDuration = Math.floor((tempSettings[getCurrentTimeKey(currentType)] * 60 - currentTime) / 60);
@@ -178,14 +195,17 @@ const Pomodoro = () => {
        isCompleted: true
      });
 
+
      setIsActive(false);
      setIsPaused(false);
+
 
      setPomodoroData(prev => ({
        ...prev,
        stats: response.stats ? response.stats : prev.stats,
        currentSession: response.currentSession ? response.currentSession : prev.currentSession,
      }));
+
 
      if (currentType === 'pomodoro') {
        showNotification('Pomodoro completed! Great work!', 'success');
@@ -204,6 +224,7 @@ const Pomodoro = () => {
    }
  };
 
+
  const startNextSession = async (sessionType) => {
    try {
      const timeInSeconds = pomodoroData.settings[getCurrentTimeKey(sessionType)] * 60;
@@ -221,6 +242,7 @@ const Pomodoro = () => {
    }
  };
 
+
  const handleTypeChange = (newType) => {
    setCurrentType(newType);
    const newTime = pomodoroData.settings[getCurrentTimeKey(newType)] * 60;
@@ -228,11 +250,15 @@ const Pomodoro = () => {
    setShowSessionTypeModal(false);
  };
 
+
  const handleCategoryChange = (categoryName) => {
    setSelectedCategory(categoryName);
    setShowCategorySelectModal(false);
    showNotification(`Category changed to ${categoryName}`);
  };
+
+
+
 
 
 
@@ -255,6 +281,7 @@ const Pomodoro = () => {
    }
  };
 
+
  const deleteCategory = async (categoryId) => {
    try {
      await apiRequest(`/pomodoro/categories/${categoryId}`, 'DELETE');
@@ -268,6 +295,7 @@ const Pomodoro = () => {
      showNotification('Error deleting category: ' + error.message, 'error');
    }
  };
+
 
  const saveSettings = async () => {
    setActionLoading(prev => ({ ...prev, settings: true }));
@@ -286,6 +314,7 @@ const Pomodoro = () => {
    }
  };
 
+
  const showNotification = (message, type = 'info') => {
    setNotification({ message, type });
    clearTimeout(notificationTimeoutRef.current);
@@ -294,11 +323,13 @@ const Pomodoro = () => {
    }, 3000);
  };
 
+
  const formatTime = (seconds) => {
    const mins = Math.floor(seconds / 60);
    const secs = seconds % 60;
    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
  };
+
 
  const formatDuration = (minutes) => {
    const hours = Math.floor(minutes / 60);
@@ -306,16 +337,19 @@ const Pomodoro = () => {
    return hours > 0 ? `${hours}h ${mins}m` : `${mins}m`;
  };
 
+
  const getProgressColor = () => {
    if (currentType === 'pomodoro') return '#3b82f6';
    return '#ffffff';
  };
+
 
  const getSessionTypeLabel = () => {
    if (currentType === 'shortBreak') return 'Short Break';
    if (currentType === 'longBreak') return 'Long Break';
    return 'Focus Time';
  };
+
 
  if (isPageLoading) {
    return (
@@ -326,6 +360,7 @@ const Pomodoro = () => {
    );
  }
 
+
  if (!pomodoroData) {
    return (
      <div className="pd-loading-screen">
@@ -335,17 +370,19 @@ const Pomodoro = () => {
    );
  }
 
+
  const todayPomodoros = pomodoroData.stats.todayPomodoros;
  const dailyGoal = pomodoroData.settings.dailyGoal;
  const goalReached = todayPomodoros >= dailyGoal;
  const streakContinuedToday = pomodoroData.stats.streakContinuedToday ?? false;
  const currentStreak = pomodoroData.stats.currentStreak;
 
+
  return (
    <div className="pd-pomodoro-container">
      {/* <NavbarLeft />
      <NavbarTop /> */}
-    
+   
      <div className="pd-main-content">
        <div className="pd-timer-section">
          <div className="pd-timer-display">
@@ -416,6 +453,7 @@ const Pomodoro = () => {
        </div>
      </div>
 
+
      <button
        className="pd-sidebar-toggle-fixed"
        onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -430,6 +468,7 @@ const Pomodoro = () => {
      >
        {sidebarOpen ? '⮞' : '⮜'}
      </button>
+
 
      <div className={`pd-sidebar ${sidebarOpen ? 'pd-sidebar-open' : 'pd-sidebar-closed'}`}>
        {sidebarOpen && (
@@ -458,6 +497,7 @@ const Pomodoro = () => {
              </button>
            </div>
 
+
            <div className="pd-panel-container">
              {activePanel === 'home' && (
                <div className="pd-panel-content">
@@ -480,6 +520,7 @@ const Pomodoro = () => {
                      </div>
                    </div>
 
+
                    <div className="pd-stat-card pd-compact">
                      <div className="pd-card-header">
                        <span className="pd-card-label">DAILY GOAL</span>
@@ -497,6 +538,7 @@ const Pomodoro = () => {
                      </div>
                    </div>
                  </div>
+
 
                  <div className="pd-categories-section">
                    <h3>Categories</h3>
@@ -564,6 +606,7 @@ const Pomodoro = () => {
                        ))}
                      </div>
 
+
                      {pomodoroData.categories.length < 25 && (
                        <div className="pd-add-category-fixed">
                          <button
@@ -578,6 +621,7 @@ const Pomodoro = () => {
                  </div>
                </div>
              )}
+
 
              {activePanel === 'settings' && (
                <div className="pd-panel-content pd-settings-panel">
@@ -613,7 +657,7 @@ const Pomodoro = () => {
                          <span className="pd-unit">min</span>
                        </div>
                      </div>
-                    
+                   
                      <div className="pd-form-group">
                        <label>Short Break</label>
                        <div className="pd-input-with-unit">
@@ -643,6 +687,7 @@ const Pomodoro = () => {
                          <span className="pd-unit">min</span>
                        </div>
                      </div>
+
 
                      <div className="pd-form-group">
                        <label>Long Break</label>
@@ -674,6 +719,7 @@ const Pomodoro = () => {
                        </div>
                      </div>
 
+
                      <div className="pd-form-group">
                        <label>Daily Goal</label>
                        <div className="pd-input-with-unit">
@@ -703,6 +749,7 @@ const Pomodoro = () => {
                          <span className="pd-unit">sessions</span>
                        </div>
                      </div>
+
 
                      <div className="pd-form-group">
                        <label>Long Break After</label>
@@ -735,6 +782,7 @@ const Pomodoro = () => {
                      </div>
                    </div>
 
+
                    <button
                      className="pd-btn pd-btn-primary pd-save-settings-btn"
                      onClick={saveSettings}
@@ -751,6 +799,7 @@ const Pomodoro = () => {
                </div>
              )}
 
+
              {activePanel === 'statistics' && (
                <div className="pd-panel-content">
                  <h3>Analytics</h3>
@@ -765,6 +814,7 @@ const Pomodoro = () => {
                        <span className="pd-overview-label">Total Focus Time</span>
                      </div>
                    </div>
+
 
                    <div className="pd-category-stats">
                      <h4>By Category</h4>
@@ -792,6 +842,7 @@ const Pomodoro = () => {
          </div>
        )}
      </div>
+
 
      {/* Session Type Modal */}
      {showSessionTypeModal && (
@@ -825,6 +876,7 @@ const Pomodoro = () => {
        </div>
      )}
 
+
      {/* Category Select Modal */}
      {showCategorySelectModal && (
        <div className="pd-modal-overlay" onClick={() => setShowCategorySelectModal(false)}>
@@ -848,6 +900,7 @@ const Pomodoro = () => {
        </div>
      )}
 
+
      {/* Add Category Modal */}
      {showCategoryModal && (
        <div className="pd-modal-overlay" onClick={() => setShowCategoryModal(false)}>
@@ -856,6 +909,7 @@ const Pomodoro = () => {
              <h3>Add New Category</h3>
              <button onClick={() => setShowCategoryModal(false)} className="pd-close-btn">✕</button>
            </div>
+
 
            <div className="pd-category-input">
              <input
@@ -895,6 +949,7 @@ const Pomodoro = () => {
        </div>
      )}
 
+
      {/* Delete Confirmation Modal */}
      {showDeleteConfirm && (
        <div className="pd-modal-overlay" onClick={() => setShowDeleteConfirm(null)}>
@@ -919,6 +974,7 @@ const Pomodoro = () => {
        </div>
      )}
 
+
      {/* Notification */}
      {notification && (
        <div className={`pd-notification ${notification.type}`}>
@@ -929,4 +985,6 @@ const Pomodoro = () => {
  );
 };
 
+
 export default Pomodoro;
+
