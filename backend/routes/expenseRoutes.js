@@ -1,13 +1,13 @@
 const express = require("express");
 const { protect } = require("../middleware/authMiddleware");
 const {
-  createCategory,
-  getCategories,
-  updateCategory,
-  createTransaction,
-  getTransactions,
-  updateTransaction,
-  deleteTransaction,
+ createCategory,
+ getCategories,
+ updateCategory,
+ createTransaction,
+ getTransactions,
+ updateTransaction,
+ deleteTransaction,
 } = require("../controllers/expenseController");
 
 const router = express.Router();
@@ -24,3 +24,7 @@ router.put("/transactions/:transactionId", protect, updateTransaction); // Updat
 router.delete("/transactions/:transactionId", protect, deleteTransaction); // Delete transaction
 
 module.exports = router;
+
+
+
+

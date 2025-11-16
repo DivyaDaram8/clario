@@ -1,208 +1,314 @@
+// controllers/todoController.js
 const Task = require("../models/Task");
 const Category = require("../models/Category");
+const mongoose = require("mongoose");
+
+// Default categories (customize names/colors/icons as you like)
+const DEFAULT_CATEGORIES = [
+ { name: "Todo", color: "#ef4444", icon: "📝" },
+ { name: "Work", color: "#2563eb", icon: "💼" },
+ { name: "Personal", color: "#16a34a", icon: "👤" },
+ { name: "Misc", color: "#6b7280", icon: "📌" },
+];
+
+// Helper: ensure default categories exist for a user (idempotent)
+async function ensureDefaultCategories(userId) {
+ const ops = DEFAULT_CATEGORIES.map(def => ({
+   updateOne: {
+     filter: { createdBy: userId, name: def.name },
+     update: {
+       $setOnInsert: {
+         name: def.name,
+         color: def.color,
+         icon: def.icon,
+         createdBy: userId,
+         createdAt: new Date()
+       }
+     },
+     upsert: true
+   }
+ }));
+
+ if (ops.length) {
+   await Category.bulkWrite(ops);
+ }
+}
 
 // ---------------- Category Controllers ----------------
 
-// Create Category
 exports.createCategory = async (req, res) => {
-  try {
-    const category = await Category.create({
-      name: req.body.name,
-      color: req.body.color || "#000000",
-      icon: req.body.icon || "",
-      createdBy: req.user._id
-    });
-    res.status(201).json(category);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
+ try {
+   const { name, color, icon } = req.body;
+   if (!name || !name.trim()) return res.status(400).json({ message: "Name is required" });
+
+   const existing = await Category.findOne({ createdBy: req.user._id, name: name.trim() });
+   if (existing) return res.status(200).json(existing);
+
+   const category = await Category.create({
+     name: name.trim(),
+     color: color || "#000000",
+     icon: icon || "",
+     createdBy: req.user._id
+   });
+
+   res.status(201).json(category);
+ } catch (err) {
+   if (err.code === 11000) {
+     return res.status(409).json({ message: "Category already exists" });
+   }
+   res.status(400).json({ error: err.message });
+ }
 };
 
-// Get All Categories for a User
 exports.getCategories = async (req, res) => {
-  try {
-    const categories = await Category.find({ createdBy: req.user._id });
-    res.json(categories);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+ try {
+   await ensureDefaultCategories(req.user._id);
+   const categories = await Category.find({ createdBy: req.user._id }).sort({ createdAt: 1, name: 1 });
+   res.json(categories);
+ } catch (err) {
+   res.status(500).json({ error: err.message });
+ }
+};
+
+exports.updateCategory = async (req, res) => {
+ try {
+   const { id } = req.params;
+   const updates = {};
+   if (req.body.name) updates.name = req.body.name.trim();
+   if (req.body.color) updates.color = req.body.color;
+   if (req.body.icon) updates.icon = req.body.icon;
+
+   if (updates.name) {
+     const conflict = await Category.findOne({
+       _id: { $ne: id },
+       createdBy: req.user._id,
+       name: updates.name
+     });
+     if (conflict) return res.status(409).json({ message: "A category with that name already exists" });
+   }
+
+   const category = await Category.findOneAndUpdate(
+     { _id: id, createdBy: req.user._id },
+     updates,
+     { new: true }
+   );
+
+   if (!category) return res.status(404).json({ message: "Category not found" });
+   res.json(category);
+ } catch (err) {
+   if (err.code === 11000) {
+     return res.status(409).json({ message: "Category name conflict" });
+   }
+   res.status(400).json({ error: err.message });
+ }
 };
 
 // ---------------- Task Controllers ----------------
 
-// Create Task inside Category (with taskDate)
 exports.createTask = async (req, res) => {
-  try {
-    const { categoryId } = req.params;
+ try {
+   const { categoryId } = req.params;
 
-    const category = await Category.findOne({ _id: categoryId, createdBy: req.user._id });
-    if (!category) return res.status(404).json({ message: "Category not found" });
+   const category = await Category.findOne({ _id: categoryId, createdBy: req.user._id });
+   if (!category) return res.status(404).json({ message: "Category not found" });
 
-    // Use provided date or default to today
-    const taskDate = req.body.taskDate ? new Date(req.body.taskDate) : new Date();
-    taskDate.setHours(0, 0, 0, 0);
+   const taskDate = req.body.taskDate ? new Date(req.body.taskDate) : new Date();
+   taskDate.setHours(0, 0, 0, 0);
 
-    if (isNaN(taskDate.getTime())) {
-      return res.status(400).json({ message: "Invalid taskDate" });
-    }
+   if (isNaN(taskDate.getTime())) {
+     return res.status(400).json({ message: "Invalid taskDate" });
+   }
 
-    const taskCount = await Task.countDocuments({
-      category: categoryId,
-      createdBy: req.user._id,
-      taskDate
-    });
+   const taskCount = await Task.countDocuments({
+     category: categoryId,
+     createdBy: req.user._id,
+     taskDate
+   });
 
-    const task = await Task.create({
-      name: req.body.name || "Untitled Task",
-      description: req.body.description || "",
-      priority: req.body.priority || "Medium",
-      category: categoryId,
-      orderIndex: taskCount,
-      createdBy: req.user._id,
-      taskDate
-    });
+   const task = await Task.create({
+     name: req.body.name || "Untitled Task",
+     description: req.body.description || "",
+     priority: req.body.priority || "Medium",
+     category: categoryId,
+     orderIndex: taskCount,
+     createdBy: req.user._id,
+     taskDate
+   });
 
-    res.status(201).json(task);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
+   res.status(201).json(task);
+ } catch (err) {
+   res.status(400).json({ error: err.message });
+ }
 };
 
-
-// Get All Tasks for a Category (for a given date)
 exports.getTasksByCategory = async (req, res) => {
-  try {
-    const { categoryId } = req.params;
-    const { date } = req.query;
+ try {
+   const { categoryId } = req.params;
+   const { date } = req.query;
 
-    const category = await Category.findOne({ _id: categoryId, createdBy: req.user._id });
-    if (!category) return res.status(404).json({ message: "Category not found" });
+   const category = await Category.findOne({ _id: categoryId, createdBy: req.user._id });
+   if (!category) return res.status(404).json({ message: "Category not found" });
 
-    if (!date) return res.status(400).json({ message: "Date is required" });
+   if (!date) return res.status(400).json({ message: "Date is required" });
 
-    const start = new Date(date);
-    start.setHours(0, 0, 0, 0);
-    const end = new Date(date);
-    end.setHours(23, 59, 59, 999);
+   const start = new Date(date);
+   start.setHours(0, 0, 0, 0);
+   const end = new Date(date);
+   end.setHours(23, 59, 59, 999);
 
-    const tasks = await Task.find({
-      category: categoryId,
-      createdBy: req.user._id,
-      taskDate: { $gte: start, $lte: end }
-    }).sort({ priority: 1, orderIndex: 1 });
+   const tasks = await Task.find({
+     category: categoryId,
+     createdBy: req.user._id,
+     taskDate: { $gte: start, $lte: end }
+   }).sort({ orderIndex: 1 });
 
-    res.json(tasks);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+   res.json(tasks);
+ } catch (err) {
+   res.status(500).json({ error: err.message });
+ }
 };
 
-// Update Task
 exports.updateTask = async (req, res) => {
-  try {
-    const { id } = req.params;
+ try {
+   const { id } = req.params;
 
-    const task = await Task.findOneAndUpdate(
-      { _id: id, createdBy: req.user._id },
-      req.body,
-      { new: true }
-    );
+   const task = await Task.findOneAndUpdate(
+     { _id: id, createdBy: req.user._id },
+     req.body,
+     { new: true }
+   );
 
-    if (!task) return res.status(404).json({ message: "Task not found" });
-    res.json(task);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
+   if (!task) return res.status(404).json({ message: "Task not found" });
+   res.json(task);
+ } catch (err) {
+   res.status(400).json({ error: err.message });
+ }
 };
 
-// Delete Task
 exports.deleteTask = async (req, res) => {
-  try {
-    const { id } = req.params;
+ try {
+   const { id } = req.params;
 
-    const task = await Task.findOneAndDelete({ _id: id, createdBy: req.user._id });
-    if (!task) return res.status(404).json({ message: "Task not found" });
+   const task = await Task.findOneAndDelete({ _id: id, createdBy: req.user._id });
+   if (!task) return res.status(404).json({ message: "Task not found" });
 
-    res.json({ message: "Task deleted" });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+   res.json({ message: "Task deleted" });
+ } catch (err) {
+   res.status(500).json({ error: err.message });
+ }
 };
 
-// Reorder Tasks within Category & Date
 exports.reorderTasks = async (req, res) => {
-  try {
-    const { categoryId } = req.params;
-    const { tasks, date } = req.body; // array of { id, orderIndex, priority }
+ try {
+   const { categoryId } = req.params;
+   const { tasks, date } = req.body;
 
-    const category = await Category.findOne({ _id: categoryId, createdBy: req.user._id });
-    if (!category) return res.status(404).json({ message: "Category not found" });
-    if (!date) return res.status(400).json({ message: "Date is required" });
+   const category = await Category.findOne({ _id: categoryId, createdBy: req.user._id });
+   if (!category) return res.status(404).json({ message: "Category not found" });
+   if (!date) return res.status(400).json({ message: "Date is required" });
 
-    const taskDate = new Date(date);
-    taskDate.setHours(0, 0, 0, 0);
+   const taskDate = new Date(date);
+   taskDate.setHours(0, 0, 0, 0);
 
-    for (let t of tasks) {
-      await Task.findOneAndUpdate(
-        {
-          _id: t.id,
-          category: categoryId,
-          createdBy: req.user._id,
-          taskDate,
-          priority: t.priority   // ✅ ensures only within group
-        },
-        { orderIndex: t.orderIndex }
-      );
-    }
+   const bulkOps = tasks.map(t => ({
+     updateOne: {
+       filter: {
+         _id: t.id,
+         category: categoryId,
+         createdBy: req.user._id,
+         taskDate,
+         priority: t.priority
+       },
+       update: { $set: { orderIndex: t.orderIndex } }
+     }
+   }));
 
-    res.json({ message: "Order updated" });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+   if (bulkOps.length) await Task.bulkWrite(bulkOps);
+
+   res.json({ message: "Order updated" });
+ } catch (err) {
+   res.status(500).json({ error: err.message });
+ }
 };
 
-
-
-// Get All Tasks by Date (across all categories)
 exports.getTasksByDate = async (req, res) => {
-  try {
-    const { date } = req.query;
-    if (!date) return res.status(400).json({ message: "Date is required" });
+ try {
+   const { date } = req.query;
+   if (!date) return res.status(400).json({ message: "Date is required" });
 
-    const start = new Date(date);
-    start.setHours(0, 0, 0, 0);
-    const end = new Date(date);
-    end.setHours(23, 59, 59, 999);
+   const start = new Date(date);
+   start.setHours(0, 0, 0, 0);
+   const end = new Date(date);
+   end.setHours(23, 59, 59, 999);
 
-    const tasks = await Task.find({
-      createdBy: req.user._id,
-      taskDate: { $gte: start, $lte: end }
-    }).sort({ orderIndex: 1 });
+   const tasks = await Task.find({
+     createdBy: req.user._id,
+     taskDate: { $gte: start, $lte: end }
+   }).sort({ orderIndex: 1 });
 
-    res.json(tasks);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+   res.json(tasks);
+ } catch (err) {
+   res.status(500).json({ error: err.message });
+ }
 };
 
+// ---------------- Statistics Controller ----------------
 
-// Delete Category (and optionally its tasks)
-exports.deleteCategory = async (req, res) => {
-  try {
-    const category = await Category.findOneAndDelete({
-      _id: req.params.id,
-      createdBy: req.user._id,
-    });
+exports.getMonthlyStats = async (req, res) => {
+ try {
+   const { year, month } = req.query;
+  
+   if (!year || !month) {
+     return res.status(400).json({ message: "Year and month are required" });
+   }
 
-    if (!category) {
-      return res.status(404).json({ message: "Category not found" });
-    }
+   const startDate = new Date(parseInt(year), parseInt(month) - 1, 1);
+   startDate.setHours(0, 0, 0, 0);
+  
+   const endDate = new Date(parseInt(year), parseInt(month), 0);
+   endDate.setHours(23, 59, 59, 999);
 
-    // Delete all tasks inside this category too (cascade delete)
-    await Task.deleteMany({ category: req.params.id, createdBy: req.user._id });
+   // Get all tasks for the month
+   const tasks = await Task.find({
+     createdBy: req.user._id,
+     taskDate: { $gte: startDate, $lte: endDate }
+   }).populate('category');
 
-    res.json({ message: "Category and its tasks deleted successfully" });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+   // Calculate totals
+   const totalTasks = tasks.length;
+   const totalCompleted = tasks.filter(t => t.completed).length;
+
+   // Group by category
+   const categoryMap = {};
+   tasks.forEach(task => {
+     const catId = task.category?._id?.toString() || 'uncategorized';
+     const catName = task.category?.name || 'Uncategorized';
+     const catIcon = task.category?.icon || '📌';
+
+     if (!categoryMap[catId]) {
+       categoryMap[catId] = {
+         name: catName,
+         icon: catIcon,
+         total: 0,
+         completed: 0
+       };
+     }
+
+     categoryMap[catId].total++;
+     if (task.completed) {
+       categoryMap[catId].completed++;
+     }
+   });
+
+   const byCategory = Object.values(categoryMap);
+
+   res.json({
+     totalTasks,
+     totalCompleted,
+     byCategory
+   });
+ } catch (err) {
+   res.status(500).json({ error: err.message });
+ }
 };
+

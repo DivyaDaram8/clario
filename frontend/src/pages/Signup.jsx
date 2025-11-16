@@ -1,5 +1,6 @@
+// ========== Signup.jsx ==========
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import "../styles/Auth.css";
 
@@ -69,6 +70,10 @@ const Signup = () => {
           <button type="submit">Sign Up</button>
         </form>
         {message && <div className="message">{message}</div>}
+        
+        <div className="auth-switch">
+          <p>Already a user? <Link to="/login">Login here</Link></p>
+        </div>
       </div>
     </div>
   );

@@ -1,0 +1,454 @@
+/* ========== NOTES - DARK THEME (consistent with Habit Tracker) ========== */
+
+.notes-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(to bottom right, #000000, #18181b, #171717);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.notes-container {
+  min-height: 100vh;
+  background: linear-gradient(to bottom right, #000000, #18181b, #171717);
+  padding: 8rem 2rem 2rem 10rem; /* match habit tracker padding */
+}
+
+/* ========== HEADER (UPDATED) ========== */
+.notes-header {
+  margin-bottom: 1.75rem;      /* reduced from 3rem */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: -1rem;           /* moves everything UP */
+}
+
+.notes-title {
+  font-size: 2.2rem;           /* reduced from 3rem */
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.notes-header-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;                /* tighter spacing */
+}
+
+/* Smaller, sleeker Add Note button */
+.notes-add-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.65rem 1.4rem;    /* reduced height & width */
+  background: rgba(255, 255, 255, 0.9);
+  color: #000000;
+  border: none;
+  border-radius: 0.85rem;     /* slightly smaller radius */
+  font-weight: 700;
+  font-size: 0.9rem;          /* smaller text */
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.notes-add-btn:hover {
+  background: #ffffff;
+  transform: scale(1.04);
+  box-shadow: 0 6px 26px rgba(255, 255, 255, 0.2);
+}
+
+
+/* ========== NOTES GRID ========== */
+.notes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.25rem; /* slightly tighter grid */
+  margin-bottom: 2rem;
+}
+
+/* ========== NOTE CARD ========== */
+.note-card {
+  position: relative;
+  background: linear-gradient(to bottom right, #18181b, #000000);
+  border-radius: 1.25rem;
+  padding: 1rem;
+  transition: all 0.35s ease;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  min-height: 180px; /* reduced height for compact look */
+  max-height: 220px; /* keep cards uniform */
+  display: flex;
+  flex-direction: column;
+}
+
+.note-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.02), transparent);
+  border-radius: 1.25rem;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.note-card:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 18px 56px rgba(0, 0, 0, 0.8);
+}
+
+.note-card:hover::before {
+  opacity: 1;
+}
+
+/* ========== CONTENT ========== */
+.note-card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  position: relative;
+  z-index: 10;
+  overflow: hidden; /* ensure only textarea scrolls */
+}
+
+.note-title-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #ffffff;
+  padding: 0.25rem 0;
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.18s;
+}
+
+.note-title-input:focus {
+  border-bottom-color: rgba(255, 255, 255, 0.06);
+}
+
+.note-title-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: 600;
+}
+
+/* textarea styling + slim scrollbar */
+.note-content-input {
+  width: 100%;
+  flex: 1;
+  min-height: 56px;
+  max-height: 110px; /* prevents card growing too tall */
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.9);
+  resize: none;
+  padding: 0.25rem 0;
+  font-family: inherit;
+  overflow-y: auto;
+}
+
+/* Firefox slim scrollbar */
+.note-content-input {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.12) transparent;
+}
+
+/* Webkit (Chrome, Edge, Safari) slim scrollbar */
+.note-content-input::-webkit-scrollbar {
+  width: 5px;
+}
+
+.note-content-input::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.note-content-input::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+}
+
+.note-content-input::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ========== FOOTER (timestamp + actions) ========== */
+.note-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  position: relative;
+  z-index: 10;
+}
+
+/* timestamp on left */
+.note-timestamp {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.55);
+  font-weight: 500;
+}
+
+/* bottom-right action group */
+.note-card-actions-bottom {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/* action buttons (bottom) */
+.note-action-btn.bottom {
+  padding: 0.4rem 0.6rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 0.6rem;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  color: rgba(255, 255, 255, 0.85);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.note-action-btn.bottom:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-1px);
+  color: #ffffff;
+}
+
+.note-action-btn.bottom.pinned {
+  color: rgba(250, 204, 21, 0.95); /* subtle gold tint when pinned */
+}
+
+/* delete button (bottom) - red accent on hover */
+.note-delete-btn.bottom:hover {
+  background: rgba(239, 68, 68, 0.18);
+  border-color: rgba(239, 68, 68, 0.38);
+  color: #ef4444;
+}
+
+/* ========== EMPTY STATE ========== */
+.notes-empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.notes-empty-state h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 0.75rem;
+}
+
+.notes-empty-state p {
+  font-size: 1.125rem;
+}
+
+/* ========== MODAL ========== */
+.notes-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 2rem;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; } to { opacity: 1; }
+}
+
+.notes-modal {
+  background: linear-gradient(to bottom right, #18181b, #000000);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 1.5rem;
+  padding: 2.5rem;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.9);
+  position: relative;
+  animation: scaleIn 0.3s ease;
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; }
+}
+
+.notes-modal::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.05), transparent);
+  border-radius: 1.5rem;
+  pointer-events: none;
+}
+
+.notes-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 10;
+}
+
+.notes-modal-header h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.notes-close-btn {
+  padding: 0.5rem 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  color: #ffffff;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  line-height: 1;
+}
+
+.notes-close-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.5);
+  transform: scale(1.1);
+}
+
+/* ========== FORM BUTTONS ========== */
+.notes-form-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+.notes-form-cancel-btn {
+  padding: 0.875rem 2rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.notes-form-cancel-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.5);
+  transform: scale(1.05);
+}
+
+.notes-form-add-btn {
+  padding: 0.875rem 2rem;
+  background: rgba(255, 255, 255, 0.9);
+  color: #000000;
+  border: none;
+  border-radius: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.notes-form-add-btn:hover {
+  background: #ffffff;
+  transform: scale(1.05);
+  box-shadow: 0 8px 32px rgba(255, 255, 255, 0.2);
+}
+
+/* ========== NOTIFICATION ========== */
+.notes-notification {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  padding: 1rem 1.5rem;
+  border-radius: 1rem;
+  font-weight: 600;
+  z-index: 2000;
+  animation: slideIn 0.3s ease;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(12px);
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; }
+}
+
+.notes-notification.success {
+  background: rgba(34, 197, 94, 0.2);
+  border: 1px solid rgba(34, 197, 94, 0.5);
+  color: #ffffff;
+}
+
+.notes-notification.error {
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  color: #ffffff;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 1024px) {
+  .notes-container {
+    padding: 8rem 2rem 2rem 2rem;
+  }
+
+  .notes-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+
+  .notes-header-controls {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .notes-grid {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .notes-title {
+    font-size: 2rem;
+  }
+
+  .notes-header-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .notes-add-btn {
+    width: 100%;
+  }
+
+  .notes-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .notes-modal {
+    padding: 1.5rem;
+  }
+}

@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import { FaStar, FaRegStar, FaEdit, FaTrash } from "react-icons/fa";
-import { motion } from "framer-motion";
+import { Star, Trash2 } from "lucide-react";
+import "../../styles/Note.css";
 
 export default function NoteCard({ note, onUpdate, onDelete, onToggleFav }) {
   const [title, setTitle] = useState(note.title || "");
   const [content, setContent] = useState(note.content || "");
   const titleRef = useRef(null);
+  const contentRef = useRef(null);
 
   useEffect(() => {
     setTitle(note.title || "");
@@ -13,103 +14,87 @@ export default function NoteCard({ note, onUpdate, onDelete, onToggleFav }) {
   }, [note._id, note.title, note.content]);
 
   const saveTitle = () => {
-    if (title !== note.title) onUpdate({ title });
+    if (title !== note.title) {
+      onUpdate({ title });
+    }
   };
+
   const saveContent = () => {
-    if (content !== note.content) onUpdate({ content });
+    if (content !== note.content) {
+      onUpdate({ content });
+    }
+  };
+
+  const handleTitleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      saveTitle();
+      contentRef.current?.focus();
+    }
+    if (e.key === "Escape") {
+      setTitle(note.title || "");
+      e.currentTarget.blur();
+    }
+  };
+
+  const handleContentKeyDown = (e) => {
+    if (e.key === "Escape") {
+      setContent(note.content || "");
+      e.currentTarget.blur();
+    }
   };
 
   return (
-    <motion.div
-      whileHover={{ scale: 1.02, boxShadow: "0 8px 20px rgba(0,0,0,0.12)" }}
-      transition={{ duration: 0.15 }}
-      style={{
-        background: note.color || "#FFF",
-        borderRadius: 12,
-        boxShadow: "0 6px 18px rgba(0,0,0,0.08)",
-        padding: 12,
-        display: "flex",
-        flexDirection: "column",
-        position: "relative",
-        overflow: "hidden",
-      }}
-    >
-      <div style={{ position: "absolute", top: 8, right: 8, display: "flex", gap: 8 }}>
-        <motion.button
-          whileTap={{ scale: 0.8 }}
-          onClick={onToggleFav}
-          title={note.isPinned ? "Unfavorite" : "Favorite"}
-          style={iconBtn}
-        >
-          {note.isPinned ? <FaStar /> : <FaRegStar />}
-        </motion.button>
-        <motion.button
-          whileTap={{ scale: 0.8 }}
-          onClick={onDelete}
-          title="Delete note"
-          style={iconBtn}
-        >
-          <FaTrash />
-        </motion.button>
+    <div className="note-card">
+      <div className="note-card-content">
+        <input
+          ref={titleRef}
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          onBlur={saveTitle}
+          onKeyDown={handleTitleKeyDown}
+          placeholder="Title"
+          className="note-title-input"
+        />
+
+        <textarea
+          ref={contentRef}
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          onBlur={saveContent}
+          onKeyDown={handleContentKeyDown}
+          placeholder="Take a note..."
+          className="note-content-input"
+          rows={4}
+        />
       </div>
 
-      <input
-        ref={titleRef}
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        onBlur={saveTitle}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            e.preventDefault();
-            e.currentTarget.blur();
-          }
-        }}
-        placeholder="Title"
-        style={{
-          background: "transparent",
-          border: "none",
-          outline: "none",
-          fontSize: 16,
-          fontWeight: 700,
-          marginBottom: 8,
-        }}
-      />
+      <div className="note-card-footer">
+        <span className="note-timestamp">
+          {new Date(note.createdAt).toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          })}
+        </span>
 
-      <textarea
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-        onBlur={saveContent}
-        placeholder="Take a note…"
-        rows={5}
-        style={{
-          flex: 1,
-          background: "transparent",
-          border: "none",
-          outline: "none",
-          resize: "none",
-          fontSize: 14,
-          lineHeight: 1.45,
-        }}
-      />
+        <div className="note-card-actions-bottom">
+          <button
+            onClick={onToggleFav}
+            className={`note-action-btn bottom ${note.isPinned ? "pinned" : ""}`}
+            title={note.isPinned ? "Unpin note" : "Pin note"}
+            aria-pressed={note.isPinned}
+          >
+            <Star size={16} fill={note.isPinned ? "currentColor" : "none"} />
+          </button>
 
-      <div style={{ display: "flex", justifyContent: "space-between", marginTop: 8, opacity: 0.75 }}>
-        <small>{new Date(note.createdAt).toLocaleString()}</small>
-        <small style={{ display: "inline-flex", alignItems: "center", gap: 6, opacity: 0.7 }}>
-          <FaEdit /> inline edit
-        </small>
+          <button onClick={onDelete} className="note-action-btn note-delete-btn bottom" title="Delete note">
+            <Trash2 size={16} />
+          </button>
+        </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
-
-const iconBtn = {
-  background: "#FFFFFF",
-  border: "none",
-  borderRadius: 8,
-  width: 32,
-  height: 32,
-  display: "grid",
-  placeItems: "center",
-  boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
-  cursor: "pointer",
-};

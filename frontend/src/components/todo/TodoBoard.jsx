@@ -1,3 +1,4 @@
+// ========== TODO BOARD ==========
 import React from "react";
 import DateBar from "./DateBar";
 import CategoryBar from "./CategoryBar";
@@ -11,42 +12,33 @@ export default function TodoBoard({
   setSelectedCategory,
 }) {
   return (
-    <div className="flex w-full h-[calc(100vh-80px)] gap-6">
-      {/* Category Sidebar */}
-      <div className="w-64 flex-shrink-0">
-        {/* added deleteCategory support */}
-<CategoryBar
-  categories={todos.categories}
-  selectedId={selectedCategory}
-  onSelect={(id) => setSelectedCategory(id)}
-  onOpenAdd={onAddCategory}
-  onOpenTaskModal={(id) => {
-    setSelectedCategory(id);
+    <div className="todo-board">
+      <CategoryBar
+        categories={todos.categories}
+        selectedId={selectedCategory}
+        onSelect={(id) => setSelectedCategory(id)}
+        onOpenAdd={onAddCategory}
+        onOpenTaskModal={(id) => {
+          setSelectedCategory(id);
 
-    const todayStr = new Date().toISOString().slice(0, 10);
-    if (todos.selectedDate < todayStr) {
-      alert("You cannot add tasks to past dates 🚫");
-      return;
-    }
+          const todayStr = new Date().toISOString().slice(0, 10);
+          if (todos.selectedDate < todayStr) {
+            alert("You cannot add tasks to past dates 🚫");
+            return;
+          }
 
-    onAddTask(); // ✅ only opens if today/future
-  }}
-  onDeleteCategory={todos.deleteCategory}
-/>
+          onAddTask();
+        }}
+        onDeleteCategory={todos.deleteCategory}
+      />
 
+      <div className="todo-board-main">
+        <DateBar
+          selectedDate={todos.selectedDate}
+          onSelect={(d) => todos.setSelectedDate(d)}
+        />
 
-      </div>
-
-      {/* Right side */}
-      <div className="flex flex-col flex-1 gap-4">
-        <div>
-          <DateBar
-            selectedDate={todos.selectedDate}
-            onSelect={(d) => todos.setSelectedDate(d)}
-          />
-        </div>
-
-        <div className="flex-1 rounded-2xl bg-white shadow-md p-6 overflow-x-auto">
+        <div className="todo-board-content">
           <KanbanBoard
             categories={todos.categories}
             tasksByCategory={todos.tasksByCategory}
@@ -54,12 +46,11 @@ export default function TodoBoard({
               await todos.updateTask(task._id, { completed: !task.completed });
             }}
             onEdit={(task) => {
-              // Find the category ID for this task
               const categoryId = todos.categories.find(cat => 
                 todos.tasksByCategory[cat._id]?.some(t => t._id === task._id)
               )?._id;
               setSelectedCategory(categoryId);
-              onAddTask(task); // pass task into modal
+              onAddTask(task);
             }}
             onReorder={(catId, newArr) => todos.reorder(catId, newArr)}
             onDelete={(task, categoryId) => todos.deleteTask(task._id, categoryId)}

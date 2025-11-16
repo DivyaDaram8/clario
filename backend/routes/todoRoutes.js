@@ -1,12 +1,13 @@
+// routes/todoRoutes.js
 const express = require("express");
 const router = express.Router();
 const todoController = require("../controllers/todoController");
 const { protect } = require("../middleware/authMiddleware");
 
 // ---------------- Category Routes ----------------
-router.post("/categories", protect, todoController.createCategory);
 router.get("/categories", protect, todoController.getCategories);
-router.delete("/categories/:id", protect, todoController.deleteCategory);
+router.put("/categories/:id", protect, todoController.updateCategory);
+router.post("/categories", protect, todoController.createCategory);
 
 // ---------------- Task Routes ----------------
 router.post("/categories/:categoryId/tasks", protect, todoController.createTask);
@@ -20,6 +21,7 @@ router.put("/categories/:categoryId/tasks/reorder", protect, todoController.reor
 // Get tasks by specific date (regardless of category)
 router.get("/tasks/by-date", protect, todoController.getTasksByDate);
 
-
+// ---------------- Statistics Routes ----------------
+router.get("/stats/monthly", protect, todoController.getMonthlyStats);
 
 module.exports = router;

@@ -1,699 +1,980 @@
-.ht-container {
- min-height: 100vh;
- background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
- color: #ffffff;
- font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
- padding: 2rem;
-}
+/* ========== HABIT TRACKER - DARK THEME ========== */
 
 .ht-loading {
- display: flex;
- align-items: center;
- justify-content: center;
- height: 50vh;
- font-size: 1.2rem;
- color: #8892b0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(to bottom right, #000000, #18181b, #171717);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.5rem;
+  font-weight: 600;
 }
 
+.ht-container {
+  min-height: 100vh;
+  background: linear-gradient(to bottom right, #000000, #18181b, #171717);
+  padding: 8rem 2rem 2rem 10rem;
+}
+
+/* ========== HEADER ========== */
 .ht-header {
- display: flex;
- justify-content: space-between;
- align-items: center;
- margin-bottom: 2rem;
- flex-wrap: wrap;
- gap: 1rem;
+  margin-bottom: 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .ht-title {
- font-size: 2.5rem;
- font-weight: 700;
- background: linear-gradient(45deg, #64ffda, #bb86fc);
- background-clip: text;
- -webkit-background-clip: text;
- -webkit-text-fill-color: transparent;
- margin: 0;
+  font-size: 3rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin: 0;
 }
 
 .ht-header-controls {
- display: flex;
- gap: 1rem;
- align-items: center;
- flex-wrap: wrap;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 .ht-stats-btn {
- background: rgba(100, 255, 218, 0.1);
- border: 1px solid rgba(100, 255, 218, 0.3);
- color: #64ffda;
- padding: 0.75rem 1.5rem;
- border-radius: 12px;
- cursor: pointer;
- font-weight: 600;
- backdrop-filter: blur(10px);
- transition: all 0.3s ease;
+  padding: 0.875rem 2rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(12px);
+  white-space: nowrap;
 }
 
 .ht-stats-btn:hover {
- background: rgba(100, 255, 218, 0.2);
- border-color: rgba(100, 255, 218, 0.5);
- transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+  box-shadow: 0 8px 32px rgba(255, 255, 255, 0.1);
 }
 
-.ht-add-habit {
- display: flex;
- gap: 0.5rem;
- align-items: center;
+.ht-add-habit-btn {
+  padding: 0.875rem 2rem;
+  background: rgba(255, 255, 255, 0.9);
+  color: #000000;
+  border: none;
+  border-radius: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.ht-add-habit-btn:hover {
+  background: #ffffff;
+  transform: scale(1.05);
+  box-shadow: 0 8px 32px rgba(255, 255, 255, 0.2);
+}
+
+.ht-add-habit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 1rem;
 }
 
 .ht-input {
- background: rgba(255, 255, 255, 0.05);
- border: 1px solid rgba(255, 255, 255, 0.1);
- border-radius: 8px;
- padding: 0.75rem 1rem;
- color: #ffffff;
- font-size: 0.9rem;
- backdrop-filter: blur(10px);
- transition: all 0.3s ease;
- min-width: 200px;
-}
-
-.ht-input:focus {
- outline: none;
- border-color: rgba(187, 134, 252, 0.5);
- background: rgba(255, 255, 255, 0.08);
+  flex: 1;
+  padding: 0.875rem 1.25rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  color: #ffffff;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(12px);
 }
 
 .ht-input::placeholder {
- color: #8892b0;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.ht-input:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.05);
 }
 
 .ht-add-btn {
- background: linear-gradient(45deg, #bb86fc, #6c63ff);
- border: none;
- color: white;
- padding: 0.75rem 1.5rem;
- border-radius: 8px;
- cursor: pointer;
- font-weight: 600;
- transition: all 0.3s ease;
+  padding: 0.875rem 2rem;
+  background: rgba(255, 255, 255, 0.9);
+  color: #000000;
+  border: none;
+  border-radius: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  align-self: flex-end;
 }
 
 .ht-add-btn:hover {
- transform: translateY(-2px);
- box-shadow: 0 8px 25px rgba(187, 134, 252, 0.3);
+  background: #ffffff;
+  transform: scale(1.05);
+  box-shadow: 0 8px 32px rgba(255, 255, 255, 0.2);
 }
 
+.ht-form-cancel-btn {
+  padding: 0.875rem 2rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  align-self: flex-end;
+}
+
+.ht-form-cancel-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.5);
+  transform: scale(1.05);
+}
+
+.ht-form-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+/* ========== HABITS GRID ========== */
 .ht-habits-grid {
- display: grid;
- grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
- gap: 1.5rem;
- margin-bottom: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
 }
 
 .ht-habit-card {
- background: rgba(255, 255, 255, 0.05);
- border: 1px solid rgba(255, 255, 255, 0.1);
- border-radius: 16px;
- padding: 1.5rem;
- backdrop-filter: blur(20px);
- transition: all 0.3s ease;
- box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  position: relative;
+  background: linear-gradient(to bottom right, #18181b, #000000);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1.5rem;
+  padding: 2rem;
+  transition: all 0.5s ease;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+
+.ht-habit-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.02), transparent);
+  border-radius: 1.5rem;
+  opacity: 0;
+  transition: opacity 0.7s ease;
 }
 
 .ht-habit-card:hover {
- border-color: rgba(187, 134, 252, 0.3);
- transform: translateY(-4px);
- box-shadow: 0 12px 40px rgba(187, 134, 252, 0.15);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: scale(1.02);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
 }
 
+.ht-habit-card:hover::before {
+  opacity: 1;
+}
+
+/* ========== HABIT HEADER ========== */
 .ht-habit-header {
- display: flex;
- justify-content: space-between;
- align-items: center;
- margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 10;
 }
 
 .ht-habit-name {
- font-size: 1.3rem;
- font-weight: 600;
- margin: 0;
- color: #ffffff;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.02em;
 }
 
 .ht-habit-actions {
- display: flex;
- gap: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
 }
 
 .ht-action-btn {
- background: rgba(255, 255, 255, 0.1);
- border: none;
- padding: 0.5rem;
- border-radius: 8px;
- cursor: pointer;
- font-size: 1rem;
- transition: all 0.3s ease;
+  padding: 0.5rem 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  color: rgba(255, 255, 255, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .ht-action-btn:hover {
- background: rgba(255, 255, 255, 0.2);
- transform: scale(1.1);
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.1);
+  color: #ffffff;
 }
 
 .ht-delete-btn:hover {
- background: rgba(255, 99, 99, 0.2);
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.5);
+  color: #ef4444;
 }
 
 .ht-edit-form {
- display: flex;
- gap: 0.5rem;
- align-items: center;
- flex: 1;
+  display: flex;
+  gap: 0.5rem;
+  flex: 1;
 }
 
 .ht-save-btn {
- background: rgba(76, 175, 80, 0.2);
- border: 1px solid rgba(76, 175, 80, 0.3);
- color: #4caf50;
- padding: 0.5rem 0.75rem;
- border-radius: 6px;
- cursor: pointer;
- transition: all 0.3s ease;
+  padding: 0.5rem 1rem;
+  background: rgba(34, 197, 94, 0.2);
+  border: 1px solid rgba(34, 197, 94, 0.5);
+  border-radius: 0.75rem;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 1.125rem;
+  transition: all 0.3s ease;
 }
 
 .ht-save-btn:hover {
- background: rgba(76, 175, 80, 0.3);
+  background: rgba(34, 197, 94, 0.3);
+  transform: scale(1.1);
 }
 
 .ht-cancel-btn {
- background: rgba(244, 67, 54, 0.2);
- border: 1px solid rgba(244, 67, 54, 0.3);
- color: #f44336;
- padding: 0.5rem 0.75rem;
- border-radius: 6px;
- cursor: pointer;
- transition: all 0.3s ease;
+  padding: 0.5rem 1rem;
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  border-radius: 0.75rem;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 1.125rem;
+  transition: all 0.3s ease;
 }
 
 .ht-cancel-btn:hover {
- background: rgba(244, 67, 54, 0.3);
+  background: rgba(239, 68, 68, 0.3);
+  transform: scale(1.1);
 }
 
+/* ========== WEEK CONTAINER ========== */
 .ht-week-container {
- margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 10;
+  margin-bottom: 1.5rem;
 }
 
 .ht-week-labels {
- display: grid;
- grid-template-columns: repeat(7, 1fr);
- gap: 0.5rem;
- margin-bottom: 0.75rem;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
 }
 
 .ht-day-column {
- display: flex;
- flex-direction: column;
- align-items: center;
- gap: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
 }
 
 .ht-day-label {
- font-size: 0.75rem;
- color: #8892b0;
- font-weight: 500;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .ht-date-number {
- font-size: 0.85rem;
- color: #ffffff;
- font-weight: 600;
- padding: 0.25rem;
- border-radius: 4px;
- min-width: 1.5rem;
- text-align: center;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .ht-date-number.ht-today {
- background: linear-gradient(45deg, #64ffda, #bb86fc);
- color: #0f0f23;
- font-weight: 700;
+  background: rgba(255, 255, 255, 0.9);
+  color: #000000;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.5rem;
+  font-weight: 700;
 }
 
 .ht-week-checkboxes {
- display: grid;
- grid-template-columns: repeat(7, 1fr);
- gap: 0.5rem;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.5rem;
 }
 
+/* ========== CHECKBOX STYLING ========== */
 .ht-checkbox-container {
- position: relative;
- display: flex;
- justify-content: center;
- cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  height: 3rem;
 }
 
 .ht-checkbox {
- display: none;
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
 }
 
 .ht-checkmark {
- width: 2.5rem;
- height: 2.5rem;
- border: 2px solid rgba(255, 255, 255, 0.2);
- border-radius: 50%;
- position: relative;
- transition: all 0.3s ease;
- background: rgba(255, 255, 255, 0.05);
- display: flex;
- align-items: center;
- justify-content: center;
+  position: relative;
+  height: 2.5rem;
+  width: 2.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.75rem;
+  transition: all 0.3s ease;
 }
 
 .ht-checkmark:hover {
- border-color: rgba(187, 134, 252, 0.5);
- background: rgba(187, 134, 252, 0.1);
- transform: scale(1.1);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
 }
 
-.ht-checkbox:checked + .ht-checkmark {
- background: linear-gradient(45deg, #bb86fc, #6c63ff);
- border-color: #bb86fc;
- box-shadow: 0 0 15px rgba(187, 134, 252, 0.4);
+.ht-checkbox:checked ~ .ht-checkmark {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: #ffffff;
 }
 
-.ht-checkbox:checked + .ht-checkmark::after {
- content: '✓';
- color: white;
- font-weight: bold;
- font-size: 1.1rem;
+.ht-checkmark::after {
+  content: '';
+  position: absolute;
+  display: none;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -60%) rotate(45deg);
+  width: 0.4rem;
+  height: 0.8rem;
+  border: solid #000000;
+  border-width: 0 3px 3px 0;
 }
 
-.ht-checkbox:disabled + .ht-checkmark {
- opacity: 0.3;
- cursor: not-allowed;
- background: rgba(255, 255, 255, 0.02);
- border-color: rgba(255, 255, 255, 0.1);
+.ht-checkbox:checked ~ .ht-checkmark::after {
+  display: block;
 }
 
-.ht-checkbox:disabled + .ht-checkmark.ht-future {
- opacity: 0.2;
- background: rgba(255, 255, 255, 0.01);
- border-color: rgba(255, 255, 255, 0.05);
+.ht-checkbox:disabled ~ .ht-checkmark {
+  cursor: not-allowed;
+  opacity: 0.4;
 }
 
-.ht-checkbox:disabled + .ht-checkmark:hover {
- transform: none;
- border-color: rgba(255, 255, 255, 0.1);
- background: rgba(255, 255, 255, 0.02);
+.ht-checkmark.ht-future {
+  opacity: 0.3;
+  cursor: not-allowed;
 }
 
+/* ========== HABIT STATS ========== */
 .ht-habit-stats {
- display: flex;
- justify-content: space-between;
- align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  z-index: 10;
 }
 
 .ht-streak {
- display: flex;
- align-items: center;
- gap: 0.5rem;
- font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.875rem;
 }
 
 .ht-streak-icon {
- font-size: 1.2rem;
+  font-size: 1.5rem;
 }
 
 .ht-streak-number {
- font-weight: 600;
- color: #ff6b35;
+  font-weight: 700;
+  font-size: 1.125rem;
+  color: #ffffff;
 }
 
 .ht-view-more-btn {
- background: rgba(100, 255, 218, 0.1);
- border: 1px solid rgba(100, 255, 218, 0.2);
- color: #64ffda;
- padding: 0.5rem 1rem;
- border-radius: 8px;
- cursor: pointer;
- font-size: 0.85rem;
- font-weight: 500;
- transition: all 0.3s ease;
+  padding: 0.75rem 1.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.875rem;
 }
 
 .ht-view-more-btn:hover {
- background: rgba(100, 255, 218, 0.2);
- border-color: rgba(100, 255, 218, 0.4);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
 }
 
+/* ========== EMPTY STATE ========== */
 .ht-empty-state {
- text-align: center;
- padding: 4rem 2rem;
- color: #8892b0;
+  text-align: center;
+  padding: 4rem 2rem;
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .ht-empty-state h2 {
- margin-bottom: 0.5rem;
- color: #ffffff;
+  font-size: 2rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 0.75rem;
 }
 
-/* Modal Styles */
+.ht-empty-state p {
+  font-size: 1.125rem;
+}
+
+/* ========== MODALS ========== */
 .ht-modal-overlay {
- position: fixed;
- top: 0;
- left: 0;
- right: 0;
- bottom: 0;
- background: rgba(0, 0, 0, 0.7);
- display: flex;
- align-items: center;
- justify-content: center;
- z-index: 1000;
- backdrop-filter: blur(5px);
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 2rem;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .ht-modal {
- background: rgba(15, 15, 35, 0.95);
- border: 1px solid rgba(255, 255, 255, 0.1);
- border-radius: 20px;
- padding: 2rem;
- max-width: 90vw;
- max-height: 90vh;
- overflow-y: auto;
- backdrop-filter: blur(20px);
- box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+  background: linear-gradient(to bottom right, #18181b, #000000);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 1.5rem;
+  padding: 2.5rem;
+  max-width: 700px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.9);
+  position: relative;
+  animation: scaleIn 0.3s ease;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ========== CONFIRMATION DIALOG ========== */
+.ht-confirm-dialog {
+  background: linear-gradient(to bottom right, #18181b, #000000);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 1.5rem;
+  padding: 2.5rem;
+  max-width: 450px;
+  width: 100%;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.9);
+  position: relative;
+  animation: scaleIn 0.3s ease;
+}
+
+.ht-confirm-dialog::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.05), transparent);
+  border-radius: 1.5rem;
+  pointer-events: none;
+}
+
+.ht-confirm-content {
+  position: relative;
+  z-index: 10;
+}
+
+.ht-confirm-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 1rem;
+}
+
+.ht-confirm-message {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.ht-confirm-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+.ht-confirm-btn {
+  padding: 0.875rem 2rem;
+  border-radius: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.ht-confirm-btn-primary {
+  background: rgba(239, 68, 68, 0.9);
+  color: #ffffff;
+}
+
+.ht-confirm-btn-primary:hover {
+  background: rgba(239, 68, 68, 1);
+  transform: scale(1.05);
+  box-shadow: 0 8px 32px rgba(239, 68, 68, 0.3);
+}
+
+.ht-confirm-btn-secondary {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.ht-confirm-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
+.ht-modal::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.05), transparent);
+  border-radius: 1.5rem;
+  pointer-events: none;
 }
 
 .ht-modal-header {
- display: flex;
- justify-content: space-between;
- align-items: center;
- margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 10;
 }
 
 .ht-modal-header h2 {
- margin: 0;
- color: #ffffff;
- font-size: 1.5rem;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffffff;
 }
 
 .ht-close-btn {
- background: rgba(255, 255, 255, 0.1);
- border: none;
- color: #ffffff;
- font-size: 1.5rem;
- padding: 0.5rem;
- border-radius: 8px;
- cursor: pointer;
- transition: all 0.3s ease;
+  padding: 0.5rem 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  color: #ffffff;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  line-height: 1;
 }
 
 .ht-close-btn:hover {
- background: rgba(255, 255, 255, 0.2);
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.5);
+  transform: scale(1.1);
 }
 
+/* ========== MONTH NAVIGATION ========== */
 .ht-month-navigation {
- display: flex;
- justify-content: space-between;
- align-items: center;
- margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 10;
 }
 
 .ht-month-navigation h3 {
- margin: 0;
- color: #ffffff;
- font-size: 1.3rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ffffff;
 }
 
 .ht-nav-btn {
- background: rgba(187, 134, 252, 0.1);
- border: 1px solid rgba(187, 134, 252, 0.2);
- color: #bb86fc;
- font-size: 1.5rem;
- padding: 0.5rem 0.75rem;
- border-radius: 8px;
- cursor: pointer;
- transition: all 0.3s ease;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  color: #ffffff;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  line-height: 1;
 }
 
 .ht-nav-btn:hover {
- background: rgba(187, 134, 252, 0.2);
- border-color: rgba(187, 134, 252, 0.4);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
 }
 
+/* ========== MONTHLY STATS ========== */
 .ht-monthly-stats {
- display: grid;
- grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
- gap: 1rem;
- margin-bottom: 2rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 10;
 }
 
 .ht-stat-item {
- background: rgba(255, 255, 255, 0.05);
- border: 1px solid rgba(255, 255, 255, 0.1);
- border-radius: 12px;
- padding: 1rem;
- text-align: center;
- display: flex;
- flex-direction: column;
- gap: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.25rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  transition: all 0.3s ease;
+}
+
+.ht-stat-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: scale(1.02);
 }
 
 .ht-stat-item span:first-child {
- color: #8892b0;
- font-size: 0.85rem;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 500;
 }
 
 .ht-stat-item span:last-child {
- color: #64ffda;
- font-size: 1.2rem;
- font-weight: 600;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ffffff;
 }
 
+/* ========== CALENDAR ========== */
 .ht-calendar {
- background: rgba(255, 255, 255, 0.02);
- border-radius: 12px;
- padding: 1rem;
- border: 1px solid rgba(255, 255, 255, 0.05);
+  position: relative;
+  z-index: 10;
 }
 
 .ht-calendar-header {
- display: grid;
- grid-template-columns: repeat(7, 1fr);
- gap: 0.5rem;
- margin-bottom: 1rem;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .ht-calendar-day-header {
- text-align: center;
- padding: 0.5rem;
- color: #8892b0;
- font-weight: 500;
- font-size: 0.85rem;
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+  padding: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .ht-calendar-body {
- display: grid;
- grid-template-columns: repeat(7, 1fr);
- gap: 0.5rem;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.5rem;
 }
 
 .ht-calendar-day {
- aspect-ratio: 1;
- display: flex;
- align-items: center;
- justify-content: center;
- border-radius: 8px;
- cursor: pointer;
- font-weight: 500;
- transition: all 0.3s ease;
- border: 1px solid transparent;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
 }
 
 .ht-calendar-day.empty {
- cursor: default;
+  background: transparent;
 }
 
 .ht-calendar-day.available {
- background: rgba(255, 255, 255, 0.05);
- border-color: rgba(255, 255, 255, 0.1);
- color: #ffffff;
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
 }
 
 .ht-calendar-day.available:hover {
- background: rgba(187, 134, 252, 0.1);
- border-color: rgba(187, 134, 252, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  transform: scale(1.1);
 }
 
 .ht-calendar-day.completed {
- background: linear-gradient(45deg, #bb86fc, #6c63ff);
- color: white;
- font-weight: 600;
- box-shadow: 0 0 10px rgba(187, 134, 252, 0.3);
+  background: rgba(255, 255, 255, 0.9);
+  color: #000000;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.ht-calendar-day.completed:hover {
+  background: rgba(255, 255, 255, 0.8);
+  transform: scale(1.1);
 }
 
 .ht-calendar-day.future {
- background: rgba(255, 255, 255, 0.02);
- color: #555;
- cursor: not-allowed;
+  background: rgba(255, 255, 255, 0.02);
+  color: rgba(255, 255, 255, 0.3);
+  cursor: not-allowed;
 }
 
-/* Global Stats Styles */
+/* ========== GLOBAL STATS ========== */
 .ht-global-stats {
- min-width: 500px;
+  position: relative;
+  z-index: 10;
 }
 
 .ht-motivational-message {
- background: linear-gradient(45deg, rgba(187, 134, 252, 0.1), rgba(100, 255, 218, 0.1));
- border: 1px solid rgba(187, 134, 252, 0.2);
- border-radius: 12px;
- padding: 1.5rem;
- text-align: center;
- font-size: 1.1rem;
- font-weight: 500;
- color: #64ffda;
- margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.125rem;
+  font-style: italic;
+  text-align: center;
+  margin-bottom: 2rem;
+  line-height: 1.6;
 }
 
 .ht-global-overview {
- display: grid;
- grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
- gap: 1rem;
- margin-bottom: 2rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
 }
 
 .ht-stat-card {
- background: rgba(255, 255, 255, 0.05);
- border: 1px solid rgba(255, 255, 255, 0.1);
- border-radius: 12px;
- padding: 1.5rem 1rem;
- text-align: center;
- transition: all 0.3s ease;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  text-align: center;
+  transition: all 0.3s ease;
 }
 
 .ht-stat-card:hover {
- border-color: rgba(187, 134, 252, 0.3);
- transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: scale(1.02);
 }
 
 .ht-stat-card h4 {
- margin: 0 0 0.5rem 0;
- color: #8892b0;
- font-size: 0.85rem;
- font-weight: 500;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 500;
+  margin-bottom: 0.75rem;
 }
 
 .ht-stat-value {
- font-size: 1.5rem;
- font-weight: 700;
- color: #64ffda;
+  display: block;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffffff;
 }
 
+/* ========== HABIT BREAKDOWN ========== */
 .ht-habit-breakdown {
- border-top: 1px solid rgba(255, 255, 255, 0.1);
- padding-top: 1.5rem;
+  margin-top: 2rem;
 }
 
 .ht-habit-breakdown h3 {
- margin: 0 0 1rem 0;
- color: #ffffff;
- font-size: 1.2rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 1rem;
 }
 
 .ht-habit-summary {
- display: flex;
- justify-content: space-between;
- align-items: center;
- padding: 0.75rem 1rem;
- background: rgba(255, 255, 255, 0.03);
- border: 1px solid rgba(255, 255, 255, 0.05);
- border-radius: 8px;
- margin-bottom: 0.5rem;
- transition: all 0.3s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  margin-bottom: 0.75rem;
+  transition: all 0.3s ease;
 }
 
 .ht-habit-summary:hover {
- border-color: rgba(255, 255, 255, 0.1);
- background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateX(0.5rem);
 }
 
 .ht-habit-summary-name {
- color: #ffffff;
- font-weight: 500;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
 }
 
 .ht-habit-summary-stats {
- display: flex;
- gap: 1rem;
- font-size: 0.85rem;
- color: #8892b0;
+  display: flex;
+  gap: 1.5rem;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.7);
 }
 
-/* Notification Styles */
+/* ========== NOTIFICATION ========== */
 .ht-notification {
- position: fixed;
- bottom: 2rem;
- left: 50%;
- transform: translateX(-50%);
- padding: 1rem 1.5rem;
- border-radius: 12px;
- font-weight: 500;
- z-index: 1100;
- backdrop-filter: blur(20px);
- animation: slideUp 0.3s ease;
- box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  padding: 1rem 1.5rem;
+  border-radius: 1rem;
+  font-weight: 600;
+  z-index: 2000;
+  animation: slideIn 0.3s ease;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(12px);
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 .ht-notification.success {
- background: rgba(76, 175, 80, 0.2);
- border: 1px solid rgba(76, 175, 80, 0.3);
- color: #4caf50;
+  background: rgba(34, 197, 94, 0.2);
+  border: 1px solid rgba(34, 197, 94, 0.5);
+  color: #ffffff;
 }
 
 .ht-notification.error {
- background: rgba(244, 67, 54, 0.2);
- border: 1px solid rgba(244, 67, 54, 0.3);
- color: #f44336;
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  color: #ffffff;
 }
 
-@keyframes slideUp {
- from {
-   opacity: 0;
-   transform: translateX(-50%) translateY(20px);
- }
- to {
-   opacity: 1;
-   transform: translateX(-50%) translateY(0);
- }
+/* ========== SCROLLBAR ========== */
+.ht-modal::-webkit-scrollbar {
+  width: 8px;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
- .ht-container {
-   padding: 1rem;
- }
-  .ht-title {
-   font-size: 2rem;
- }
+.ht-modal::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 1rem;
+}
+
+.ht-modal::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 1rem;
+}
+
+.ht-modal::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 1024px) {
+  .ht-container {
+    padding: 8rem 2rem 2rem 2rem;
+  }
+
   .ht-header {
-   flex-direction: column;
-   align-items: stretch;
-   gap: 1rem;
- }
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+
   .ht-header-controls {
-   justify-content: center;
- }
+    width: 100%;
+    justify-content: flex-start;
+  }
+
   .ht-habits-grid {
-   grid-template-columns: 1fr;
- }
-  .ht-modal {
-   margin: 1rem;
-   padding: 1.5rem;
- }
-  .ht-global-stats {
-   min-width: auto;
- }
+    grid-template-columns: 1fr;
+  }
+
   .ht-global-overview {
-   grid-template-columns: repeat(2, 1fr);
- }
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .ht-title {
+    font-size: 2rem;
+  }
+
+  .ht-header-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .ht-stats-btn,
+  .ht-add-habit-btn {
+    width: 100%;
+  }
+
+  .ht-monthly-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .ht-modal,
+  .ht-confirm-dialog {
+    padding: 1.5rem;
+  }
 }

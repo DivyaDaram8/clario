@@ -3,6 +3,7 @@ import { BookOpen, Bookmark, ChevronLeft, ChevronRight, Filter, X, List, Sparkle
 import NavbarLeft from "../layout/NavbarLeft";
 import NavbarTop from "../layout/NavbarTop";
 import { apiRequest } from "../api";
+import '../styles/Books.css';
 
 export default function Books() {
   const [books, setBooks] = useState([]);
@@ -180,11 +181,11 @@ export default function Books() {
     setShowTableOfContents(true);
   };
 
-  const getStatusColor = (status) => {
+  const getStatusClass = (status) => {
     switch(status) {
-      case 'completed': return 'text-green-400';
-      case 'in_progress': return 'text-blue-400';
-      default: return 'text-gray-400';
+      case 'completed': return 'completed';
+      case 'in_progress': return 'in-progress';
+      default: return 'not-started';
     }
   };
 
@@ -200,17 +201,15 @@ export default function Books() {
 
   if (loading) {
     return (
-      <div className="flex h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
-        <NavbarLeft />
-        <div className="flex-1 flex flex-col">
-          <NavbarTop />
-          <div className="flex-1 flex items-center justify-center">
-            <div className="relative">
-              <div className="absolute inset-0 blur-3xl bg-blue-500/30 animate-pulse"></div>
-              <div className="relative backdrop-blur-xl bg-white/10 rounded-3xl p-12 border border-white/20">
-                <Sparkles className="w-16 h-16 text-blue-300 animate-spin mx-auto mb-4" />
-                <p className="text-white text-2xl font-semibold">Loading your library...</p>
-              </div>
+      <div className="books-loading">
+        {/* <NavbarLeft /> */}
+        <div className="books-main">
+          {/* <NavbarTop /> */}
+          <div className="books-loading-content">
+            <div className="books-loading-blur"></div>
+            <div className="books-loading-card">
+              <Sparkles className="books-loading-icon" />
+              <p className="books-loading-text">Loading your library...</p>
             </div>
           </div>
         </div>
@@ -225,40 +224,33 @@ export default function Books() {
       : selectedBook.progress;
 
     return (
-      <div className="flex h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 overflow-hidden">
+      <div className="books-reader">
         <NavbarLeft />
-        <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="books-main">
           <NavbarTop />
-          <div className="flex-1 overflow-y-auto p-4 md:p-6">
-            <div className="max-w-5xl mx-auto">
+          <div className="books-reader-content">
+            <div className="books-reader-inner">
               {/* Header Card */}
-              <div className="backdrop-blur-xl bg-white/10 rounded-3xl p-4 md:p-6 mb-6 border border-white/20 shadow-2xl animate-slide-down">
-                <button
-                  onClick={closeBook}
-                  className="mb-4 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-xl transition-all duration-300 text-white flex items-center gap-2 hover:scale-105 hover:shadow-lg"
-                >
+              <div className="books-reader-header-card">
+                <button onClick={closeBook} className="books-back-btn">
                   <ChevronLeft size={20} /> Back to Library
                 </button>
                 
-                <div className="flex flex-col md:flex-row items-start justify-between gap-4">
-                  <div className="flex-1">
-                    <h1 className="text-3xl md:text-4xl font-bold text-white mb-2 leading-tight">
-                      {selectedBook.title}
-                    </h1>
-                    <p className="text-lg md:text-xl text-blue-200 mb-3">by {selectedBook.author}</p>
-                    <span className="inline-block px-4 py-1 bg-purple-500/30 rounded-full text-purple-200 text-sm backdrop-blur-sm border border-purple-300/20">
-                      {selectedBook.genre}
-                    </span>
+                <div className="books-reader-header">
+                  <div className="books-reader-info">
+                    <h1 className="books-reader-title">{selectedBook.title}</h1>
+                    <p className="books-reader-author">by {selectedBook.author}</p>
+                    <span className="books-reader-genre">{selectedBook.genre}</span>
                   </div>
                   
                   <button
                     onClick={() => toggleBookmark(selectedBook._id)}
                     disabled={bookmarkLoading === selectedBook._id}
-                    className="p-3 rounded-full bg-white/20 hover:bg-white/30 transition-all duration-300 hover:scale-110 hover:rotate-12 disabled:opacity-50"
+                    className="books-reader-bookmark"
                   >
                     <Bookmark
                       size={24}
-                      className={`transition-all ${selectedBook.bookmarked ? 'fill-yellow-400 text-yellow-400' : 'text-white'} ${bookmarkLoading === selectedBook._id ? 'animate-pulse' : ''}`}
+                      className={`books-bookmark-icon ${selectedBook.bookmarked ? 'bookmarked' : ''} ${bookmarkLoading === selectedBook._id ? 'loading' : ''}`}
                     />
                   </button>
                 </div>
@@ -266,108 +258,82 @@ export default function Books() {
 
               {/* Table of Contents OR Current Section */}
               {showTableOfContents ? (
-                <div className="backdrop-blur-xl bg-white/10 rounded-3xl p-4 md:p-6 mb-6 border border-white/20 shadow-2xl animate-fade-in-up">
-                  <h2 className="text-2xl md:text-3xl font-bold text-white mb-6 flex items-center gap-2">
-                    <BookOpen size={28} className="text-blue-300" /> 
-                    <span className="bg-gradient-to-r from-blue-300 to-purple-300 bg-clip-text text-transparent">
-                      Table of Contents
-                    </span>
+                <div className="books-toc-card">
+                  <h2 className="books-toc-title">
+                    <BookOpen size={28} className="books-toc-icon" /> 
+                    <span className="books-toc-gradient-text">Table of Contents</span>
                   </h2>
-                  <div className="grid grid-cols-1 gap-3">
+                  <div className="books-toc-list">
                     {selectedBook.summary.map((section, idx) => {
                       const isRead = idx < (selectedBook.lastReadSection || 0);
                       return (
                         <button
                           key={idx}
                           onClick={() => selectSection(idx)}
-                          className={`text-left p-4 rounded-xl transition-all duration-300 flex items-center justify-between group relative overflow-hidden ${
-                            isRead 
-                              ? 'bg-green-500/20 border border-green-400/30' 
-                              : 'bg-white/10 border border-white/20'
-                          } hover:bg-white/20 hover:scale-[1.02] hover:shadow-lg`}
+                          className={`books-toc-item ${isRead ? 'read' : ''}`}
                         >
-                          <div className="absolute inset-0 bg-gradient-to-r from-blue-500/0 via-blue-500/10 to-purple-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                          <span className="relative z-10 flex items-center gap-3">
-                            <span className={`font-bold text-lg ${isRead ? 'text-green-300' : 'text-blue-300'}`}>
-                              {idx + 1}.
-                            </span>
-                            <span className={`font-medium ${isRead ? 'text-green-100' : 'text-blue-100'}`}>
-                              {section.title}
-                            </span>
+                          <span className="books-toc-item-content">
+                            <span className="books-toc-item-number">{idx + 1}.</span>
+                            <span className="books-toc-item-title">{section.title}</span>
                           </span>
-                          <ChevronRight 
-                            size={20} 
-                            className="opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:translate-x-1 text-blue-300 relative z-10" 
-                          />
+                          <ChevronRight size={20} className="books-toc-item-arrow" />
                         </button>
                       );
                     })}
                   </div>
                 </div>
               ) : (
-                <div className="backdrop-blur-xl bg-white/10 rounded-3xl p-6 md:p-8 mb-6 border border-white/20 shadow-2xl animate-fade-in-up">
-                  <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 gap-4">
-                    <h3 className="text-2xl md:text-3xl font-bold text-white leading-tight">
+                <div className="books-section-card">
+                  <div className="books-section-header">
+                    <h3 className="books-section-title">
                       {selectedBook.summary[currentSection].title}
                     </h3>
-                    <button
-                      onClick={backToTableOfContents}
-                      className="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-xl transition-all duration-300 text-white flex items-center gap-2 text-sm hover:scale-105 whitespace-nowrap"
-                    >
+                    <button onClick={backToTableOfContents} className="books-toc-btn">
                       <List size={18} /> Contents
                     </button>
                   </div>
-                  <div className="prose prose-invert max-w-none">
-                    <div className="text-base md:text-lg text-blue-50 leading-relaxed whitespace-pre-wrap">
-                      {selectedBook.summary[currentSection].content}
-                    </div>
+                  <div className="books-section-content">
+                    {selectedBook.summary[currentSection].content}
                   </div>
                 </div>
               )}
 
               {/* Navigation Bar */}
-              <div className="backdrop-blur-xl bg-white/10 rounded-3xl p-4 md:p-6 border border-white/20 shadow-2xl sticky bottom-4 animate-slide-up">
-                <div className="flex items-center justify-between mb-4 gap-2">
-                  <button
-                    onClick={() => navigateSection(-1)}
-                    className="px-4 md:px-6 py-3 rounded-xl flex items-center gap-2 font-semibold transition-all duration-300 bg-blue-500/40 text-white hover:bg-blue-500/60 hover:scale-105 hover:shadow-lg text-sm md:text-base"
-                  >
+              <div className="books-nav-card">
+                <div className="books-nav-controls">
+                  <button onClick={() => navigateSection(-1)} className="books-nav-btn">
                     <ChevronLeft size={20} /> 
-                    <span className="hidden sm:inline">{showTableOfContents ? 'Previous' : 'Back'}</span>
+                    <span className="desktop-only">{showTableOfContents ? 'Previous' : 'Back'}</span>
                   </button>
 
-                  <div className="text-center flex-1">
-                    <p className="text-white font-semibold text-sm md:text-lg">
+                  <div className="books-nav-info">
+                    <p className="books-nav-position">
                       {showTableOfContents 
                         ? 'Table of Contents' 
                         : `Section ${currentSection + 1} of ${totalSections}`
                       }
                     </p>
-                    <p className="text-blue-200 text-xs md:text-sm">{completionPercentage}% Complete</p>
+                    <p className="books-nav-progress-text">{completionPercentage}% Complete</p>
                   </div>
 
                   <button
                     onClick={() => navigateSection(1)}
                     disabled={!showTableOfContents && currentSection === totalSections - 1}
-                    className={`px-4 md:px-6 py-3 rounded-xl flex items-center gap-2 font-semibold transition-all duration-300 text-sm md:text-base ${
-                      !showTableOfContents && currentSection === totalSections - 1
-                        ? 'bg-gray-500/30 text-gray-400 cursor-not-allowed'
-                        : 'bg-blue-500/40 text-white hover:bg-blue-500/60 hover:scale-105 hover:shadow-lg'
-                    }`}
+                    className="books-nav-btn"
                   >
-                    <span className="hidden sm:inline">Next</span>
+                    <span className="desktop-only">Next</span>
                     <ChevronRight size={20} />
                   </button>
                 </div>
 
                 {/* Progress Bar */}
-                <div className="w-full bg-white/20 rounded-full h-3 overflow-hidden relative">
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer"></div>
+                <div className="books-nav-progress-bar-container">
+                  <div className="books-nav-progress-shimmer"></div>
                   <div
-                    className="bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 h-full transition-all duration-500 rounded-full relative z-10"
+                    className="books-nav-progress-bar-fill"
                     style={{ width: `${completionPercentage}%` }}
                   >
-                    <div className="absolute inset-0 bg-white/30 animate-pulse-slow"></div>
+                    <div className="books-nav-progress-pulse"></div>
                   </div>
                 </div>
               </div>
@@ -379,74 +345,72 @@ export default function Books() {
   }
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 overflow-hidden">
+    <div className="books-container">
       <NavbarLeft />
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="books-main">
         <NavbarTop />
-        <div className="flex-1 overflow-y-auto p-4 md:p-6">
-          <div className="max-w-7xl mx-auto">
+        <div className="books-content">
+          <div className="books-content-inner">
             {/* Header */}
-            <div className="mb-8 animate-fade-in">
-              <h1 className="text-4xl md:text-5xl font-bold text-white mb-2 bg-gradient-to-r from-blue-300 via-purple-300 to-pink-300 bg-clip-text text-transparent">
-                Your Library
-              </h1>
-              <p className="text-lg md:text-xl text-blue-200">Read any book in 5-10 minutes ⚡</p>
+            <div className="books-library-header">
+              <h1 className="books-library-title">Your Library</h1>
+              <p className="books-library-subtitle">Read any book in 5-10 minutes ⚡</p>
             </div>
 
             {/* Filters */}
-            <div className="backdrop-blur-xl bg-white/10 rounded-3xl p-4 md:p-6 mb-8 border border-white/20 shadow-2xl animate-slide-down">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl md:text-2xl font-bold text-white flex items-center gap-2">
-                  <Filter size={24} className="text-blue-300" /> 
+            <div className="books-filters-card">
+              <div className="books-filters-header">
+                <h2 className="books-filters-title">
+                  <Filter size={24} className="books-filters-icon" /> 
                   <span>Filters</span>
                 </h2>
                 <button
                   onClick={() => setShowFilters(!showFilters)}
-                  className="md:hidden p-2 bg-white/20 rounded-lg hover:bg-white/30 transition-all hover:scale-110"
+                  className="books-filters-toggle"
                 >
-                  {showFilters ? <X size={20} className="text-white" /> : <Filter size={20} className="text-white" />}
+                  {showFilters ? <X size={20} /> : <Filter size={20} />}
                 </button>
               </div>
               
-              <div className={`grid grid-cols-1 md:grid-cols-3 gap-4 transition-all duration-300 ${showFilters ? 'block' : 'hidden md:grid'}`}>
-                <div>
-                  <label className="block text-blue-200 mb-2 font-semibold text-sm">Genre</label>
+              <div className={`books-filters-grid ${showFilters ? '' : 'mobile-hidden'}`}>
+                <div className="books-filter-group">
+                  <label>Genre</label>
                   <select
                     value={filters.genre}
                     onChange={(e) => setFilters({ ...filters, genre: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl bg-white/20 text-white border border-white/30 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all backdrop-blur-sm"
+                    className="books-filter-select"
                   >
                     {uniqueGenres.map(genre => (
-                      <option key={genre} value={genre} className="bg-gray-900">
+                      <option key={genre} value={genre}>
                         {genre === 'all' ? 'All Genres' : genre}
                       </option>
                     ))}
                   </select>
                 </div>
 
-                <div>
-                  <label className="block text-blue-200 mb-2 font-semibold text-sm">Status</label>
+                <div className="books-filter-group">
+                  <label>Status</label>
                   <select
                     value={filters.status}
                     onChange={(e) => setFilters({ ...filters, status: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl bg-white/20 text-white border border-white/30 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all backdrop-blur-sm"
+                    className="books-filter-select"
                   >
-                    <option value="all" className="bg-gray-900">All Status</option>
-                    <option value="not_started" className="bg-gray-900">Not Started</option>
-                    <option value="in_progress" className="bg-gray-900">In Progress</option>
-                    <option value="completed" className="bg-gray-900">Completed</option>
+                    <option value="all">All Status</option>
+                    <option value="not_started">Not Started</option>
+                    <option value="in_progress">In Progress</option>
+                    <option value="completed">Completed</option>
                   </select>
                 </div>
 
-                <div>
-                  <label className="block text-blue-200 mb-2 font-semibold text-sm">Bookmarked</label>
+                <div className="books-filter-group">
+                  <label>Bookmarked</label>
                   <select
                     value={filters.bookmarked}
                     onChange={(e) => setFilters({ ...filters, bookmarked: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl bg-white/20 text-white border border-white/30 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all backdrop-blur-sm"
+                    className="books-filter-select"
                   >
-                    <option value="all" className="bg-gray-900">All Books</option>
-                    <option value="true" className="bg-gray-900">Bookmarked Only</option>
+                    <option value="all">All Books</option>
+                    <option value="true">Bookmarked Only</option>
                   </select>
                 </div>
               </div>
@@ -454,67 +418,61 @@ export default function Books() {
 
             {/* Books Grid */}
             {filteredBooks.length === 0 ? (
-              <div className="text-center py-20 animate-fade-in">
-                <div className="backdrop-blur-xl bg-white/10 rounded-3xl p-12 border border-white/20 inline-block">
-                  <BookOpen className="w-20 h-20 text-blue-300 mx-auto mb-4 opacity-50" />
-                  <p className="text-2xl text-white font-semibold">No books found</p>
-                  <p className="text-blue-200 mt-2">Try adjusting your filters</p>
+              <div className="books-empty-state">
+                <div className="books-empty-card">
+                  <BookOpen className="books-empty-icon" />
+                  <p className="books-empty-title">No books found</p>
+                  <p className="books-empty-subtitle">Try adjusting your filters</p>
                 </div>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              <div className="books-grid">
                 {filteredBooks.map((book, idx) => (
                   <div
                     key={book._id}
-                    className="backdrop-blur-xl bg-white/10 rounded-2xl p-4 md:p-5 border border-white/20 shadow-2xl hover:scale-105 hover:bg-white/20 transition-all duration-300 cursor-pointer animate-fade-in group relative overflow-hidden"
+                    className="books-card"
                     style={{ animationDelay: `${idx * 0.05}s` }}
                     onClick={() => openBook(book._id)}
                   >
-                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500/0 via-purple-500/0 to-pink-500/0 group-hover:from-blue-500/10 group-hover:via-purple-500/10 group-hover:to-pink-500/10 transition-all duration-500"></div>
-                    
-                    <div className="relative mb-4">
+                    <div className="books-cover-container">
                       <img
                         src={book.coverUrl || 'https://via.placeholder.com/200x300?text=No+Cover'}
                         alt={book.title}
-                        className="w-full h-64 object-cover rounded-xl shadow-lg group-hover:shadow-2xl transition-all duration-300"
+                        className="books-cover"
                         loading="lazy"
                       />
                       <button
                         onClick={(e) => toggleBookmark(book._id, e)}
                         disabled={bookmarkLoading === book._id}
-                        className="absolute top-3 right-3 p-2 bg-black/50 backdrop-blur-sm rounded-full hover:bg-black/70 transition-all hover:scale-110 hover:rotate-12 disabled:opacity-50"
+                        className="books-bookmark-btn"
                       >
                         <Bookmark
                           size={20}
-                          className={`transition-all ${book.bookmarked ? 'fill-yellow-400 text-yellow-400' : 'text-white'} ${bookmarkLoading === book._id ? 'animate-pulse' : ''}`}
+                          className={`books-bookmark-icon ${book.bookmarked ? 'bookmarked' : ''} ${bookmarkLoading === book._id ? 'loading' : ''}`}
                         />
                       </button>
                     </div>
 
-                    <h3 className="text-lg md:text-xl font-bold text-white mb-1 line-clamp-2 relative z-10">
-                      {book.title}
-                    </h3>
-                    <p className="text-blue-200 mb-3 text-sm relative z-10">{book.author}</p>
-                    
-                    <div className="flex items-center justify-between mb-3 relative z-10">
-                      <span className="px-3 py-1 bg-purple-500/30 rounded-full text-purple-200 text-xs backdrop-blur-sm border border-purple-300/20">
-                        {book.genre}
-                      </span>
-                      <span className={`text-xs md:text-sm font-semibold ${getStatusColor(book.status)}`}>
-                        {getStatusText(book.status)}
-                      </span>
-                    </div>
+                    <div className="books-card-content">
+                      <h3 className="books-title">{book.title}</h3>
+                      <p className="books-author">{book.author}</p>
+                      
+                      <div className="books-meta">
+                        <span className="books-genre-badge">{book.genre}</span>
+                        <span className={`books-status ${getStatusClass(book.status)}`}>
+                          {getStatusText(book.status)}
+                        </span>
+                      </div>
 
-                    {/* Progress Bar */}
-                    <div className="w-full bg-white/20 rounded-full h-2 overflow-hidden mb-2 relative z-10">
-                      <div
-                        className="bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 h-full transition-all duration-500 rounded-full"
-                        style={{ width: `${book.progress}%` }}
-                      ></div>
+                      {/* Progress Bar */}
+                      <div className="books-progress-container">
+                        <div
+                          className="books-progress-bar"
+                          style={{ width: `${book.progress}%` }}
+                        ></div>
+                      </div>
+                      <p className="books-progress-text">{book.progress}% complete</p>
                     </div>
-                    <p className="text-right text-blue-200 text-xs md:text-sm relative z-10">
-                      {book.progress}% complete
-                    </p>
                   </div>
                 ))}
               </div>
@@ -522,95 +480,6 @@ export default function Books() {
           </div>
         </div>
       </div>
-
-      <style jsx>{`
-        @keyframes fade-in {
-          from {
-            opacity: 0;
-            transform: translateY(10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes slide-down {
-          from {
-            opacity: 0;
-            transform: translateY(-20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes slide-up {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes fade-in-up {
-          from {
-            opacity: 0;
-            transform: translateY(30px) scale(0.95);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-          }
-        }
-
-        @keyframes shimmer {
-          0% {
-            transform: translateX(-100%);
-          }
-          100% {
-            transform: translateX(100%);
-          }
-        }
-
-        @keyframes pulse-slow {
-          0%, 100% {
-            opacity: 0.3;
-          }
-          50% {
-            opacity: 0.5;
-          }
-        }
-
-        .animate-fade-in {
-          animation: fade-in 0.6s ease-out forwards;
-          opacity: 0;
-        }
-
-        .animate-slide-down {
-          animation: slide-down 0.5s ease-out;
-        }
-
-        .animate-slide-up {
-          animation: slide-up 0.4s ease-out;
-        }
-
-        .animate-fade-in-up {
-          animation: fade-in-up 0.5s ease-out;
-        }
-
-        .animate-shimmer {
-          animation: shimmer 2s infinite;
-        }
-
-        .animate-pulse-slow {
-          animation: pulse-slow 2s ease-in-out infinite;
-        }
-      `}</style>
     </div>
   );
 }

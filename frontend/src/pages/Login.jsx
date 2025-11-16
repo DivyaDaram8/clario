@@ -1,7 +1,8 @@
+// ========== Login.jsx ==========
 import React, { useState } from "react";
 import axios from "axios";
 import "../styles/Auth.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -48,6 +49,10 @@ const Login = () => {
           <button type="submit">Login</button>
         </form>
         {message && <div className="message">{message}</div>}
+        
+        <div className="auth-switch">
+          <p>New user? <Link to="/signup">Create an account</Link></p>
+        </div>
       </div>
     </div>
   );

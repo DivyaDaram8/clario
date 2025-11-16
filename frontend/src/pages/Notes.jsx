@@ -3,15 +3,20 @@ import { apiRequest } from "../api";
 import NavbarLeft from "../layout/NavbarLeft";
 import NavbarTop from "../layout/NavbarTop";
 import NoteCard from "../components/notes/NoteCard";
-import { FaPlus } from "react-icons/fa";
-import { AnimatePresence, motion } from "framer-motion";
+import { Plus } from "lucide-react";
+import "../styles/Note.css";
 
-export default function NotesPage() {
+export default function Notes() {
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [showColors, setShowColors] = useState(false);
+  const [notification, setNotification] = useState({ message: "", type: "", show: false });
 
-  const presetColors = ["#FDE68A", "#86EFAC", "#93C5FD", "#FCA5A5", "#C4B5FD", "#FBBF24"];
+  const showNotification = (message, type = "success") => {
+    setNotification({ message, type, show: true });
+    setTimeout(() => {
+      setNotification({ message: "", type: "", show: false });
+    }, 3000);
+  };
 
   const fetchNotes = async () => {
     try {
@@ -19,7 +24,7 @@ export default function NotesPage() {
       const data = await apiRequest("/notes", "GET");
       setNotes(data || []);
     } catch (err) {
-      console.error(err.message);
+      showNotification("Failed to fetch notes", "error");
     } finally {
       setLoading(false);
     }
@@ -29,40 +34,49 @@ export default function NotesPage() {
     fetchNotes();
   }, []);
 
-  // Create empty note at the first slot
-const createEmptyNote = async (color) => {
-  try {
-    // Close the color bar first
-    setShowColors(false);
+  // Create empty note immediately when Add is clicked
+  const createEmptyNote = async () => {
+    try {
+      // optimistic UI: add a temporary local note right away
+      const tempId = `temp-${Date.now()}`;
+      const tempNote = {
+        _id: tempId,
+        title: "",
+        content: "",
+        isPinned: false,
+        createdAt: new Date().toISOString(),
+        // any other fields your UI expects
+      };
+      setNotes((prev) => [tempNote, ...prev]);
 
-    // Wait for the close animation to finish before adding the note
-    setTimeout(async () => {
       const created = await apiRequest("/notes", "POST", {
         title: "",
         content: "",
-        color,
         isPinned: false,
       });
+
+      // replace temp note with server note (or refresh if something odd)
       if (created && created._id) {
-        setNotes((prev) => [created, ...prev]); // top position
+        setNotes((prev) => {
+          return prev.map((n) => (n._id === tempId ? created : n));
+        });
+        showNotification("Note created successfully!");
       } else {
+        // server didn't return expected item — refetch to sync
         fetchNotes();
       }
-    }, 200); // match your framer-motion exit animation time
-  } catch (e) {
-    console.error(e);
-  }
-};
-
+    } catch (e) {
+      showNotification("Failed to create note", "error");
+      fetchNotes(); // sync back to server state
+    }
+  };
 
   const updateNote = async (id, patch) => {
     try {
-      setNotes((prev) =>
-        prev.map((n) => (n._id === id ? { ...n, ...patch } : n))
-      );
+      setNotes((prev) => prev.map((n) => (n._id === id ? { ...n, ...patch } : n)));
       await apiRequest(`/notes/${id}`, "PUT", patch);
     } catch (e) {
-      console.error(e);
+      showNotification("Failed to update note", "error");
     }
   };
 
@@ -70,8 +84,9 @@ const createEmptyNote = async (color) => {
     try {
       setNotes((prev) => prev.filter((n) => n._id !== id));
       await apiRequest(`/notes/${id}`, "DELETE");
+      showNotification("Note deleted successfully!");
     } catch (e) {
-      console.error(e);
+      showNotification("Failed to delete note", "error");
       fetchNotes();
     }
   };
@@ -81,158 +96,46 @@ const createEmptyNote = async (color) => {
     [notes]
   );
 
-  const MAX_SLOTS = 12;
-  const placeholders = Math.max(0, MAX_SLOTS - sortedNotes.length);
+  if (loading) {
+    return <div className="notes-loading">Loading notes...</div>;
+  }
 
   return (
-    <>
-      <NavbarLeft />
-      <NavbarTop />
-      <div style={{ padding: "24px", display: "flex", justifyContent: "center" }}>
-        <div
-          style={{
-            width: "100%",
-            maxWidth: 1280,
-            minHeight: "80vh",
-            background: "#F9FAFB",
-            borderRadius: 16,
-            boxShadow: "0 12px 30px rgba(0,0,0,0.10)",
-            padding: 24,
-            display: "grid",
-            gridTemplateColumns: "90px 1fr",
-            gap: 16,
-          }}
-        >
-          {/* Left rail */}
-          <div style={{ position: "relative" }}>
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={() => setShowColors((s) => !s)}
-              title="Add Note"
-              style={{
-                width: 56,
-                height: 56,
-                borderRadius: "50%",
-                background: "#FFFFFF",
-                display: "grid",
-                placeItems: "center",
-                boxShadow: "0 3px 10px rgba(0,0,0,0.15)",
-                cursor: "pointer",
-                userSelect: "none",
-              }}
-            >
-              <FaPlus />
-            </motion.div>
+    <div className="notes-container">
+      {/* <NavbarLeft />
+      <NavbarTop /> */}
 
-            {showColors && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                style={{
-                  marginTop: 12,
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 10,
-                }}
-              >
-                {presetColors.map((c) => (
-                  <motion.button
-                    key={c}
-                    onClick={() => createEmptyNote(c)}
-                    style={{
-                      width: 40,
-                      height: 40,
-                      borderRadius: "50%",
-                      border: "none",
-                      background: c,
-                      boxShadow: "0 2px 6px rgba(0,0,0,0.12)",
-                      cursor: "pointer",
-                    }}
-                    whileHover={{ scale: 1.15 }}
-                    whileTap={{ scale: 0.9 }}
-                  />
-                ))}
-                <input
-                  type="color"
-                  onChange={(e) => createEmptyNote(e.target.value)}
-                  title="Custom color"
-                  style={{
-                    appearance: "none",
-                    width: 40,
-                    height: 40,
-                    borderRadius: "50%",
-                    border: "none",
-                    padding: 0,
-                    cursor: "pointer",
-                    boxShadow: "0 2px 6px rgba(0,0,0,0.12)",
-                  }}
-                />
-              </motion.div>
-            )}
-          </div>
-
-{/* Fixed 4x3 grid scrollable */}
-<div
-  style={{
-    background: "#FFFFFF",
-    borderRadius: 16,
-    boxShadow: "inset 0 0 0 1px #E5E7EB",
-    padding: 16,
-    marginTop: 28,
-    overflowY: "auto",
-    maxHeight: "615px", // fixed height, or use calc for dynamic
-  }}
-  className="scrollable-grid"
->
-  <div
-    style={{
-      display: "grid",
-      gridTemplateColumns: "repeat(4, 1fr)",
-      gap: 16,
-    }}
-  >
-    {loading ? (
-      <div
-        style={{
-          gridColumn: "1 / -1",
-          display: "grid",
-          placeItems: "center",
-          color: "#6B7280",
-        }}
-      >
-        Loading…
-      </div>
-    ) : (
-      <>
-        <AnimatePresence>
-          {sortedNotes.map((note) => (
-            <motion.div
-              key={note._id}
-              initial={{ opacity: 0, scale: 0.85 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              transition={{ duration: 0.2 }}
-            >
-              <NoteCard
-                note={note}
-                onUpdate={(patch) => updateNote(note._id, patch)}
-                onDelete={() => deleteNote(note._id)}
-                onToggleFav={() =>
-                  updateNote(note._id, { isPinned: !note.isPinned })
-                }
-              />
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </>
-    )}
-  </div>
-</div>
-
+      <div className="notes-header">
+        <h1 className="notes-title">Notes</h1>
+        <div className="notes-header-controls">
+          {/* Direct create on click */}
+          <button className="notes-add-btn" onClick={createEmptyNote}>
+            <Plus size={20} />
+            Add Note
+          </button>
         </div>
       </div>
-    </>
+
+      <div className="notes-grid">
+        {sortedNotes.map((note) => (
+          <NoteCard
+            key={note._id}
+            note={note}
+            onUpdate={(patch) => updateNote(note._id, patch)}
+            onDelete={() => deleteNote(note._id)}
+            onToggleFav={() => updateNote(note._id, { isPinned: !note.isPinned })}
+          />
+        ))}
+      </div>
+
+      {notes.length === 0 && (
+        <div className="notes-empty-state">
+          <h2>No notes yet</h2>
+          <p>Create your first note to get started!</p>
+        </div>
+      )}
+
+      {notification.show && <div className={`notes-notification ${notification.type}`}>{notification.message}</div>}
+    </div>
   );
 }
