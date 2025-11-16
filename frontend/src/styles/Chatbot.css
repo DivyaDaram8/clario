@@ -1,7 +1,6 @@
 /* Importing Google Fonts - Inter */
 @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,100..900&display=swap');
 
-
 #chatbot-toggler {
   position: fixed;
   bottom: 30px;
@@ -14,16 +13,25 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: #6D4FC2;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-  transition: all 0.2s ease;
+  background: linear-gradient(to bottom right, #18181b, #000000);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.9);
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+#chatbot-toggler:hover {
+  box-shadow: 0 25px 100px rgba(0, 0, 0, 1);
+  transform: scale(1.05);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 .container.show-chatbot #chatbot-toggler {
-  transform: rotate(90deg);
+  transform: rotate(90deg) scale(1.05);
 }
 #chatbot-toggler span {
   color: #fff;
   position: absolute;
+  font-size: 1.5rem;
 }
 #chatbot-toggler span:last-child,
 .container.show-chatbot #chatbot-toggler span:first-child {
@@ -41,12 +49,14 @@
   pointer-events: none;
   transform: scale(0.2);
   overflow: hidden;
-  background: #fff;
+  background: #000000;
   border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
   transform-origin: bottom right;
-  box-shadow: 0 0 128px 0 rgba(0, 0, 0, 0.1),
-    0 32px 64px -48px rgba(0, 0, 0, 0.5);
-  transition: all 0.1s ease;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.9);
+  transition: all 0.3s ease;
+  z-index: 999;
 }
 .container.show-chatbot .chatbot-popup {
   opacity: 1;
@@ -57,8 +67,10 @@
   display: flex;
   padding: 15px 22px;
   align-items: center;
-  background: #6D4FC2;
+  background: linear-gradient(to bottom right, #18181b, #000000);
   justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
 }
 .chat-header .header-info {
   display: flex;
@@ -70,15 +82,17 @@
   height: 35px;
   flex-shrink: 0;
   padding: 6px;
-  fill: #6D4FC2;
-  background: #fff;
+  fill: #000000;
+  background: rgba(255, 255, 255, 0.95);
   border-radius: 50%;
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
 }
 .header-info .logo-text {
   color: #fff;
   font-weight: 600;
   font-size: 1.31rem;
   letter-spacing: 0.02rem;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 .chat-header button {
   border: none;
@@ -90,11 +104,14 @@
   margin-right: -10px;
   font-size: 1.9rem;
   border-radius: 50%;
-  background: none;
-  transition: 0.2s ease;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: 0.3s ease;
 }
 .chat-header button:hover {
-  background: #593bab;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
 }
 .chat-body {
   display: flex;
@@ -105,7 +122,8 @@
   margin-bottom: 82px;
   padding: 25px 22px;
   scrollbar-width: thin;
-  scrollbar-color: #DDD3F9 transparent;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+  background: #000000;
 }
 
 /* Custom scrollbar styles for WebKit browsers */
@@ -114,8 +132,9 @@
   background: transparent;
 }
 .chat-body::-webkit-scrollbar-thumb {
-  background: #DDD3F9;
+  background: rgba(255, 255, 255, 0.2);
   border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 .chat-body::-webkit-scrollbar-track {
   background: transparent;
@@ -130,11 +149,12 @@
   height: 35px;
   flex-shrink: 0;
   padding: 6px;
-  fill: #fff;
+  fill: #000000;
   align-self: flex-end;
   margin-bottom: 2px;
-  background: #6D4FC2;
+  background: rgba(255, 255, 255, 0.95);
   border-radius: 50%;
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
 }
 .chat-body .message .message-text {
   padding: 12px 16px;
@@ -144,39 +164,51 @@
   white-space: pre-line;
 }
 .chat-body .message.error .message-text {
-  color: #ff0000;
+  color: #ff6b6b;
 }
 .chat-body .bot-message .message-text {
-  background: #F6F2FF;
+  background: linear-gradient(to bottom right, #18181b, #000000);
+  color: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 13px 13px 13px 3px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
 }
 .chat-body .user-message {
   flex-direction: column;
   align-items: flex-end;
 }
 .chat-body .user-message .message-text {
-  color: #fff;
-  background: #6D4FC2;
+  color: #000000;
+  background: rgba(255, 255, 255, 0.9);
   border-radius: 13px 13px 3px 13px;
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+  font-weight: 500;
 }
 .chat-footer {
   position: absolute;
   bottom: 0;
   width: 100%;
-  background: #fff;
+  background: linear-gradient(to bottom right, #18181b, #000000);
   padding: 15px 22px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
 }
 .chat-footer .chat-form {
   display: flex;
   align-items: center;
   position: relative;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.05);
   border-radius: 32px;
-  outline: 1px solid #CCCCE5;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(12px);
+  transition: all 0.3s ease;
 }
 .chat-form:focus-within {
-  outline: 2px solid #6D4FC2;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.8);
+  background: rgba(255, 255, 255, 0.08);
 }
 .chat-form .message-input {
   width: 100%;
@@ -186,27 +218,31 @@
   font-size: 0.95rem;
   padding: 0 17px;
   background: none;
+  color: rgba(255, 255, 255, 0.9);
+}
+.chat-form .message-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
 }
 .chat-form #send-message {
   height: 35px;
   width: 35px;
   border: none;
   flex-shrink: 0;
-  color: #fff;
+  color: #000000;
   cursor: pointer;
-  display: none;
   margin-right: 6px;
-  background: #6D4FC2;
+  background: rgba(255, 255, 255, 0.9);
   border-radius: 50%;
   font-size: 1.15rem;
-  transition: 0.2s ease;
-}
-.chat-form .message-input:valid~#send-message {
-  display: block;
+  transition: 0.3s ease;
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
 }
 .chat-form #send-message:hover {
-  background: #593bab;
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0 4px 25px rgba(255, 255, 255, 0.4);
+  transform: scale(1.05);
 }
+
 /* Responsive media query for mobile screens */
 @media (max-width: 520px) {
   #chatbot-toggler {
@@ -219,6 +255,7 @@
     height: 100%;
     border-radius: 0;
     width: 100%;
+    border: none;
   }
   .chatbot-popup .chat-header {
     padding: 12px 15px;
