@@ -28,7 +28,7 @@ app.use(express.json());
 
 // Configure CORS: allow specific origin in production
 const corsOptions = NODE_ENV === "production"
-  ? { origin: FRONTEND_URL || "https://your-frontend-domain.com", optionsSuccessStatus: 200 }
+  ? { origin: FRONTEND_URL || "https://clario-frontend-2k1a.onrender.com", optionsSuccessStatus: 200 }
   : { origin: true }; // allow all in dev (change if you want)
 app.use(cors(corsOptions));
 
