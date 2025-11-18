@@ -1,5 +1,6 @@
 // server.js
 require("dotenv").config();
+
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -8,48 +9,86 @@ const compression = require("compression");
 const morgan = require("morgan");
 const rateLimit = require("express-rate-limit");
 
-
 const app = express();
 
-// Basic env validation
-const { MONGO_URI, PORT = 5000, FRONTEND_URL, NODE_ENV } = process.env;
+// ----- ENV -----
+const {
+  MONGO_URI,
+  PORT = 5000,
+  FRONTEND_URL,
+  NODE_ENV = "development",
+} = process.env;
+
+console.log("Starting server…");
+console.log("NODE_ENV:", NODE_ENV);
+console.log("FRONTEND_URL:", FRONTEND_URL);
+
+// Fail fast if no DB
 if (!MONGO_URI) {
-  console.error("FATAL: MONGO_URI is not set in environment");
+  console.error("FATAL: MONGO_URI missing");
   process.exit(1);
 }
 
-// Trust proxy if behind Render/Vercel/Heroku
+// Trust Render proxy
 app.set("trust proxy", 1);
 
-// Middlewares
+// ----- Middlewares -----
 app.use(helmet());
 app.use(compression());
 app.use(express.json());
 
-// Configure CORS: allow specific origin in production
-const corsOptions = NODE_ENV === "production"
-  ? { origin: FRONTEND_URL || "https://clario-frontend-2k1a.onrender.com", optionsSuccessStatus: 200 }
-  : { origin: true }; // allow all in dev (change if you want)
-app.use(cors(corsOptions));
+// ----- CORS ALLOWLIST -----
+const allowlist = [
+  FRONTEND_URL,                                  // deployed frontend
+  "https://clario-frontend-2k1a.onrender.com",   // explicit fallback
+  "http://localhost:5173",                       // local dev (Vite)
+  "http://localhost:3000",                       // optional
+].filter(Boolean);
 
+const corsOptions = {
+  origin: function (origin, callback) {
+    // allow requests with no Origin (curl/postman)
+    if (!origin) return callback(null, true);
+
+    if (allowlist.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(
+        new Error(`CORS blocked: origin ${origin} not allowed`)
+      );
+    }
+  },
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions)); // handle preflight
+
+// ----- Logging -----
 if (NODE_ENV !== "production") {
   app.use(morgan("dev"));
 } else {
   app.use(morgan("combined"));
 }
 
-// Basic rate limiter — tune for your app
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 200, // limit each IP to 200 requests per windowMs
-  message: { message: "Too many requests, please try again later." },
-});
-app.use(limiter);
+// ----- Rate limiter -----
+app.use(
+  rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 200,
+    message: { message: "Too many requests, try again later." },
+  })
+);
 
-// Health check
-app.get("/health", (req, res) => res.json({ status: "ok", uptime: process.uptime() }));
+// ----- Health check -----
+app.get("/health", (req, res) =>
+  res.json({ status: "ok", uptime: process.uptime() })
+);
 
-// Routes
+// ----- ROUTES -----
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/notes", require("./routes/noteRoutes"));
 app.use("/api/todos", require("./routes/todoRoutes"));
@@ -61,47 +100,48 @@ app.use("/api/summarizer", require("./routes/summarizerRoutes"));
 app.use("/api/habits", require("./routes/habitRoutes"));
 app.use("/api/journal", require("./routes/journalRoutes"));
 
-// 404 handler
-app.use((req, res, next) => {
+// ----- 404 -----
+app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });
 });
 
-// Error handler (must be last middleware)
+// ----- ERROR HANDLER -----
 app.use((err, req, res, next) => {
-  console.error(err);
-  const status = err.status || 500;
-  res.status(status).json({ message: err.message || "Internal Server Error" });
+  console.error("ERROR:", err.message || err);
+
+  if (err.message && err.message.startsWith("CORS blocked")) {
+    return res.status(403).json({ message: err.message });
+  }
+
+  res
+    .status(err.status || 500)
+    .json({ message: err.message || "Internal Server Error" });
 });
 
-// Connect to MongoDB and start server
+// ----- DB + START -----
 mongoose
   .connect(MONGO_URI, {
-    // mongoose v6+ doesn't require options, but leaving these is harmless
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
   .then(() => {
     console.log("Connected to MongoDB");
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    app.listen(PORT, () =>
+      console.log(`Server running on port ${PORT}`)
+    );
   })
   .catch((err) => {
     console.error("MongoDB connection error:", err);
     process.exit(1);
   });
 
-// Graceful shutdown
-process.on("SIGINT", () => {
-  console.info("SIGINT received — closing MongoDB connection");
+// ----- Graceful shutdown -----
+function shutdown(signal) {
+  console.info(`${signal} received. Closing DB...`);
   mongoose.connection.close(false, () => {
-    console.log("MongoDB connection closed.");
+    console.log("MongoDB closed. Exiting.");
     process.exit(0);
   });
-});
-
-process.on("SIGTERM", () => {
-  console.info("SIGTERM received — closing MongoDB connection");
-  mongoose.connection.close(false, () => {
-    console.log("MongoDB connection closed.");
-    process.exit(0);
-  });
-});
+}
+process.on("SIGINT", () => shutdown("SIGINT"));
+process.on("SI
