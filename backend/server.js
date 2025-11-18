@@ -54,8 +54,9 @@ const corsOptions = {
   optionsSuccessStatus: 200,
 };
 
+// Use cors middleware properly (pass the middleware function)
 app.use(cors(corsOptions));
-app.options("*", corsOptions);
+app.options("*", cors(corsOptions)); // <-- CORRECT: pass cors(corsOptions) here
 
 // Logging
 if (NODE_ENV !== "production") app.use(morgan("dev"));
@@ -73,7 +74,7 @@ app.use(
 // Health check
 app.get("/health", (req, res) => res.json({ status: "ok", uptime: process.uptime() }));
 
-// Routes (ensure these files exist)
+// Routes
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/notes", require("./routes/noteRoutes"));
 app.use("/api/todos", require("./routes/todoRoutes"));
