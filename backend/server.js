@@ -11,7 +11,7 @@ const rateLimit = require("express-rate-limit");
 
 const app = express();
 
-// ----- ENV -----
+// ----- Read env vars -----
 const {
   MONGO_URI,
   PORT = 5000,
@@ -19,17 +19,16 @@ const {
   NODE_ENV = "development",
 } = process.env;
 
-console.log("Starting server…");
 console.log("NODE_ENV:", NODE_ENV);
 console.log("FRONTEND_URL:", FRONTEND_URL);
 
-// Fail fast if no DB
+// fail fast if needed
 if (!MONGO_URI) {
-  console.error("FATAL: MONGO_URI missing");
+  console.error("FATAL: MONGO_URI is not set");
   process.exit(1);
 }
 
-// Trust Render proxy
+// trust proxy for Render
 app.set("trust proxy", 1);
 
 // ----- Middlewares -----
@@ -37,26 +36,19 @@ app.use(helmet());
 app.use(compression());
 app.use(express.json());
 
-// ----- CORS ALLOWLIST -----
+// ----- CORS Allowlist -----
 const allowlist = [
-  FRONTEND_URL,                                  // deployed frontend
-  "https://clario-frontend-2k1a.onrender.com",   // explicit fallback
-  "http://localhost:5173",                       // local dev (Vite)
-  "http://localhost:3000",                       // optional
+  FRONTEND_URL,                                // Render frontend
+  "https://clario-frontend-2k1a.onrender.com", // fallback
+  "http://localhost:5173",                     // local dev
+  "http://localhost:3000",
 ].filter(Boolean);
 
 const corsOptions = {
-  origin: function (origin, callback) {
-    // allow requests with no Origin (curl/postman)
+  origin: (origin, callback) => {
     if (!origin) return callback(null, true);
-
-    if (allowlist.includes(origin)) {
-      return callback(null, true);
-    } else {
-      return callback(
-        new Error(`CORS blocked: origin ${origin} not allowed`)
-      );
-    }
+    if (allowlist.includes(origin)) return callback(null, true);
+    return callback(new Error(`CORS blocked for origin ${origin}`));
   },
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
@@ -65,30 +57,27 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.options("*", cors(corsOptions)); // handle preflight
+app.options("*", cors(corsOptions)); // preflight
 
 // ----- Logging -----
-if (NODE_ENV !== "production") {
-  app.use(morgan("dev"));
-} else {
-  app.use(morgan("combined"));
-}
+if (NODE_ENV !== "production") app.use(morgan("dev"));
+else app.use(morgan("combined"));
 
 // ----- Rate limiter -----
 app.use(
   rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 200,
-    message: { message: "Too many requests, try again later." },
+    message: { message: "Too many requests, slow down!" },
   })
 );
 
-// ----- Health check -----
+// ----- Health Check -----
 app.get("/health", (req, res) =>
   res.json({ status: "ok", uptime: process.uptime() })
 );
 
-// ----- ROUTES -----
+// ----- Your Routes -----
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/notes", require("./routes/noteRoutes"));
 app.use("/api/todos", require("./routes/todoRoutes"));
@@ -100,30 +89,23 @@ app.use("/api/summarizer", require("./routes/summarizerRoutes"));
 app.use("/api/habits", require("./routes/habitRoutes"));
 app.use("/api/journal", require("./routes/journalRoutes"));
 
-// ----- 404 -----
-app.use((req, res) => {
-  res.status(404).json({ message: "Route not found" });
-});
+// ----- 404 Handler -----
+app.use((req, res) =>
+  res.status(404).json({ message: "Route not found" })
+);
 
-// ----- ERROR HANDLER -----
+// ----- Error Handler (no express-async-errors) -----
 app.use((err, req, res, next) => {
   console.error("ERROR:", err.message || err);
-
-  if (err.message && err.message.startsWith("CORS blocked")) {
+  if (err.message && err.message.includes("CORS")) {
     return res.status(403).json({ message: err.message });
   }
-
-  res
-    .status(err.status || 500)
-    .json({ message: err.message || "Internal Server Error" });
+  res.status(500).json({ message: "Internal Server Error" });
 });
 
-// ----- DB + START -----
+// ----- Connect & Start -----
 mongoose
-  .connect(MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(MONGO_URI)
   .then(() => {
     console.log("Connected to MongoDB");
     app.listen(PORT, () =>
@@ -131,17 +113,17 @@ mongoose
     );
   })
   .catch((err) => {
-    console.error("MongoDB connection error:", err);
+    console.error("MongoDB error:", err);
     process.exit(1);
   });
 
-// ----- Graceful shutdown -----
-function shutdown(signal) {
-  console.info(`${signal} received. Closing DB...`);
-  mongoose.connection.close(false, () => {
-    console.log("MongoDB closed. Exiting.");
-    process.exit(0);
-  });
-}
-process.on("SIGINT", () => shutdown("SIGINT"));
-process.on("SI
+// ----- Graceful Shutdown -----
+process.on("SIGINT", () => {
+  console.log("SIGINT: closing DB...");
+  mongoose.connection.close(false, () => process.exit(0));
+});
+
+process.on("SIGTERM", () => {
+  console.log("SIGTERM: closing DB...");
+  mongoose.connection.close(false, () => process.exit(0));
+});
