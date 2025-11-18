@@ -11,7 +11,6 @@ const rateLimit = require("express-rate-limit");
 
 const app = express();
 
-// ----- Read env vars -----
 const {
   MONGO_URI,
   PORT = 5000,
@@ -22,25 +21,24 @@ const {
 console.log("NODE_ENV:", NODE_ENV);
 console.log("FRONTEND_URL:", FRONTEND_URL);
 
-// fail fast if needed
+// Fail fast
 if (!MONGO_URI) {
   console.error("FATAL: MONGO_URI is not set");
   process.exit(1);
 }
 
-// trust proxy for Render
 app.set("trust proxy", 1);
 
-// ----- Middlewares -----
+// Middlewares
 app.use(helmet());
 app.use(compression());
 app.use(express.json());
 
-// ----- CORS Allowlist -----
+// CORS allowlist
 const allowlist = [
-  FRONTEND_URL,                                // Render frontend
-  "https://clario-frontend-2k1a.onrender.com", // fallback
-  "http://localhost:5173",                     // local dev
+  FRONTEND_URL,
+  "https://clario-frontend-2k1a.onrender.com",
+  "http://localhost:5173",
   "http://localhost:3000",
 ].filter(Boolean);
 
@@ -57,13 +55,13 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.options("*", cors(corsOptions)); // preflight
+app.options("*", corsOptions);
 
-// ----- Logging -----
+// Logging
 if (NODE_ENV !== "production") app.use(morgan("dev"));
 else app.use(morgan("combined"));
 
-// ----- Rate limiter -----
+// Rate limiter
 app.use(
   rateLimit({
     windowMs: 15 * 60 * 1000,
@@ -72,12 +70,10 @@ app.use(
   })
 );
 
-// ----- Health Check -----
-app.get("/health", (req, res) =>
-  res.json({ status: "ok", uptime: process.uptime() })
-);
+// Health check
+app.get("/health", (req, res) => res.json({ status: "ok", uptime: process.uptime() }));
 
-// ----- Your Routes -----
+// Routes (ensure these files exist)
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/notes", require("./routes/noteRoutes"));
 app.use("/api/todos", require("./routes/todoRoutes"));
@@ -89,41 +85,38 @@ app.use("/api/summarizer", require("./routes/summarizerRoutes"));
 app.use("/api/habits", require("./routes/habitRoutes"));
 app.use("/api/journal", require("./routes/journalRoutes"));
 
-// ----- 404 Handler -----
-app.use((req, res) =>
-  res.status(404).json({ message: "Route not found" })
-);
+// 404
+app.use((req, res) => res.status(404).json({ message: "Route not found" }));
 
-// ----- Error Handler (no express-async-errors) -----
+// Error handler
 app.use((err, req, res, next) => {
-  console.error("ERROR:", err.message || err);
-  if (err.message && err.message.includes("CORS")) {
+  console.error("ERROR:", err && err.stack ? err.stack : err);
+  if (err && err.message && err.message.includes("CORS")) {
     return res.status(403).json({ message: err.message });
   }
-  res.status(500).json({ message: "Internal Server Error" });
+  res.status(500).json({ message: err.message || "Internal Server Error" });
 });
 
-// ----- Connect & Start -----
+// Connect & Start
 mongoose
   .connect(MONGO_URI)
   .then(() => {
     console.log("Connected to MongoDB");
-    app.listen(PORT, () =>
-      console.log(`Server running on port ${PORT}`)
-    );
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
   })
   .catch((err) => {
-    console.error("MongoDB error:", err);
+    console.error("MongoDB connection error:", err);
     process.exit(1);
   });
 
-// ----- Graceful Shutdown -----
-process.on("SIGINT", () => {
-  console.log("SIGINT: closing DB...");
-  mongoose.connection.close(false, () => process.exit(0));
-});
+// Graceful shutdown
+function gracefulShutdown(signal) {
+  console.log(`${signal} received — closing MongoDB connection`);
+  mongoose.connection.close(false, () => {
+    console.log("MongoDB connection closed.");
+    process.exit(0);
+  });
+}
 
-process.on("SIGTERM", () => {
-  console.log("SIGTERM: closing DB...");
-  mongoose.connection.close(false, () => process.exit(0));
-});
+process.on("SIGINT", () => gracefulShutdown("SIGINT"));
+process.on("SIGTERM", () => gracefulShutdown("SIGTERM"));
