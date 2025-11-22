@@ -75,11 +75,7 @@ app.use((err, req, res, next) => {
 
 // Connect to MongoDB and start server
 mongoose
-  .connect(MONGO_URI, {
-    // mongoose v6+ doesn't require options, but leaving these is harmless
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(MONGO_URI)
   .then(() => {
     console.log("Connected to MongoDB");
     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
@@ -88,6 +84,7 @@ mongoose
     console.error("MongoDB connection error:", err);
     process.exit(1);
   });
+
 
 // Graceful shutdown
 process.on("SIGINT", () => {
