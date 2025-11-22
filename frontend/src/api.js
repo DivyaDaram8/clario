@@ -1,5 +1,4 @@
-const API_URL = "https://clario-backend-y1p1.onrender.com/api";
-// change to deployed URL when hosted
+const API_URL = "http://localhost:5000/api"; // change to deployed URL when hosted
 
 export const apiRequest = async (endpoint, method = "GET", data = null) => {
   const token = localStorage.getItem("token");
@@ -15,7 +14,8 @@ export const apiRequest = async (endpoint, method = "GET", data = null) => {
 
   const res = await fetch(`${API_URL}${endpoint}`, options);
   const result = await res.json();
+
   if (!res.ok) throw new Error(result.message || "Something went wrong");
+
   return result;
 };
-
