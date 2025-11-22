@@ -1,5 +1,6 @@
 // server.js
 require("dotenv").config();
+
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -8,17 +9,24 @@ const compression = require("compression");
 const morgan = require("morgan");
 const rateLimit = require("express-rate-limit");
 
-
 const app = express();
 
-// Basic env validation
-const { MONGO_URI, PORT = 5000, FRONTEND_URL, NODE_ENV } = process.env;
+const {
+  MONGO_URI,
+  PORT = 5000,
+  FRONTEND_URL,
+  NODE_ENV = "development",
+} = process.env;
+
+console.log("NODE_ENV:", NODE_ENV);
+console.log("FRONTEND_URL:", FRONTEND_URL);
+
+// Fail fast
 if (!MONGO_URI) {
-  console.error("FATAL: MONGO_URI is not set in environment");
+  console.error("FATAL: MONGO_URI is not set");
   process.exit(1);
 }
 
-// Trust proxy if behind Render/Vercel/Heroku
 app.set("trust proxy", 1);
 
 // Middlewares
@@ -26,25 +34,42 @@ app.use(helmet());
 app.use(compression());
 app.use(express.json());
 
-// Configure CORS: allow specific origin in production
-const corsOptions = NODE_ENV === "production"
-  ? { origin: FRONTEND_URL || "https://clario-frontend-2k1a.onrender.com", optionsSuccessStatus: 200 }
-  : { origin: true }; // allow all in dev (change if you want)
+// CORS allowlist
+const allowlist = [
+  FRONTEND_URL,
+  "https://clario-frontend-2k1a.onrender.com",
+  "http://localhost:5173",
+  "http://localhost:3000",
+].filter(Boolean);
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    if (allowlist.includes(origin)) return callback(null, true);
+    return callback(new Error(`CORS blocked for origin ${origin}`));
+  },
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
+  optionsSuccessStatus: 200,
+};
+
+// Use cors middleware properly (pass the middleware function)
 app.use(cors(corsOptions));
+app.options("*", cors(corsOptions)); // <-- CORRECT: pass cors(corsOptions) here
 
-if (NODE_ENV !== "production") {
-  app.use(morgan("dev"));
-} else {
-  app.use(morgan("combined"));
-}
+// Logging
+if (NODE_ENV !== "production") app.use(morgan("dev"));
+else app.use(morgan("combined"));
 
-// Basic rate limiter — tune for your app
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 200, // limit each IP to 200 requests per windowMs
-  message: { message: "Too many requests, please try again later." },
-});
-app.use(limiter);
+// Rate limiter
+app.use(
+  rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 200,
+    message: { message: "Too many requests, slow down!" },
+  })
+);
 
 // Health check
 app.get("/health", (req, res) => res.json({ status: "ok", uptime: process.uptime() }));
@@ -61,19 +86,19 @@ app.use("/api/summarizer", require("./routes/summarizerRoutes"));
 app.use("/api/habits", require("./routes/habitRoutes"));
 app.use("/api/journal", require("./routes/journalRoutes"));
 
-// 404 handler
-app.use((req, res, next) => {
-  res.status(404).json({ message: "Route not found" });
-});
+// 404
+app.use((req, res) => res.status(404).json({ message: "Route not found" }));
 
-// Error handler (must be last middleware)
+// Error handler
 app.use((err, req, res, next) => {
-  console.error(err);
-  const status = err.status || 500;
-  res.status(status).json({ message: err.message || "Internal Server Error" });
+  console.error("ERROR:", err && err.stack ? err.stack : err);
+  if (err && err.message && err.message.includes("CORS")) {
+    return res.status(403).json({ message: err.message });
+  }
+  res.status(500).json({ message: err.message || "Internal Server Error" });
 });
 
-// Connect to MongoDB and start server
+// Connect & Start
 mongoose
   .connect(MONGO_URI)
   .then(() => {
@@ -87,18 +112,13 @@ mongoose
 
 
 // Graceful shutdown
-process.on("SIGINT", () => {
-  console.info("SIGINT received — closing MongoDB connection");
+function gracefulShutdown(signal) {
+  console.log(`${signal} received — closing MongoDB connection`);
   mongoose.connection.close(false, () => {
     console.log("MongoDB connection closed.");
     process.exit(0);
   });
-});
+}
 
-process.on("SIGTERM", () => {
-  console.info("SIGTERM received — closing MongoDB connection");
-  mongoose.connection.close(false, () => {
-    console.log("MongoDB connection closed.");
-    process.exit(0);
-  });
-});
+process.on("SIGINT", () => gracefulShutdown("SIGINT"));
+process.on("SIGTERM", () => gracefulShutdown("SIGTERM"));
