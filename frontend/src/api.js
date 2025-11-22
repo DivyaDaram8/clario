@@ -1,4 +1,5 @@
-const API_URL = "https://clario-backend-y1p1.onrender.com"; // change to deployed URL when hosted
+// frontend/src/api.js
+const API_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
 export const apiRequest = async (endpoint, method = "GET", data = null) => {
   const token = localStorage.getItem("token");
