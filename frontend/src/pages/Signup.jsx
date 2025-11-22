@@ -22,7 +22,7 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(`${API_URL}/api/auth/register`, form);
+      const res = await axios.post(`${API_URL}/auth/register`, form);
       setMessage(`Success: Welcome ${res.data.name}`);
       localStorage.setItem("token", res.data.token);
       navigate("/home");

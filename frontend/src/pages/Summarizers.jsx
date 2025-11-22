@@ -28,7 +28,7 @@ export default function Summarizers() {
     setError('');
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${API_URL}/api/summarizer`, {
+      const response = await fetch(`${API_URL}/summarizer`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -70,7 +70,7 @@ export default function Summarizers() {
       formData.append('output_language', language);
 
       const token = localStorage.getItem('token');
-      const response = await fetch(`${API_URL}/api/summarizer/docs`, {
+      const response = await fetch(`${API_URL}/summarizer/docs`, {
         method: 'POST',
         headers: {
           ...(token && { Authorization: `Bearer ${token}` }),
