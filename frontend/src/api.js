@@ -1,5 +1,6 @@
 // frontend/src/api.js
-const API_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+const rawBackend = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+export const API_URL = (rawBackend.replace(/\/+$/, "")) + "/api";
 
 export const apiRequest = async (endpoint, method = "GET", data = null) => {
   const token = localStorage.getItem("token");
@@ -14,9 +15,10 @@ export const apiRequest = async (endpoint, method = "GET", data = null) => {
   };
 
   const res = await fetch(`${API_URL}${endpoint}`, options);
-  const result = await res.json();
+  const text = await res.text();
+  let result;
+  try { result = text ? JSON.parse(text) : {}; } catch (e) { result = text; }
 
-  if (!res.ok) throw new Error(result.message || "Something went wrong");
-
+  if (!res.ok) throw new Error(result?.message || result || "Something went wrong");
   return result;
 };
