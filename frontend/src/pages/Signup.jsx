@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import "../styles/Auth.css";
+import { API_URL } from "../api"
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/register", form);
+      const res = await axios.post(`${API_URL}/auth/register`, form);
       setMessage(`Success: Welcome ${res.data.name}`);
       localStorage.setItem("token", res.data.token);
       navigate("/home");

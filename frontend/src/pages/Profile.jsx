@@ -1,24 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, Lock, LogOut, User, Mail, Eye, EyeOff, CheckCircle2, XCircle, Zap } from 'lucide-react';
 import "../styles/Profile.css";
+import { API_URL, apiRequest } from "../api";
 
-const API_URL = "http://localhost:5000/api";
 
-const apiRequest = async (endpoint, method = "GET", data = null) => {
-  const token = localStorage.getItem("token");
-  const options = {
-    method,
-    headers: {
-      "Content-Type": "application/json",
-      ...(token && { Authorization: `Bearer ${token}` }),
-    },
-    ...(data && { body: JSON.stringify(data) }),
-  };
-  const res = await fetch(`${API_URL}${endpoint}`, options);
-  const result = await res.json();
-  if (!res.ok) throw new Error(result.message || "Something went wrong");
-  return result;
-};
+
+// const apiRequest = async (endpoint, method = "GET", data = null) => {
+//   const token = localStorage.getItem("token");
+//   const options = {
+//     method,
+//     headers: {
+//       "Content-Type": "application/json",
+//       ...(token && { Authorization: `Bearer ${token}` }),
+//     },
+//     ...(data && { body: JSON.stringify(data) }),
+//   };
+//   const res = await fetch(`${API_URL}${endpoint}`, options);
+//   const result = await res.json();
+//   if (!res.ok) throw new Error(result.message || "Something went wrong");
+//   return result;
+// };
 
 export default function Profile() {
   const [user, setUser] = useState(null);

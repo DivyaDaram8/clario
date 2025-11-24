@@ -3,6 +3,8 @@ import { FileUp, Zap, Copy, Check } from 'lucide-react';
 import NavbarLeft from "../layout/NavbarLeft";
 import NavbarTop from "../layout/NavbarTop";
 import "../styles/Summarizers.css";
+import { API_URL } from "../api"; 
+
 
 export default function Summarizers() {
   const [textInput, setTextInput] = useState('');
@@ -26,7 +28,7 @@ export default function Summarizers() {
     setError('');
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/api/summarizer', {
+      const response = await fetch(`${API_URL}/summarizer`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -68,7 +70,7 @@ export default function Summarizers() {
       formData.append('output_language', language);
 
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/api/summarizer/docs', {
+      const response = await fetch(`${API_URL}/summarizer/docs`, {
         method: 'POST',
         headers: {
           ...(token && { Authorization: `Bearer ${token}` }),
