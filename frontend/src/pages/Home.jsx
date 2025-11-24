@@ -14,8 +14,7 @@ import {
 } from "react-icons/fa6";
 import { FaUserCircle } from "react-icons/fa";
 import { ChevronLeft, ChevronRight, Lock } from "lucide-react";
-import NavbarLeft from "../layout/NavbarLeft";
-import NavbarTop from "../layout/NavbarTop";
+
 
 
 // ========== MYSTERY CARD DATA (3 MONTHS PRE-FILLED) ==========
@@ -240,173 +239,122 @@ const MYSTERY_CONTENT = [
 ];
 
 
-// // ========== SIDEBAR NAV ==========
-// function NavbarLeft() {
-//   const navItems = [
-//     { to: "/home", icon: <FaHouse />, label: "Home" },
-//     { to: "/pomodoro", icon: <FaClock />, label: "Pomodoro" },
-//     { to: "/habit-tracker", icon: <FaList />, label: "Habit Tracker" },
-//     { to: "/notes", icon: <FaNoteSticky />, label: "Quick Notes" },
-//     { to: "/journal", icon: <FaBook />, label: "Journal" },
-//     { to: "/todo", icon: <FaListCheck />, label: "Todo" },
-//     { to: "/expense-tracker", icon: <FaWallet />, label: "Expense Tracker" },
-//     { to: "/brain-games", icon: <FaPuzzlePiece />, label: "Brain Games" },
-//     { to: "/books", icon: <FaBookOpen />, label: "Books" },
-//   ];
-//   return (
-//     <div className="fixed top-1/2 left-5 -translate-y-1/2 z-50 bg-black/90 rounded-2xl p-2 border border-white/20 group hover:w-52 w-16 transition-all duration-300 shadow-2xl backdrop-blur-xl">
-//       <ul className="flex flex-col gap-2">
-//         {navItems.map((item, idx) => (
-//           <li key={idx}>
-//             <Link
-//               to={item.to}
-//               className="flex items-center gap-3 p-3 rounded-xl text-white/90 hover:bg-white/10 hover:scale-110 hover:shadow-xl transition-all duration-300"
-//             >
-//               <span className="text-xl">{item.icon}</span>
-//               <span className="whitespace-nowrap overflow-hidden opacity-0 group-hover:opacity-100 transition-all duration-300 font-medium text-base">
-//                 {item.label}
-//               </span>
-//             </Link>
-//           </li>
-//         ))}
-//       </ul>
-//     </div>
-//   );
-// }
+// FRONTEND-ONLY: Quote of the Day (MINIMAL)
+function DailyQuoteFrontendOnly({
+  storageKey = "clario_qotd_minimal_v1",
+  fetchUrl = "https://api.api-ninjas.com/v2/quoteoftheday"
+}) {
+  const [quote, setQuote] = useState(null);
 
+  const today = () => new Date().toISOString().slice(0, 10); // YYYY-MM-DD
 
-// // ========== TOP NAVBAR ==========
-// function NavbarTop() {
-//   const [isPlaying, setIsPlaying] = useState(false);
-//   return (
-//     <div className="fixed top-7 left-1/2 -translate-x-1/2 z-50 w-fit">
-//       <div className="flex items-center justify-between gap-8 px-6 py-3 rounded-full shadow-2xl bg-black/95 border border-white/20 transition-all duration-300 hover:scale-105 backdrop-blur-xl">
-//         <div className="font-bold text-2xl text-white tracking-wider uppercase">
-//           CLARIO
-//         </div>
-//         <div className="flex items-center gap-3">
-//           <button
-//             onClick={() => setIsPlaying(!isPlaying)}
-//             className="text-white bg-white/10 hover:bg-white/20 p-3 rounded-full transition-all"
-//           >
-//             {isPlaying ? (
-//               <svg className="w-4 h-4" viewBox="0 0 20 20">
-//                 <rect
-//                   width="4"
-//                   height="12"
-//                   x="3"
-//                   y="4"
-//                   rx="1"
-//                   fill="currentColor"
-//                 />
-//                 <rect
-//                   width="4"
-//                   height="12"
-//                   x="13"
-//                   y="4"
-//                   rx="1"
-//                   fill="currentColor"
-//                 />
-//               </svg>
-//             ) : (
-//               <svg className="w-4 h-4" viewBox="0 0 20 20">
-//                 <polygon points="6,4 16,10 6,16" fill="currentColor" />
-//               </svg>
-//             )}
-//           </button>
-//           <span className="text-white text-base font-light">
-//             {isPlaying ? "Now Playing" : "Paused"}
-//           </span>
-//         </div>
-//         <div className="text-white cursor-pointer hover:text-gray-300 transition-colors">
-//           <FaUserCircle size={28} />
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
+  useEffect(() => {
+    const cached = localStorage.getItem(storageKey);
+    if (cached) {
+      try {
+        const parsed = JSON.parse(cached);
+        if (parsed?.date === today()) {
+          setQuote(parsed.quote);
+          return;
+        }
+      } catch {}
+    }
+
+    (async () => {
+      try {
+        const key = import.meta.env.VITE_API_NINJAS_KEY;
+        if (!key) return;
+
+        const res = await fetch(fetchUrl, {
+          headers: { "X-Api-Key": key }
+        });
+        if (!res.ok) return;
+
+        const data = await res.json();
+        const q = Array.isArray(data) ? data[0] : data;
+
+        const normalized = {
+          quote: q?.quote || "",
+          author: q?.author || ""
+        };
+
+        localStorage.setItem(storageKey, JSON.stringify({
+          date: today(),
+          quote: normalized
+        }));
+
+        setQuote(normalized);
+      } catch (e) {
+        console.log("QOTD Error", e);
+      }
+    })();
+  }, []);
+
+  if (!quote) return null; // don't show anything until fetched
+
+  return (
+    <div className="mt-6">
+      <h4 className="text-sm text-white/60 mb-2">Quote of the Day</h4>
+      <p className="text-2xl text-white/90 leading-relaxed">“{quote.quote}”</p>
+      <p className="mt-1 text-xs text-white/60">- {quote.author}</p>
+    </div>
+  );
+}
+
 
 
 // ========== GREETING CARD ==========
 function GreetingCard() {
- const [greeting, setGreeting] = useState("");
- const [motivation, setMotivation] = useState("");
+  const [greeting, setGreeting] = useState("");
 
+  useEffect(() => {
+    const hour = new Date().getHours();
+    let txt = "";
+    if (hour < 12) txt = "Good Morning,";
+    else if (hour < 17) txt = "Good Afternoon,";
+    else if (hour < 21) txt = "Good Evening,";
+    else txt = "Good Night,";
+    setGreeting(txt);
+  }, []);
 
- const motivationalQuotes = [
-   "Every moment is a fresh beginning.",
-   "Believe you can and you're halfway there.",
-   "Small steps every day lead to big changes.",
-   "Your only limit is your mind.",
-   "Progress, not perfection.",
-   "Make today so awesome yesterday gets jealous.",
-   "You are capable of amazing things.",
-   "Embrace the journey, trust the process.",
- ];
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95, y: 20 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="relative h-full rounded-3xl bg-gradient-to-br from-zinc-950 via-neutral-950 to-black shadow-2xl border border-white/10 px-12 py-10 overflow-hidden group hover:border-white/20 transition-all duration-500"
+    >
+      <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
 
+      <div className="relative z-10 flex items-center gap-6">
+        <div className="relative">
+          <div className="absolute inset-0 bg-white/5 rounded-2xl blur-xl" />
+          <img
+            src="https://cdn.pixabay.com/photo/2016/11/19/14/00/code-1839406_1280.jpg"
+            alt="Character"
+            className="relative w-20 h-20 object-cover rounded-2xl grayscale shadow-2xl border-4 border-white/20 hover:scale-105 transition-transform duration-500"
+            draggable={false}
+          />
+        </div>
+        <div>
+          <h1 className="text-4xl font-extrabold text-white mb-2">
+            {greeting}{" "}
+            <span className="bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+              Clario.
+            </span>
+          </h1>
+          <p className="text-lg text-white/60 font-medium">
+            Welcome back to your advanced dashboard.
+          </p>
+        </div>
+      </div>
 
- useEffect(() => {
-   const hour = new Date().getHours();
-   let greetingText = "";
-   if (hour < 12) greetingText = "Good Morning,";
-   else if (hour < 17) greetingText = "Good Afternoon,";
-   else if (hour < 21) greetingText = "Good Evening,";
-   else greetingText = "Good Night,";
-   setGreeting(greetingText);
-   setMotivation(
-     motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)]
-   );
- }, []);
-
-
- return (
-   <motion.div
-     initial={{ opacity: 0, scale: 0.95, y: 20 }}
-     animate={{ opacity: 1, scale: 1, y: 0 }}
-     transition={{ duration: 0.6, ease: "easeOut" }}
-     className="relative h-full rounded-3xl bg-gradient-to-br from-zinc-950 via-neutral-950 to-black shadow-2xl border border-white/10 px-12 py-10 overflow-hidden group hover:border-white/20 transition-all duration-500"
-   >
-     <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-
-
-     <div className="relative z-10 flex items-center gap-6">
-       <div className="relative">
-         <div className="absolute inset-0 bg-white/5 rounded-2xl blur-xl" />
-         <img
-           src="https://cdn.pixabay.com/photo/2016/11/19/14/00/code-1839406_1280.jpg"
-           alt="Character"
-           className="relative w-20 h-20 object-cover rounded-2xl grayscale shadow-2xl border-4 border-white/20 hover:scale-105 transition-transform duration-500"
-           draggable={false}
-         />
-       </div>
-       <div>
-         <h1 className="text-4xl font-extrabold text-white mb-2">
-           {greeting}{" "}
-           <span className="bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
-             Clario.
-           </span>
-         </h1>
-         <p className="text-lg text-white/60 font-medium">
-           Welcome back to your advanced dashboard.
-         </p>
-       </div>
-     </div>
-
-
-     <motion.div
-       initial={{ opacity: 0, y: 10 }}
-       animate={{ opacity: 1, y: 0 }}
-       transition={{ delay: 0.3, duration: 0.6 }}
-       className="relative mt-6"
-     >
-       <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-white/10 rounded-xl blur-xl" />
-       <p className="relative px-6 py-3 italic text-gray-200 text-lg font-medium rounded-xl border border-white/10 bg-black/30 backdrop-blur-xl shadow-xl">
-         "{motivation}"
-       </p>
-     </motion.div>
-   </motion.div>
- );
+      {/* Minimal Quote of the Day */}
+      <DailyQuoteFrontendOnly />
+    </motion.div>
+  );
 }
+
 
 
 // ========== ANALOG + DIGITAL CLOCK ==========
