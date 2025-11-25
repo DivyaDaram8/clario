@@ -77,7 +77,7 @@ export default function App() {
       </section>
 
       <footer className="px-6 py-8 text-center text-white/50 text-sm border-t border-white/10 relative z-20">
-        <strong>clarIo</strong>
+        <strong>cLarIo</strong>
         <br />
         Designed and Developed by
         <br />
