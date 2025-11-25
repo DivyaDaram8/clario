@@ -49,7 +49,7 @@ export default function App() {
           transition={{ duration: 1 }}
           className="text-6xl md:text-8xl font-extrabold tracking-tight text-white drop-shadow-[0_0_50px_rgba(255,255,255,0.25)]"
         >
-          CLarIo
+          cLarIo
         </motion.h1>
 
         <motion.p
