@@ -14,229 +14,12 @@ import {
 } from "react-icons/fa6";
 import { FaUserCircle } from "react-icons/fa";
 import { ChevronLeft, ChevronRight, Lock } from "lucide-react";
+import { MYSTERY_CATEGORIES, MYSTERY_CONTENT } from "../data/mysteryData.js";
 
 
 
-// ========== MYSTERY CARD DATA (3 MONTHS PRE-FILLED) ==========
-const MYSTERY_CATEGORIES = {
- 0: { name: "Tech Puzzle", bg: "from-zinc-950 to-black" },
- 1: { name: "Mindfulness", bg: "from-zinc-950 to-black" },
- 2: { name: "AI Spotlight", bg: "from-zinc-950 to-black" },
- 3: { name: "Hack Tip", bg: "from-zinc-950 to-black" },
- 4: { name: "Tech Fact", bg: "from-zinc-950 to-black" },
- 5: { name: "Productivity", bg: "from-zinc-950 to-black" },
- 6: { name: "Fun Puzzle", bg: "from-zinc-950 to-black" },
-};
 
 
-const MYSTERY_CONTENT = [
- // Week 1
- {
-   day: 0,
-   cat: 0,
-   title: "Logic Gate Challenge",
-   content:
-     "What does XOR gate output when both inputs are 1? Answer: 0 (XOR outputs 1 only when inputs differ)",
- },
- {
-   day: 1,
-   cat: 1,
-   title: "Breath Awareness",
-   content:
-     "Take 3 deep breaths. Inhale for 4 counts, hold for 4, exhale for 6. Reset your mind.",
- },
- {
-   day: 2,
-   cat: 2,
-   title: "Transformer Models",
-   content:
-     "GPT models use attention mechanisms to weigh the importance of different words in context.",
- },
- {
-   day: 3,
-   cat: 3,
-   title: "Terminal Shortcut",
-   content:
-     "Use Ctrl+R to search your command history. Type keywords to find previous commands instantly.",
- },
- {
-   day: 4,
-   cat: 4,
-   title: "Moore's Law",
-   content:
-     "The number of transistors on microchips doubles approximately every two years since 1965.",
- },
- {
-   day: 5,
-   cat: 5,
-   title: "Time Blocking",
-   content:
-     "Schedule specific blocks for deep work. Protect these like important meetings.",
- },
- {
-   day: 6,
-   cat: 6,
-   title: "Number Sequence",
-   content:
-     "What comes next? 1, 1, 2, 3, 5, 8, 13... Answer: 21 (Fibonacci sequence)",
- },
- // Week 2
- {
-   day: 7,
-   cat: 0,
-   title: "Binary Math",
-   content: "In binary, what is 1010 + 0110? Answer: 10000 (16 in decimal)",
- },
- {
-   day: 8,
-   cat: 1,
-   title: "Posture Check",
-   content:
-     "Sit up straight. Roll your shoulders back. Relax your jaw. Feel the difference.",
- },
- {
-   day: 9,
-   cat: 2,
-   title: "Neural Networks",
-   content:
-     "Deep learning models learn by adjusting millions of weighted connections between artificial neurons.",
- },
- {
-   day: 10,
-   cat: 3,
-   title: "Git Alias Power",
-   content:
-     "Create aliases: git config --global alias.co checkout. Now use 'git co' instead.",
- },
- {
-   day: 11,
-   cat: 4,
-   title: "First Computer Bug",
-   content:
-     "The first 'computer bug' was an actual moth found in Harvard's Mark II computer in 1947.",
- },
- {
-   day: 12,
-   cat: 5,
-   title: "Two-Minute Rule",
-   content:
-     "If a task takes less than 2 minutes, do it immediately. Don't add it to your list.",
- },
- {
-   day: 13,
-   cat: 6,
-   title: "Riddle Time",
-   content:
-     "I speak without a mouth and hear without ears. What am I? Answer: An echo",
- },
- // Week 3
- {
-   day: 14,
-   cat: 0,
-   title: "Algorithm Complexity",
-   content:
-     "What's faster for searching: O(log n) or O(n)? Answer: O(log n) - logarithmic beats linear",
- },
- {
-   day: 15,
-   cat: 1,
-   title: "Digital Detox",
-   content:
-     "Put your phone in another room for 30 minutes. Notice how your mind settles.",
- },
- {
-   day: 16,
-   cat: 2,
-   title: "Reinforcement Learning",
-   content:
-     "AI learns by trial and error, receiving rewards for good actions - like training a virtual pet.",
- },
- {
-   day: 17,
-   cat: 3,
-   title: "VSCode Zen Mode",
-   content:
-     "Press Ctrl+K Z (Cmd+K Z on Mac) for distraction-free coding. Focus purely on your code.",
- },
- {
-   day: 18,
-   cat: 4,
-   title: "Internet Speed",
-   content:
-     "The internet can transfer data at up to 1 petabit per second through fiber optic cables.",
- },
- {
-   day: 19,
-   cat: 5,
-   title: "Eat the Frog",
-   content:
-     "Tackle your hardest task first thing in the morning when your willpower is strongest.",
- },
- {
-   day: 20,
-   cat: 6,
-   title: "Cipher Challenge",
-   content:
-     "Decode: KHOOR ZRUOG. Answer: HELLO WORLD (Caesar cipher, shift 3)",
- },
- // Week 4
- {
-   day: 21,
-   cat: 0,
-   title: "Recursion Puzzle",
-   content:
-     "A function calls itself. What's the base case needed? Answer: A condition to stop recursion",
- },
- {
-   day: 22,
-   cat: 1,
-   title: "Gratitude Moment",
-   content:
-     "List 3 things you're grateful for today. Studies show this boosts mood by 25%.",
- },
- {
-   day: 23,
-   cat: 2,
-   title: "Computer Vision",
-   content:
-     "CNNs detect patterns in images by learning filters - edges, textures, then complex objects.",
- },
- {
-   day: 24,
-   cat: 3,
-   title: "SSH Jump Hosts",
-   content:
-     "Use ProxyJump in SSH config to bounce through bastion hosts securely: ssh -J jump.host destination",
- },
- {
-   day: 25,
-   cat: 4,
-   title: "First Email",
-   content:
-     "Ray Tomlinson sent the first email in 1971. He chose the @ symbol to separate username from host.",
- },
- {
-   day: 26,
-   cat: 5,
-   title: "Pomodoro Power",
-   content:
-     "Work 25 min, break 5 min. After 4 cycles, take 15-30 min break. Maintains peak focus.",
- },
- {
-   day: 27,
-   cat: 6,
-   title: "Logic Puzzle",
-   content:
-     "If 5 machines make 5 widgets in 5 minutes, how long for 100 machines to make 100 widgets? Answer: 5 min",
- },
- // Continue for 3 months (90 days)
- ...Array.from({ length: 63 }, (_, i) => ({
-   day: 28 + i,
-   cat: (28 + i) % 7,
-   title: `Mystery ${28 + i + 1}`,
-   content: `Discover something amazing today! This is day ${28 + i + 1} of your journey.`,
- })),
-];
 
 
 // FRONTEND-ONLY: Quote of the Day (MINIMAL)
@@ -724,127 +507,129 @@ function InfinitySymbol() {
  );
 }
 
-
-// ========== MYSTERY CARD ==========
 function MysteryCard() {
- const [isRevealed, setIsRevealed] = useState(false);
- const [todaysMystery, setTodaysMystery] = useState(null);
- const [canReveal, setCanReveal] = useState(true);
+  const [isRevealed, setIsRevealed] = useState(false);
+  const [todaysMystery, setTodaysMystery] = useState(null);
+  const [canReveal, setCanReveal] = useState(true);
+
+  useEffect(() => {
+    // start date that seeds the cycle
+    const startDate = new Date(2025, 0, 1);
+
+    // compute difference in days using UTC midnights (avoid timezone pitfalls)
+    const today = new Date();
+    const utcStart = Date.UTC(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+    const utcToday = Date.UTC(today.getFullYear(), today.getMonth(), today.getDate());
+    const diffDays = Math.floor((utcToday - utcStart) / (1000 * 60 * 60 * 24));
+
+    const dayIndex = diffDays % MYSTERY_CONTENT.length;
 
 
- useEffect(() => {
-   const startDate = new Date(2025, 0, 1);
-   const today = new Date();
-   const diffTime = Math.abs(today - startDate);
-   const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-   const dayIndex = diffDays % 90;
+    const mystery = MYSTERY_CONTENT[dayIndex];
+    setTodaysMystery(mystery);
 
+    // check localStorage using ISO date
+    const lastReveal = localStorage.getItem("mysteryLastReveal"); // stored as YYYY-MM-DD
+    const todayStr = new Date().toISOString().slice(0, 10);
+    if (lastReveal === todayStr) {
+      setIsRevealed(true);
+      setCanReveal(false);
+    } else {
+      setIsRevealed(false);
+      setCanReveal(true);
+    }
+  }, []);
 
-   const mystery = MYSTERY_CONTENT[dayIndex];
-   setTodaysMystery(mystery);
+  const handleReveal = () => {
+    if (!canReveal || isRevealed) return;
+    const todayStr = new Date().toISOString().slice(0, 10);
+    localStorage.setItem("mysteryLastReveal", todayStr);
+    setIsRevealed(true);
+    setCanReveal(false);
+  };
 
+  if (!todaysMystery) return null;
 
-   const lastReveal = localStorage.getItem("mysteryLastReveal");
-   const todayStr = today.toDateString();
-   if (lastReveal === todayStr) {
-     setIsRevealed(true);
-     setCanReveal(false);
-   }
- }, []);
+  const category = MYSTERY_CATEGORIES[todaysMystery.cat];
 
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.6, delay: 0.4 }}
+      className="relative w-full h-full"
+      style={{ perspective: "1000px" }}
+    >
+      <motion.div
+        className="relative w-full h-full rounded-3xl shadow-2xl cursor-pointer"
+        animate={{ rotateY: isRevealed ? 180 : 0 }}
+        transition={{ duration: 0.8, type: "spring" }}
+        onClick={handleReveal}
+        style={{
+          transformStyle: "preserve-3d",
+          WebkitTransformStyle: "preserve-3d",
+          willChange: "transform",
+        }}
+      >
+        {/* Front face - Locked */}
+        <div
+          className="absolute inset-0 rounded-3xl bg-gradient-to-br from-zinc-950 to-black border border-white/10 flex flex-col items-center justify-center group hover:border-white/20 hover:scale-105 transition-all duration-500"
+          style={{
+            backfaceVisibility: "hidden",
+            WebkitBackfaceVisibility: "hidden",
+            pointerEvents: isRevealed ? "none" : "auto", // let back receive clicks after reveal
+          }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
 
- const handleReveal = () => {
-   if (!canReveal || isRevealed) return;
-   setIsRevealed(true);
-   setCanReveal(false);
-   localStorage.setItem("mysteryLastReveal", new Date().toDateString());
- };
+          <motion.div
+            animate={canReveal ? { scale: [1, 1.1, 1] } : {}}
+            transition={{ duration: 2, repeat: canReveal ? Infinity : 0 }}
+            className="relative z-10"
+          >
+            <Lock size={48} className="text-white/80 mb-4" />
+          </motion.div>
 
+          <h3 className="text-2xl font-bold text-white mb-2">Mystery of the Day</h3>
+          <p className="text-white/60 text-base mb-4">{category.name}</p>
 
- if (!todaysMystery) return null;
+          {canReveal ? (
+            <motion.div
+              animate={{ opacity: [0.5, 1, 0.5] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="text-white/40 text-sm"
+            >
+              Click to reveal
+            </motion.div>
+          ) : (
+            <div className="text-white/40 text-sm">Revealed for today</div>
+          )}
+        </div>
 
+        {/* Back face - Revealed */}
+        <div
+          className={`absolute inset-0 rounded-3xl bg-gradient-to-br ${category.bg} border border-white/20 p-8 flex flex-col justify-center shadow-2xl`}
+          style={{
+            backfaceVisibility: "hidden",
+            WebkitBackfaceVisibility: "hidden",
+            transform: "rotateY(180deg)",
+            WebkitTransform: "rotateY(180deg)",
+            pointerEvents: isRevealed ? "auto" : "none",
+          }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent rounded-3xl" />
 
- const category = MYSTERY_CATEGORIES[todaysMystery.cat];
-
-
- return (
-   <motion.div
-     initial={{ opacity: 0, scale: 0.95 }}
-     animate={{ opacity: 1, scale: 1 }}
-     transition={{ duration: 0.6, delay: 0.4 }}
-     className="relative w-full h-full"
-     style={{ perspective: "1000px" }}
-   >
-     <motion.div
-       className="relative w-full h-full rounded-3xl shadow-2xl cursor-pointer"
-       animate={{ rotateY: isRevealed ? 180 : 0 }}
-       transition={{ duration: 0.8, type: "spring" }}
-       style={{ transformStyle: "preserve-3d" }}
-       onClick={handleReveal}
-     >
-       {/* Front face - Locked */}
-       <div
-         className="absolute inset-0 rounded-3xl bg-gradient-to-br from-zinc-950 to-black border border-white/10 flex flex-col items-center justify-center group hover:border-white/20 hover:scale-105 transition-all duration-500"
-         style={{ backfaceVisibility: "hidden" }}
-       >
-         <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-
-
-         <motion.div
-           animate={canReveal ? { scale: [1, 1.1, 1] } : {}}
-           transition={{ duration: 2, repeat: Infinity }}
-           className="relative z-10"
-         >
-           <Lock size={48} className="text-white/80 mb-4" />
-         </motion.div>
-
-
-         <h3 className="text-2xl font-bold text-white mb-2">
-           Mystery of the Day
-         </h3>
-         <p className="text-white/60 text-base mb-4">{category.name}</p>
-
-
-         {canReveal ? (
-           <motion.div
-             animate={{ opacity: [0.5, 1, 0.5] }}
-             transition={{ duration: 2, repeat: Infinity }}
-             className="text-white/40 text-sm"
-           >
-             Click to reveal
-           </motion.div>
-         ) : (
-           <div className="text-white/40 text-sm">Revealed for today</div>
-         )}
-       </div>
-
-
-       {/* Back face - Revealed */}
-       <div
-         className={`absolute inset-0 rounded-3xl bg-gradient-to-br ${category.bg} border border-white/20 p-8 flex flex-col justify-center shadow-2xl`}
-         style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
-       >
-         <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent rounded-3xl" />
-
-
-         <div className="relative z-10">
-           <h3 className="text-xl font-bold text-white mb-3">
-             {category.name}
-           </h3>
-           <h4 className="text-lg font-semibold text-white/90 mb-4">
-             {todaysMystery.title}
-           </h4>
-
-
-           <p className="text-white/80 text-sm leading-relaxed">
-             {todaysMystery.content}
-           </p>
-         </div>
-       </div>
-     </motion.div>
-   </motion.div>
- );
+          <div className="relative z-10">
+            <h3 className="text-xl font-bold text-white mb-3">{category.name}</h3>
+            <h4 className="text-lg font-semibold text-white/90 mb-4">{todaysMystery.title}</h4>
+            <p className="text-white/80 text-sm leading-relaxed">{todaysMystery.content}</p>
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
 }
+
 
 
 // ========== MAIN HOME COMPONENT ==========
