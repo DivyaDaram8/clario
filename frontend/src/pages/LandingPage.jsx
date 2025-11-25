@@ -4,21 +4,19 @@ import { motion } from "framer-motion";
 export default function App() {
   return (
     <div className="min-h-screen w-full bg-black text-white flex flex-col overflow-hidden relative">
-      
       {/* Floating glowing background shapes - white glow */}
       <div className="absolute top-[-150px] left-[-150px] w-[500px] h-[500px] bg-white/5 rounded-full blur-[200px] animate-pulse" />
       <div className="absolute bottom-[-150px] right-[-150px] w-[500px] h-[500px] bg-white/5 rounded-full blur-[200px] animate-pulse" />
 
       {/* Hero Section */}
       <section className="relative flex flex-col items-center justify-center flex-1 px-6 text-center z-10">
-        
         <motion.h1
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
           className="text-6xl md:text-8xl font-extrabold tracking-tight text-white drop-shadow-[0_0_50px_rgba(255,255,255,0.3)]"
         >
-          Clario
+          CLarIo
         </motion.h1>
 
         <motion.p
@@ -27,7 +25,7 @@ export default function App() {
           transition={{ delay: 0.3, duration: 1 }}
           className="mt-6 text-lg md:text-2xl text-white/70 max-w-2xl"
         >
-          The productivity OS of the future — calm, intuitive, and impossibly beautiful.
+          Clarity engineered. Chaos deleted.
         </motion.p>
 
         <motion.div
@@ -52,9 +50,13 @@ export default function App() {
       </section>
 
       {/* Footer */}
-      {/* <footer className="px-6 py-8 text-center text-white/50 text-sm border-t border-white/10 relative z-10">
-        ©Clario. Cool, calm, and future-ready.
-      </footer> */}
+      <footer className="px-6 py-8 text-center text-white/50 text-sm border-t border-white/10 relative z-10">
+        <strong>ClarIo</strong>
+        <br />
+        Designed and Developed by
+        <br />
+        <strong>LDD &amp; IN</strong>
+      </footer>
     </div>
   );
 }
