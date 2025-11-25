@@ -9,8 +9,10 @@ export default function NavbarTop() {
   const navigate = useNavigate();
   const [isPlaying, setIsPlaying] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [showMobileControls, setShowMobileControls] = useState(false);
   const [currentSong, setCurrentSong] = useState(0);
   const audioRef = useRef(null);
+  const mobileControlsTimerRef = useRef(null);
 
   const songs = [
     "https://www.bensound.com/bensound-music/bensound-relaxing.mp3", // Calm piano
@@ -107,6 +109,28 @@ export default function NavbarTop() {
     };
   }, [currentSong, isPlaying]);
 
+  // Auto-hide mobile controls after 3 seconds
+  useEffect(() => {
+    if (showMobileControls) {
+      // Clear any existing timer
+      if (mobileControlsTimerRef.current) {
+        clearTimeout(mobileControlsTimerRef.current);
+      }
+      
+      // Set new timer to hide controls after 3 seconds
+      mobileControlsTimerRef.current = setTimeout(() => {
+        setShowMobileControls(false);
+      }, 3000);
+    }
+
+    // Cleanup timer on unmount or when showMobileControls changes
+    return () => {
+      if (mobileControlsTimerRef.current) {
+        clearTimeout(mobileControlsTimerRef.current);
+      }
+    };
+  }, [showMobileControls]);
+
   const togglePlay = () => {
     if (!audioRef.current) return;
     if (isPlaying) {
@@ -125,10 +149,21 @@ export default function NavbarTop() {
         setIsPlaying(true);
       }
     }
+    // Hide mobile controls when play/pause is clicked
+    setShowMobileControls(false);
   };
 
-  const playNext = () => setCurrentSong((prev) => (prev + 1) % songs.length);
-  const playPrevious = () => setCurrentSong((prev) => (prev - 1 + songs.length) % songs.length);
+  const playNext = () => {
+    setCurrentSong((prev) => (prev + 1) % songs.length);
+    // Keep controls visible for another 3 seconds after interaction
+    setShowMobileControls(true);
+  };
+
+  const playPrevious = () => {
+    setCurrentSong((prev) => (prev - 1 + songs.length) % songs.length);
+    // Keep controls visible for another 3 seconds after interaction
+    setShowMobileControls(true);
+  };
 
   // handle ended
   useEffect(() => {
@@ -139,24 +174,31 @@ export default function NavbarTop() {
     return () => audio.removeEventListener("ended", handleEnded);
   }, []);
 
+  // Handle mobile/tablet click on animation
+  const handleMobileAnimationClick = () => {
+    setShowMobileControls(true);
+  };
+
   return (
     <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
       <div
-        className="flex items-center justify-between gap-12 px-6 py-3 rounded-full shadow-lg bg-black/50 backdrop-blur-md border border-white/10 transition-all duration-300 hover:scale-105 hover:bg-black/70"
+        className="flex items-center justify-between gap-6 md:gap-12 px-4 md:px-6 py-3 rounded-full shadow-lg bg-black/50 backdrop-blur-md border border-white/10 transition-all duration-300 hover:scale-105 hover:bg-black/70"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <div className="text-white font-semibold tracking-wide text-lg cursor-pointer">Clario</div>
+        <div className="text-white font-semibold tracking-wide text-base md:text-lg cursor-pointer">Clario</div>
 
         <div className="flex items-center gap-3 relative min-w-[40px] justify-center">
+          {/* Play button when not playing */}
           {!isPlaying && (
             <button onClick={togglePlay} className="text-white bg-white/10 hover:bg-white/20 p-2 rounded-full transition-all">
               <FaPlay size={14} />
             </button>
           )}
 
+          {/* Desktop: Show controls on hover */}
           {isPlaying && isHovered && (
-            <div className="flex items-center gap-3">
+            <div className="hidden lg:flex items-center gap-3">
               <button onClick={playPrevious} className="text-white bg-white/10 hover:bg-white/20 p-2 rounded-full transition-all">
                 <FaStepBackward size={14} />
               </button>
@@ -169,8 +211,38 @@ export default function NavbarTop() {
             </div>
           )}
 
-          {isPlaying && !isHovered && (
-            <div className="flex items-end gap-1 h-6">
+          {/* Mobile/Tablet: Show controls on click (auto-hide after 3s) */}
+          {isPlaying && showMobileControls && (
+            <div className="flex lg:hidden items-center gap-3">
+              <button onClick={playPrevious} className="text-white bg-white/10 hover:bg-white/20 p-2 rounded-full transition-all">
+                <FaStepBackward size={14} />
+              </button>
+              <button onClick={togglePlay} className="text-white bg-white/10 hover:bg-white/20 p-2 rounded-full transition-all">
+                <FaPause size={14} />
+              </button>
+              <button onClick={playNext} className="text-white bg-white/10 hover:bg-white/20 p-2 rounded-full transition-all">
+                <FaStepForward size={14} />
+              </button>
+            </div>
+          )}
+
+          {/* Animation bars for mobile/tablet - clickable */}
+          {isPlaying && !showMobileControls && (
+            <div 
+              className="flex lg:hidden items-end gap-1 h-6 cursor-pointer"
+              onClick={handleMobileAnimationClick}
+            >
+              <div className="w-1 bg-gradient-to-t from-sky-300 to-sky-500 rounded-full animate-music-bar-1" style={{ animationDelay: "0s" }}></div>
+              <div className="w-1 bg-gradient-to-t from-sky-300 to-sky-500 rounded-full animate-music-bar-2" style={{ animationDelay: "0.2s" }}></div>
+              <div className="w-1 bg-gradient-to-t from-sky-300 to-sky-500 rounded-full animate-music-bar-3" style={{ animationDelay: "0.4s" }}></div>
+              <div className="w-1 bg-gradient-to-t from-sky-300 to-sky-500 rounded-full animate-music-bar-1" style={{ animationDelay: "0.6s" }}></div>
+              <div className="w-1 bg-gradient-to-t from-sky-300 to-sky-500 rounded-full animate-music-bar-2" style={{ animationDelay: "0.8s" }}></div>
+            </div>
+          )}
+
+          {/* Animation bars for desktop - shows when not hovered */}
+          {isPlaying && !isHovered && !showMobileControls && (
+            <div className="hidden lg:flex items-end gap-1 h-6">
               <div className="w-1 bg-gradient-to-t from-sky-300 to-sky-500 rounded-full animate-music-bar-1" style={{ animationDelay: "0s" }}></div>
               <div className="w-1 bg-gradient-to-t from-sky-300 to-sky-500 rounded-full animate-music-bar-2" style={{ animationDelay: "0.2s" }}></div>
               <div className="w-1 bg-gradient-to-t from-sky-300 to-sky-500 rounded-full animate-music-bar-3" style={{ animationDelay: "0.4s" }}></div>
@@ -181,11 +253,12 @@ export default function NavbarTop() {
         </div>
 
         <div
-  className="text-white cursor-pointer hover:text-gray-300 transition-colors"
-  onClick={() => navigate("/profile")}
->
-  <FaUserCircle size={24} />   {/* <-- Set size explicitly */}
-</div>
+          className="text-white cursor-pointer hover:text-gray-300 transition-colors"
+          onClick={() => navigate("/profile")}
+        >
+          <FaUserCircle size={20} className="md:hidden" />
+          <FaUserCircle size={24} className="hidden md:block" />
+        </div>
 
       </div>
 

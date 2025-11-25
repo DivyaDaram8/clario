@@ -116,7 +116,7 @@ function BrainGames() {
            <div className="min-h-screen bg-gradient-to-br from-black via-zinc-900 to-neutral-900 py-8 px-8 md:px-16 lg:px-24">
                <div className="max-w-7xl mx-auto">
                    {/* Heading at top left */}
-                   <h1 className="text-5xl font-bold mb-10 text-white drop-shadow-2xl">
+                   <h1 className="text-5xl font-bold mb-10 pt-15 text-white drop-shadow-2xl">
                        {" "}
                        Brain Games
                    </h1>
@@ -147,7 +147,7 @@ function BrainGames() {
                                </div>
                                {/* Overlay */}
                                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                   <span className="text-white font-bold text-lg px-6 py-2 bg-white/90 text-black rounded-full shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                                   <span className="text-black font-bold text-lg px-6 py-2 bg-white/90 text-black rounded-full shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
                                        Play Now
                                    </span>
                                </div>

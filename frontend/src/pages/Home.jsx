@@ -322,28 +322,28 @@ function GreetingCard() {
       initial={{ opacity: 0, scale: 0.95, y: 20 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="relative h-full rounded-3xl bg-gradient-to-br from-zinc-950 via-neutral-950 to-black shadow-2xl border border-white/10 px-12 py-10 overflow-hidden group hover:border-white/20 transition-all duration-500"
+      className="relative h-full rounded-3xl bg-gradient-to-br from-zinc-950 via-neutral-950 to-black shadow-2xl border border-white/10 px-6 md:px-8 lg:px-12 py-6 md:py-8 lg:py-10 overflow-hidden group hover:border-white/20 transition-all duration-500"
     >
       <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
 
-      <div className="relative z-10 flex items-center gap-6">
+      <div className="relative z-10 flex items-center gap-3 md:gap-4 lg:gap-6">
         <div className="relative">
           <div className="absolute inset-0 bg-white/5 rounded-2xl blur-xl" />
           <img
             src="https://cdn.pixabay.com/photo/2016/11/19/14/00/code-1839406_1280.jpg"
             alt="Character"
-            className="relative w-20 h-20 object-cover rounded-2xl grayscale shadow-2xl border-4 border-white/20 hover:scale-105 transition-transform duration-500"
+            className="relative w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 object-cover rounded-2xl grayscale shadow-2xl border-2 md:border-3 lg:border-4 border-white/20 hover:scale-105 transition-transform duration-500"
             draggable={false}
           />
         </div>
         <div>
-          <h1 className="text-4xl font-extrabold text-white mb-2">
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-white mb-1 md:mb-2">
             {greeting}{" "}
             <span className="bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
               Clario.
             </span>
           </h1>
-          <p className="text-lg text-white/60 font-medium">
+          <p className="text-sm md:text-base lg:text-lg text-white/60 font-medium">
             Welcome back to your advanced dashboard.
           </p>
         </div>
@@ -705,24 +705,23 @@ function InfinitySymbol() {
        {/* Subtle gradient overlay */}
        <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
 
-
-       {/* Local video instead of YouTube iframe */}
+       {/* Local video - FIXED to fit properly */}
        <video
          src="/infinity.mp4"
          autoPlay
          loop
          muted
          playsInline
-         className="absolute inset-0 w-full h-full object-cover rounded-3xl"
+         className="absolute inset-0 w-full h-full object-contain rounded-3xl"
        />
 
-
        {/* Overlay for soft glow / to hide video edges */}
-       <div className="absolute inset-0 bg-black/20 pointer-events-none" />
+       <div className="absolute inset-0 bg-black/20 pointer-events-none rounded-3xl" />
      </div>
    </motion.div>
  );
 }
+
 
 
 // ========== MYSTERY CARD ==========
@@ -848,43 +847,101 @@ function MysteryCard() {
 
 
 // ========== MAIN HOME COMPONENT ==========
+// ========== MAIN HOME COMPONENT ==========
 export default function Home() {
  return (
    <div className="fixed inset-0 min-h-screen w-full bg-gradient-to-br from-black via-zinc-950 to-neutral-950 overflow-hidden">
      {/* <NavbarTop />
      <NavbarLeft /> */}
 
-
-     <div
-       className="absolute left-28 right-8 top-28 bottom-8 flex flex-col gap-6"
-       style={{ height: "calc(100vh - 10rem)" }}
-     >
-       {/* TOP ROW: Greeting (65%) + Calendar (35%) */}
-       <div className="flex gap-6" style={{ height: "55%" }}>
-         <div style={{ width: "65%" }}>
-           <GreetingCard />
+     {/* Desktop Layout (1024px and above) */}
+     <div className="hidden lg:block absolute left-28 right-8 top-25 bottom-8">
+       <div className="flex flex-col gap-6 h-full">
+         {/* TOP ROW: Greeting (65%) + Calendar (35%) */}
+         <div className="flex gap-6" style={{ height: "55%" }}>
+           <div style={{ width: "65%" }}>
+             <GreetingCard />
+           </div>
+           <div style={{ width: "35%" }}>
+             <CalendarCard />
+           </div>
          </div>
-         <div style={{ width: "35%" }}>
-           <CalendarCard />
+
+         {/* BOTTOM ROW: Clock (38%) + Infinity (62%) under Greeting | Mystery under Calendar */}
+         <div className="flex gap-6" style={{ height: "45%" }}>
+           {/* Left side - Clock + Infinity (under greeting card) */}
+           <div className="flex gap-6" style={{ width: "65%" }}>
+             <div style={{ width: "38%" }}>
+               <ClockCard />
+             </div>
+             <div style={{ width: "62%" }}>
+               <InfinitySymbol />
+             </div>
+           </div>
+
+           {/* Right side - Mystery Card (under calendar) */}
+           <div style={{ width: "35%" }}>
+             <MysteryCard />
+           </div>
          </div>
        </div>
+     </div>
 
+     {/* iPad/Tablet Layout (768px to 1023px) */}
+     <div className="hidden md:block lg:hidden absolute inset-0 overflow-y-auto px-6 pt-20 py-8">
+       <div className="flex flex-col gap-6 pb-8">
+         {/* Row 1: Greeting Card (Full Width) */}
+         <div className="h-[320px]">
+           <GreetingCard />
+         </div>
 
-       {/* BOTTOM ROW: Clock (38%) + Infinity (62%) under Greeting | Mystery under Calendar */}
-       <div className="flex gap-6" style={{ height: "45%" }}>
-         {/* Left side - Clock + Infinity (under greeting card) */}
-         <div className="flex gap-6" style={{ width: "65%" }}>
-           <div style={{ width: "38%" }}>
+         {/* Row 2: Calendar + Mystery (50-50) */}
+         <div className="flex gap-6 h-[380px]">
+           <div className="flex-1">
+             <CalendarCard />
+           </div>
+           <div className="flex-1">
+             <MysteryCard />
+           </div>
+         </div>
+
+         {/* Row 3: Clock + Infinity (40-60) */}
+         <div className="flex gap-6 h-[320px]">
+           <div className="w-[40%]">
              <ClockCard />
            </div>
-           <div style={{ width: "62%" }}>
+           <div className="w-[60%]">
              <InfinitySymbol />
            </div>
          </div>
+       </div>
+     </div>
 
+     {/* Mobile Layout - Vertical Stack (below 768px) - WITH TOP SPACING */}
+     <div className="md:hidden absolute inset-0 overflow-y-auto px-4 pt-20 pb-6">
+       <div className="flex flex-col gap-6 pb-6">
+         {/* Greeting Card */}
+         <div className="h-[400px]">
+           <GreetingCard />
+         </div>
 
-         {/* Right side - Mystery Card (under calendar) */}
-         <div style={{ width: "35%" }}>
+         {/* Calendar Card */}
+         <div className="h-[400px]">
+           <CalendarCard />
+         </div>
+
+         {/* Clock Card */}
+         <div className="h-[400px]">
+           <ClockCard />
+         </div>
+
+         {/* Infinity Video */}
+         <div className="h-[400px]">
+           <InfinitySymbol />
+         </div>
+
+         {/* Mystery Card */}
+         <div className="h-[400px]">
            <MysteryCard />
          </div>
        </div>

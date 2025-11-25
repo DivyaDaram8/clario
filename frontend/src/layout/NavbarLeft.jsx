@@ -41,11 +41,11 @@ export default function NavbarLeft() {
 
   return (
     <>
-      {/* Mobile Hamburger Button - Shows only on mobile */}
+      {/* Mobile & Tablet Hamburger Button - Shows on mobile and tablet */}
       <button
         onClick={toggleMobileMenu}
         className="
-          md:hidden fixed top-7 left-4 z-50
+          lg:hidden fixed top-7 left-4 z-50
           bg-black/50 backdrop-blur-md border border-white/10
           rounded-xl p-3 text-white text-xl
           hover:bg-white/10 transition-all duration-300
@@ -55,18 +55,18 @@ export default function NavbarLeft() {
         {isMobileMenuOpen ? <FaXmark /> : <FaBars />}
       </button>
 
-      {/* Mobile Overlay - Shows only when menu is open */}
+      {/* Mobile & Tablet Overlay - Shows only when menu is open */}
       {isMobileMenuOpen && (
         <div
-          className="md:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
+          className="lg:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
           onClick={closeMobileMenu}
         />
       )}
 
-      {/* Mobile Sidebar Menu */}
+      {/* Mobile & Tablet Sidebar Menu */}
       <div
         className={`
-          md:hidden fixed top-0 left-0 h-full z-40
+          lg:hidden fixed top-0 left-0 h-full z-40
           bg-black/90 backdrop-blur-md border-r border-white/10
           w-64 p-6 pt-20
           transform transition-transform duration-300 ease-in-out
@@ -93,10 +93,10 @@ export default function NavbarLeft() {
         </ul>
       </div>
 
-      {/* Desktop Sidebar - Shows only on medium screens and above */}
+      {/* Desktop Sidebar - Shows only on large screens (1024px+) */}
       <div
         className="
-          hidden md:flex
+          hidden lg:flex
           fixed top-1/2 left-4 -translate-y-1/2 z-50
           bg-black/50 backdrop-blur-md border border-white/10
           rounded-2xl p-2

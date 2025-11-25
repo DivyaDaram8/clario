@@ -929,15 +929,83 @@
 }
 
 /* ========== RESPONSIVE ========== */
-@media (max-width: 1024px) {
+
+/* Large Desktop (1440px+) - 3 columns */
+@media (min-width: 1440px) {
+  .ht-habits-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Desktop (1024px - 1439px) - 2 columns */
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .ht-habits-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Tablet/iPad (768px - 1023px) - 2 columns */
+@media (min-width: 768px) and (max-width: 1023px) {
   .ht-container {
-    padding: 8rem 2rem 2rem 2rem;
+    padding: 6rem 2rem 2rem 2rem;
+  }
+
+  .ht-habits-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .ht-header {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .ht-title {
+    font-size: 2.5rem;
+    width: 100%;
+  }
+
+  .ht-header-controls {
+    width: auto;
+  }
+
+  .ht-habit-card {
+    padding: 1.5rem;
+  }
+
+  .ht-habit-name {
+    font-size: 1.25rem;
+  }
+
+  .ht-modal,
+  .ht-confirm-dialog {
+    max-width: 90%;
+  }
+
+  .ht-global-overview {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Mobile Landscape (640px - 767px) - 2 columns */
+@media (min-width: 640px) and (max-width: 767px) {
+  .ht-container {
+    padding: 5rem 1.5rem 2rem 1.5rem;
+  }
+
+  .ht-habits-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
   }
 
   .ht-header {
     flex-direction: column;
-    align-items: flex-start;
     gap: 1.5rem;
+  }
+
+  .ht-title {
+    font-size: 2rem;
   }
 
   .ht-header-controls {
@@ -945,36 +1013,162 @@
     justify-content: flex-start;
   }
 
-  .ht-habits-grid {
-    grid-template-columns: 1fr;
+  .ht-habit-card {
+    padding: 1.25rem;
+  }
+
+  .ht-habit-name {
+    font-size: 1.125rem;
+  }
+
+  .ht-checkmark {
+    height: 2rem;
+    width: 2rem;
+  }
+
+  .ht-streak-number {
+    font-size: 1rem;
+  }
+
+  .ht-monthly-stats {
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .ht-global-overview {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (max-width: 768px) {
+/* Mobile Portrait (below 640px) - 1 column */
+@media (max-width: 639px) {
+  .ht-container {
+    padding: 6rem 1rem 2rem 1rem;
+  }
+
+  .ht-habits-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .ht-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
   .ht-title {
-    font-size: 2rem;
+    font-size: 1.5rem;
   }
 
   .ht-header-controls {
+    width: 100%;
     flex-direction: column;
-    align-items: stretch;
+    gap: 0.75rem;
   }
 
   .ht-stats-btn,
   .ht-add-habit-btn {
     width: 100%;
+    padding: 0.625rem 1.25rem;
+    font-size: 0.85rem;
+  }
+
+  .ht-habit-card {
+    padding: 1.25rem;
+  }
+
+  .ht-habit-name {
+    font-size: 1.125rem;
+  }
+
+  .ht-checkmark {
+    height: 2rem;
+    width: 2rem;
+  }
+
+  .ht-day-label {
+    font-size: 0.625rem;
+  }
+
+  .ht-date-number {
+    font-size: 0.75rem;
+  }
+
+  .ht-streak-icon {
+    font-size: 1.25rem;
+  }
+
+  .ht-streak-number {
+    font-size: 1rem;
+  }
+
+  .ht-view-more-btn {
+    padding: 0.625rem 1.25rem;
+    font-size: 0.8rem;
   }
 
   .ht-monthly-stats {
     grid-template-columns: 1fr;
   }
 
+  .ht-global-overview {
+    grid-template-columns: 1fr;
+  }
+
   .ht-modal,
   .ht-confirm-dialog {
-    padding: 1.5rem;
+    padding: 1.25rem;
+    margin: 1rem;
+  }
+
+  .ht-modal-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .ht-notification {
+    bottom: 1rem;
+    right: 1rem;
+    left: 1rem;
+    font-size: 0.875rem;
+  }
+
+  .ht-calendar-day {
+    font-size: 0.75rem;
+  }
+
+  .ht-stat-value {
+    font-size: 1.5rem;
+  }
+}
+
+/* Small Mobile (below 375px) */
+@media (max-width: 374px) {
+  .ht-container {
+    padding: 6rem 1rem 2rem 1rem;
+  }
+
+  .ht-title {
+    font-size: 1.25rem;
+  }
+
+  .ht-habit-name {
+    font-size: 1rem;
+  }
+
+  .ht-week-checkboxes {
+    gap: 0.25rem;
+  }
+
+  .ht-checkmark {
+    height: 1.75rem;
+    width: 1.75rem;
+  }
+
+  .ht-day-label {
+    font-size: 0.5rem;
+  }
+
+  .ht-habit-card {
+    padding: 1rem;
   }
 }

@@ -423,31 +423,7 @@ const Pomodoro = () => {
                  )}
                </div>
              </div>
-             <svg className="pd-progress-ring" width="320" height="320">
-               <circle
-                 className="pd-progress-ring-background"
-                 stroke="rgba(255,255,255,0.1)"
-                 strokeWidth="8"
-                 fill="transparent"
-                 r="150"
-                 cx="160"
-                 cy="160"
-               />
-               <circle
-                 className="pd-progress-ring-progress"
-                 stroke={getProgressColor()}
-                 strokeWidth="8"
-                 fill="transparent"
-                 r="150"
-                 cx="160"
-                 cy="160"
-                 style={{
-                   strokeDasharray: `${2 * Math.PI * 150}`,
-                   strokeDashoffset: `${2 * Math.PI * 150 * (1 - (pomodoroData.settings[getCurrentTimeKey(currentType)] * 60 - currentTime) / (pomodoroData.settings[getCurrentTimeKey(currentType)] * 60))}`,
-                   transition: 'stroke-dashoffset 1s ease-in-out'
-                 }}
-               />
-             </svg>
+             
            </div>
          </div>
        </div>
