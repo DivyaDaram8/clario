@@ -93,43 +93,55 @@ export default function NavbarLeft() {
         </ul>
       </div>
 
-      {/* Desktop Sidebar - Shows only on large screens (1024px+) */}
-      <div
-        className="
-          hidden lg:flex
-          fixed top-1/2 left-4 -translate-y-1/2 z-50
-          bg-black/50 backdrop-blur-md border border-white/10
-          rounded-2xl p-2
-          transition-all duration-300
-          group hover:w-52 w-14
-        "
-      >
-        <ul className="flex flex-col gap-2">
-          {navItems.map((item, idx) => (
-            <li key={idx}>
-              <Link
-                to={item.to}
-                className="
-                  flex items-center gap-3 p-3 rounded-xl text-white
-                  hover:bg-white/10 hover:scale-110 hover:shadow-lg
-                  transition-all duration-300
-                "
-              >
-                <span className="text-lg">{item.icon}</span>
-                <span
-                  className="
-                    whitespace-nowrap overflow-hidden opacity-0
-                    group-hover:opacity-100 group-hover:overflow-visible
-                    transition-all duration-300 ease-in-out
-                  "
-                >
-                  {item.label}
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
+      {/* Desktop Sidebar - Expands only when hovering on an icon */}
+{/* Desktop Sidebar - expands only when actual navbar is hovered */}
+<div
+  className="
+    hidden lg:block
+    fixed top-1/2 left-4 -translate-y-1/2 z-50
+  "
+>
+  <div
+    className="
+      group/nav
+      bg-black/50 backdrop-blur-md border border-white/10
+      rounded-2xl p-2
+      w-14 hover:w-52
+      overflow-hidden
+      transition-[width] duration-300
+    "
+  >
+    <ul className="flex flex-col gap-2">
+      {navItems.map((item, idx) => (
+        <li key={idx}>
+          <Link
+            to={item.to}
+            className="
+              flex items-center gap-3 p-3 rounded-xl text-white
+              hover:bg-white/10 hover:scale-110 hover:shadow-lg
+              transition-all duration-300
+            "
+          >
+            <span className="text-lg">{item.icon}</span>
+
+            {/* Label appears only when navbar (this box) is hovered */}
+            <span
+              className="
+                whitespace-nowrap overflow-hidden opacity-0
+                group-hover/nav:opacity-100 group-hover/nav:overflow-visible
+                transition-all duration-300 ease-in-out
+              "
+            >
+              {item.label}
+            </span>
+          </Link>
+        </li>
+      ))}
+    </ul>
+  </div>
+</div>
+
+
     </>
   );
 }

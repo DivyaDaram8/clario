@@ -11,7 +11,8 @@
           "scrollbar-width",
           "scrollbar-color",
           "scrollbar-width: thin",
-          "-webkit-overflow-scrolling"
+          "-webkit-overflow-scrolling",
+          "min-height: auto"
         ]
       }
     ]
