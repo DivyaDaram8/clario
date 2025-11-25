@@ -1059,36 +1059,315 @@
   background: rgba(255, 255, 255, 0.25);
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
+/* Responsive Journal Component Styles */
+
+/* Responsive Journal Component Styles */
+
+/* ============================================
+   DESKTOP VIEW (1920px and above)
+   ============================================ */
+@media (min-width: 1920px) {
   .jo-container {
-    padding: 30px 15px 15px 15px;
+    min-height: 100vh;
+    background: linear-gradient(to bottom right, #000000, #18181b, #171717);
+    padding: 90px 20px 20px 100px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    position: relative;
+  }
+
+  .jo-main-wrapper {
+    max-width: 1600px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: calc(100vh - 120px);
   }
 
   .jo-navbar {
-    padding: 10px 15px;
+    padding: 15px 30px;
+  }
+
+  .jo-journal-header {
+    padding: 20px 30px;
+  }
+
+  .jo-editor-container {
+    padding: 30px;
+  }
+
+  .jo-toolbar {
+    padding: 15px 30px;
+  }
+}
+
+/* ============================================
+   LARGE DESKTOP (1440px - 1919px)
+   ============================================ */
+@media (min-width: 1440px) and (max-width: 1919px) {
+  .jo-container {
+    min-height: 100vh;
+    background: linear-gradient(to bottom right, #000000, #18181b, #171717);
+    padding: 90px 15px 20px 80px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    position: relative;
+  }
+
+  .jo-main-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: calc(100vh - 120px);
+  }
+
+  .jo-navbar {
+    padding: 12px 25px;
+  }
+
+  .jo-journal-header {
+    padding: 18px 25px;
+  }
+
+  .jo-editor-container {
+    padding: 25px;
+  }
+
+  .jo-toolbar {
+    padding: 12px 25px;
+    gap: 8px;
+  }
+
+  .jo-date-display {
+    font-size: 22px;
+  }
+
+  .jo-modal {
+    max-width: 500px;
+  }
+}
+
+/* ============================================
+   MEDIUM DESKTOP (1024px - 1439px)
+   ============================================ */
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .jo-container {
+    min-height: 100vh;
+    background: linear-gradient(to bottom right, #000000, #18181b, #171717);
+    padding: 90px 12px 20px 80px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    position: relative;
+  }
+
+  .jo-main-wrapper {
+    max-width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    height: calc(100vh - 120px);
+  }
+
+  .jo-navbar {
+    padding: 10px 20px;
+    flex-wrap: wrap;
+  }
+
+  .jo-navbar-section {
+    gap: 10px;
+  }
+
+  .jo-journal-header {
+    padding: 15px 20px;
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .jo-date-display {
+    font-size: 20px;
+  }
+
+  .jo-editor-container {
+    padding: 20px;
+  }
+
+  .jo-editor {
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  .jo-toolbar {
+    padding: 10px 20px;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .jo-tool-btn {
+    padding: 6px 10px;
+    font-size: 13px;
+  }
+
+  .jo-tool-select {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  .jo-save-btn {
+    padding: 8px 20px;
+    margin-left: auto;
+  }
+
+  .jo-dropdown-menu {
+    min-width: 220px;
+    max-height: 350px;
+  }
+
+  .jo-modal {
+    max-width: 450px;
+    width: 90%;
+  }
+
+  .jo-calendar {
+    gap: 6px;
+  }
+
+  .jo-color-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  .jo-emoji-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+/* ============================================
+   TABLET LANDSCAPE (768px - 1023px)
+   ============================================ */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .jo-container {
+    min-height: 100vh;
+    background: linear-gradient(to bottom right, #000000, #18181b, #171717);
+    padding: 80px 10px 20px 10px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    position: relative;
+  }
+
+  .jo-main-wrapper {
+    max-width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    height: calc(100vh - 110px);
+  }
+
+  .jo-navbar {
+    padding: 8px 12px;
+    gap: 8px;
   }
 
   .jo-navbar-section {
     gap: 8px;
+    flex-shrink: 0;
   }
 
   .jo-navigation {
-    gap: 5px;
+    gap: 4px;
+    overflow-x: auto;
+    flex: 1;
+    min-width: 0;
   }
 
   .jo-nav-btn {
     padding: 6px 12px;
+    font-size: 11px;
+    flex-shrink: 0;
+  }
+
+  .jo-nav-date {
     font-size: 12px;
+  }
+
+  .jo-today-label {
+    font-size: 7px;
+  }
+
+  .jo-icon-btn {
+    padding: 8px 12px;
+    font-size: 16px;
+  }
+
+  .jo-streak-number {
+    font-size: 14px;
+  }
+
+  .jo-arrow-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .jo-journal-header {
+    padding: 12px 15px;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
   }
 
   .jo-date-display {
     font-size: 18px;
   }
 
+  .jo-dropdown-btn {
+    min-width: 180px;
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+
+  .jo-editor-container {
+    padding: 15px;
+  }
+
+  .jo-editor {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .jo-toolbar {
+    padding: 8px 12px;
+    gap: 5px;
+    justify-content: flex-start;
+  }
+
+  .jo-tool-btn {
+    padding: 5px 8px;
+    font-size: 12px;
+  }
+
+  .jo-tool-select {
+    padding: 5px 8px;
+    font-size: 11px;
+    max-width: 100px;
+  }
+
+  .jo-save-btn {
+    padding: 8px 16px;
+    font-size: 13px;
+    margin-left: auto;
+  }
+
+  .jo-notification {
+    right: 10px;
+    left: 10px;
+    top: 70px;
+    max-width: 100%;
+  }
+
   .jo-modal {
-    padding: 20px;
+    max-width: 90%;
     width: 95%;
+    max-height: 85vh;
   }
 
   .jo-modal-title {
@@ -1100,51 +1379,663 @@
   }
 
   .jo-calendar-day {
-    font-size: 13px;
+    font-size: 12px;
   }
 
-  .jo-toolbar {
-    gap: 8px;
-    padding: 12px 15px;
-  }
-
-  .jo-tool-btn {
-    padding: 6px 10px;
-  }
-
-  .jo-emoji-picker {
-    max-width: 260px;
+  .jo-color-grid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
   }
 
   .jo-emoji-grid {
     grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
   }
 
-  .jo-color-picker-dropdown {
+  .jo-emoji-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+  }
+
+  .jo-dropdown-menu {
     min-width: 200px;
+    max-height: 300px;
+    right: -10px;
+  }
+
+  .jo-stats-modal {
+    max-width: 95%;
+  }
+
+  .jo-chart-container {
+    max-width: 100%;
+  }
+}
+
+/* ============================================
+   TABLET PORTRAIT (481px - 767px)
+   ============================================ */
+@media (min-width: 481px) and (max-width: 767px) {
+  .jo-container {
+    min-height: 100vh;
+    background: linear-gradient(to bottom right, #000000, #18181b, #171717);
+    padding: 70px 8px 15px 8px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    position: relative;
+  }
+
+  .jo-main-wrapper {
+    max-width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    height: calc(100vh - 100px);
+  }
+
+  .jo-navbar {
+    padding: 8px 10px;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .jo-navbar-section {
+    gap: 6px;
+  }
+
+  .jo-navigation {
+    gap: 4px;
+    order: 3;
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .jo-nav-btn {
+    padding: 5px 10px;
+    font-size: 11px;
+  }
+
+  .jo-nav-date {
+    font-size: 11px;
+  }
+
+  .jo-icon-btn {
+    padding: 6px 10px;
+    font-size: 14px;
+  }
+
+  .jo-streak-number {
+    font-size: 13px;
+  }
+
+  .jo-arrow-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+  }
+
+  .jo-journal-header {
+    padding: 10px 12px;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  .jo-date-display {
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .jo-dropdown-btn {
+    min-width: 100%;
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  .jo-editor-container {
+    padding: 12px;
+  }
+
+  .jo-editor {
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .jo-toolbar {
+    padding: 8px 10px;
+    gap: 4px;
+    justify-content: flex-start;
+    overflow-x: auto;
+  }
+
+  .jo-tool-btn {
+    padding: 5px 8px;
+    font-size: 11px;
+    flex-shrink: 0;
+  }
+
+  .jo-tool-select {
+    padding: 5px 6px;
+    font-size: 10px;
+    flex-shrink: 0;
+  }
+
+  .jo-save-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+
+  .jo-notification {
+    right: 8px;
+    left: 8px;
+    top: 60px;
+    padding: 12px 16px;
+  }
+
+  .jo-modal {
+    max-width: 95%;
+    width: 95%;
+    padding: 15px;
+  }
+
+  .jo-modal-title {
+    font-size: 18px;
+  }
+
+  .jo-modal-header {
+    margin-bottom: 15px;
+  }
+
+  .jo-close-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 20px;
+  }
+
+  .jo-calendar {
+    gap: 5px;
+  }
+
+  .jo-calendar-day {
+    font-size: 11px;
+    padding: 6px;
   }
 
   .jo-color-grid {
     grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+
+  .jo-color-option {
+    width: 32px;
+    height: 32px;
+  }
+
+  .jo-emoji-grid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 5px;
+  }
+
+  .jo-emoji-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+  }
+
+  .jo-dropdown-menu {
+    min-width: 180px;
+    max-height: 250px;
+  }
+
+  .jo-stats-modal {
+    max-width: 100%;
+  }
+
+  .jo-stats-title {
+    font-size: 15px;
+  }
+
+  .jo-total-entries {
+    font-size: 15px;
+  }
+
+  .jo-memorable-item {
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+
+  .jo-memorable-badge {
+    font-size: 11px;
+    padding: 3px 10px;
   }
 }
 
-/* Loading States */
-.jo-loading-spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid rgba(255, 255, 255, 0.1);
-  border-top-color: rgba(255, 255, 255, 0.8);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin: 20px auto;
+/* ============================================
+   MOBILE (320px - 480px)
+   ============================================ */
+@media (max-width: 480px) {
+  .jo-container {
+    min-height: 100vh;
+    background: linear-gradient(to bottom right, #000000, #18181b, #171717);
+    padding: 65px 6px 12px 6px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    position: relative;
+  }
+
+  .jo-main-wrapper {
+    max-width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    height: calc(100vh - 95px);
+  }
+
+  .jo-navbar {
+    padding: 6px 6px;
+    gap: 4px;
+    flex-direction: column;
+  }
+
+  .jo-navbar-section {
+    gap: 4px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .jo-navigation {
+    gap: 3px;
+    order: 3;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .jo-nav-btn {
+    padding: 4px 8px;
+    font-size: 10px;
+    flex-shrink: 0;
+    min-width: max-content;
+  }
+
+  .jo-nav-date {
+    font-size: 10px;
+  }
+
+  .jo-today-label {
+    font-size: 6px;
+  }
+
+  .jo-icon-btn {
+    padding: 5px 8px;
+    font-size: 12px;
+  }
+
+  .jo-streak-btn {
+    gap: 4px;
+    padding: 5px 10px;
+  }
+
+  .jo-streak-number {
+    font-size: 12px;
+  }
+
+  .jo-arrow-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+
+  .jo-journal-header {
+    padding: 8px 10px;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  .jo-date-display {
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .jo-dropdown-btn {
+    width: 100%;
+    padding: 6px 8px;
+    font-size: 11px;
+  }
+
+  .jo-editor-container {
+    padding: 10px;
+  }
+
+  .jo-editor {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .jo-editor ul,
+  .jo-editor ol {
+    padding-left: 20px;
+    margin: 8px 0;
+  }
+
+  .jo-toolbar {
+    padding: 6px 6px;
+    gap: 3px;
+    justify-content: flex-start;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .jo-tool-btn {
+    padding: 4px 6px;
+    font-size: 10px;
+    flex-shrink: 0;
+    min-width: max-content;
+  }
+
+  .jo-tool-select {
+    padding: 4px 6px;
+    font-size: 9px;
+    flex-shrink: 0;
+    min-width: max-content;
+    max-width: 80px;
+  }
+
+  .jo-save-btn {
+    padding: 5px 10px;
+    font-size: 11px;
+    flex-shrink: 0;
+    margin-left: 4px;
+  }
+
+  .jo-notification {
+    right: 6px;
+    left: 6px;
+    top: 55px;
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+
+  .jo-modal-overlay {
+    padding: 10px;
+  }
+
+  .jo-modal {
+    max-width: 100%;
+    width: 100%;
+    padding: 12px;
+    max-height: 90vh;
+  }
+
+  .jo-modal-title {
+    font-size: 16px;
+  }
+
+  .jo-modal-header {
+    margin-bottom: 12px;
+  }
+
+  .jo-close-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 18px;
+  }
+
+  .jo-month-navigation {
+    padding: 8px 12px;
+    margin-bottom: 12px;
+  }
+
+  .jo-month-display {
+    font-size: 14px;
+  }
+
+  .jo-month-nav-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .jo-calendar {
+    gap: 4px;
+    margin-top: 10px;
+  }
+
+  .jo-calendar-header {
+    font-size: 11px;
+    padding: 6px;
+  }
+
+  .jo-calendar-day {
+    font-size: 10px;
+    padding: 4px;
+    border-radius: 8px;
+  }
+
+  .jo-color-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
+    margin-bottom: 8px;
+  }
+
+  .jo-color-option {
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+  }
+
+  .jo-emoji-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+  }
+
+  .jo-emoji-btn {
+    width: 30px;
+    height: 30px;
+    font-size: 14px;
+  }
+
+  .jo-emoji-picker {
+    max-width: 90vw;
+    max-height: 250px;
+    padding: 10px;
+  }
+
+  .jo-color-picker-dropdown {
+    max-width: 90vw;
+    min-width: 150px;
+    padding: 10px;
+  }
+
+  .jo-dropdown-menu {
+    position: fixed;
+    bottom: 60px;
+    left: 6px;
+    right: 6px;
+    min-width: auto;
+    max-width: none;
+    max-height: 280px;
+  }
+
+  .jo-dropdown-item {
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+
+  .jo-category-input {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  .jo-add-btn,
+  .jo-save-cat-btn {
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+
+  .jo-stats-modal {
+    max-width: 100%;
+  }
+
+  .jo-stats-title {
+    font-size: 14px;
+  }
+
+  .jo-total-entries {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .jo-chart-container {
+    max-width: 100%;
+  }
+
+  .jo-memorable-list {
+    padding: 0;
+  }
+
+  .jo-memorable-item {
+    padding: 8px 10px;
+    font-size: 11px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .jo-memorable-badge {
+    font-size: 10px;
+    padding: 2px 8px;
+  }
+
+  .jo-stats-section {
+    margin-bottom: 15px;
+  }
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
+/* ============================================
+   EXTRA SMALL MOBILE (max-width: 360px)
+   ============================================ */
+@media (max-width: 360px) {
+  .jo-container {
+    padding: 60px 4px 10px 4px;
+  }
+
+  .jo-navbar {
+    padding: 4px 4px;
+  }
+
+  .jo-navbar-section {
+    gap: 3px;
+  }
+
+  .jo-icon-btn {
+    padding: 4px 6px;
+    font-size: 11px;
+  }
+
+  .jo-streak-btn {
+    padding: 4px 8px;
+  }
+
+  .jo-nav-btn {
+    padding: 3px 6px;
+    font-size: 9px;
+  }
+
+  .jo-arrow-btn {
+    width: 26px;
+    height: 26px;
+    font-size: 10px;
+  }
+
+  .jo-journal-header {
+    padding: 6px 8px;
+  }
+
+  .jo-date-display {
+    font-size: 13px;
+  }
+
+  .jo-dropdown-btn {
+    padding: 5px 6px;
+    font-size: 10px;
+  }
+
+  .jo-editor-container {
+    padding: 8px;
+  }
+
+  .jo-editor {
+    font-size: 12px;
+  }
+
+  .jo-toolbar {
+    padding: 4px 4px;
+    gap: 2px;
+  }
+
+  .jo-tool-btn {
+    padding: 3px 5px;
+    font-size: 9px;
+  }
+
+  .jo-tool-select {
+    padding: 3px 5px;
+    font-size: 8px;
+    max-width: 70px;
+  }
+
+  .jo-save-btn {
+    padding: 4px 8px;
+    font-size: 10px;
+  }
+
+  .jo-modal {
+    padding: 10px;
+  }
+
+  .jo-modal-title {
+    font-size: 14px;
+  }
+
+  .jo-color-grid {
+    gap: 4px;
+  }
+
+  .jo-emoji-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .jo-emoji-btn {
+    width: 28px;
+    height: 28px;
+  }
 }
 
-/* Accessibility */
+/* ============================================
+   ACCESSIBILITY & PERFORMANCE
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .jo-container {
+    background: linear-gradient(to bottom right, #000000, #18181b, #0a0a0a);
+  }
+}
+
+/* ============================================
+   FOCUS VISIBLE (Keyboard Navigation)
+   ============================================ */
 .jo-tool-btn:focus-visible,
 .jo-icon-btn:focus-visible,
 .jo-nav-btn:focus-visible,
@@ -1155,20 +2046,30 @@
   outline-offset: 2px;
 }
 
-/* Animation Performance */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
+/* ============================================
+   SCROLLBAR STYLING
+   ============================================ */
+.jo-editor-container::-webkit-scrollbar,
+.jo-dropdown-menu::-webkit-scrollbar,
+.jo-emoji-picker::-webkit-scrollbar,
+.jo-color-picker-dropdown::-webkit-scrollbar,
+.jo-modal::-webkit-scrollbar {
+  width: 6px;
 }
 
-/* Dark Mode Enhancements */
-@media (prefers-color-scheme: dark) {
-  .jo-container {
-    background: linear-gradient(to bottom right, #000000, #18181b, #0a0a0a);
-  }
+.jo-editor-container::-webkit-scrollbar-thumb,
+.jo-dropdown-menu::-webkit-scrollbar-thumb,
+.jo-emoji-picker::-webkit-scrollbar-thumb,
+.jo-color-picker-dropdown::-webkit-scrollbar-thumb,
+.jo-modal::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 1rem;
+}
+
+.jo-editor-container::-webkit-scrollbar-thumb:hover,
+.jo-dropdown-menu::-webkit-scrollbar-thumb:hover,
+.jo-emoji-picker::-webkit-scrollbar-thumb:hover,
+.jo-color-picker-dropdown::-webkit-scrollbar-thumb:hover,
+.jo-modal::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
 }
