@@ -27,7 +27,7 @@ export default function App() {
           transition={{ delay: 0.3, duration: 1 }}
           className="mt-6 text-lg md:text-2xl text-white/70 max-w-2xl"
         >
-          The productivity OS of the future — calm, intuitive, and impossibly beautiful.
+          Clarity engineered. Chaos deleted.
         </motion.p>
 
         <motion.div
