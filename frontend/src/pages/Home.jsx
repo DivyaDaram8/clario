@@ -509,124 +509,128 @@ function InfinitySymbol() {
 
 // ========== MYSTERY CARD ==========
 function MysteryCard() {
- const [isRevealed, setIsRevealed] = useState(false);
- const [todaysMystery, setTodaysMystery] = useState(null);
- const [canReveal, setCanReveal] = useState(true);
+  const [isRevealed, setIsRevealed] = useState(false);
+  const [todaysMystery, setTodaysMystery] = useState(null);
+  const [canReveal, setCanReveal] = useState(true);
+
+  useEffect(() => {
+    // start date that seeds the cycle
+    const startDate = new Date(2025, 0, 1);
+
+    // compute difference in days using UTC midnights (avoid timezone pitfalls)
+    const today = new Date();
+    const utcStart = Date.UTC(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+    const utcToday = Date.UTC(today.getFullYear(), today.getMonth(), today.getDate());
+    const diffDays = Math.floor((utcToday - utcStart) / (1000 * 60 * 60 * 24));
+
+    const dayIndex = diffDays % MYSTERY_CONTENT.length;
 
 
- useEffect(() => {
-   const startDate = new Date(2025, 0, 1);
-   const today = new Date();
-   const diffTime = Math.abs(today - startDate);
-   const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-   const dayIndex = diffDays % 90;
+    const mystery = MYSTERY_CONTENT[dayIndex];
+    setTodaysMystery(mystery);
 
+    // check localStorage using ISO date
+    const lastReveal = localStorage.getItem("mysteryLastReveal"); // stored as YYYY-MM-DD
+    const todayStr = new Date().toISOString().slice(0, 10);
+    if (lastReveal === todayStr) {
+      setIsRevealed(true);
+      setCanReveal(false);
+    } else {
+      setIsRevealed(false);
+      setCanReveal(true);
+    }
+  }, []);
 
-   const mystery = MYSTERY_CONTENT[dayIndex];
-   setTodaysMystery(mystery);
+  const handleReveal = () => {
+    if (!canReveal || isRevealed) return;
+    const todayStr = new Date().toISOString().slice(0, 10);
+    localStorage.setItem("mysteryLastReveal", todayStr);
+    setIsRevealed(true);
+    setCanReveal(false);
+  };
 
+  if (!todaysMystery) return null;
 
-   const lastReveal = localStorage.getItem("mysteryLastReveal");
-   const todayStr = today.toDateString();
-   if (lastReveal === todayStr) {
-     setIsRevealed(true);
-     setCanReveal(false);
-   }
- }, []);
+  const category = MYSTERY_CATEGORIES[todaysMystery.cat];
 
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.6, delay: 0.4 }}
+      className="relative w-full h-full"
+      style={{ perspective: "1000px" }}
+    >
+      <motion.div
+        className="relative w-full h-full rounded-3xl shadow-2xl cursor-pointer"
+        animate={{ rotateY: isRevealed ? 180 : 0 }}
+        transition={{ duration: 0.8, type: "spring" }}
+        onClick={handleReveal}
+        style={{
+          transformStyle: "preserve-3d",
+          WebkitTransformStyle: "preserve-3d",
+          willChange: "transform",
+        }}
+      >
+        {/* Front face - Locked */}
+        <div
+          className="absolute inset-0 rounded-3xl bg-gradient-to-br from-zinc-950 to-black border border-white/10 flex flex-col items-center justify-center group hover:border-white/20 hover:scale-105 transition-all duration-500"
+          style={{
+            backfaceVisibility: "hidden",
+            WebkitBackfaceVisibility: "hidden",
+            pointerEvents: isRevealed ? "none" : "auto", // let back receive clicks after reveal
+          }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
 
- const handleReveal = () => {
-   if (!canReveal || isRevealed) return;
-   setIsRevealed(true);
-   setCanReveal(false);
-   localStorage.setItem("mysteryLastReveal", new Date().toDateString());
- };
+          <motion.div
+            animate={canReveal ? { scale: [1, 1.1, 1] } : {}}
+            transition={{ duration: 2, repeat: canReveal ? Infinity : 0 }}
+            className="relative z-10"
+          >
+            <Lock size={48} className="text-white/80 mb-4" />
+          </motion.div>
 
+          <h3 className="text-2xl font-bold text-white mb-2">Mystery of the Day</h3>
+          <p className="text-white/60 text-base mb-4">{category.name}</p>
 
- if (!todaysMystery) return null;
+          {canReveal ? (
+            <motion.div
+              animate={{ opacity: [0.5, 1, 0.5] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="text-white/40 text-sm"
+            >
+              Click to reveal
+            </motion.div>
+          ) : (
+            <div className="text-white/40 text-sm">Revealed for today</div>
+          )}
+        </div>
 
+        {/* Back face - Revealed */}
+        <div
+          className={`absolute inset-0 rounded-3xl bg-gradient-to-br ${category.bg} border border-white/20 p-8 flex flex-col justify-center shadow-2xl`}
+          style={{
+            backfaceVisibility: "hidden",
+            WebkitBackfaceVisibility: "hidden",
+            transform: "rotateY(180deg)",
+            WebkitTransform: "rotateY(180deg)",
+            pointerEvents: isRevealed ? "auto" : "none",
+          }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent rounded-3xl" />
 
- const category = MYSTERY_CATEGORIES[todaysMystery.cat];
-
-
- return (
-   <motion.div
-     initial={{ opacity: 0, scale: 0.95 }}
-     animate={{ opacity: 1, scale: 1 }}
-     transition={{ duration: 0.6, delay: 0.4 }}
-     className="relative w-full h-full"
-     style={{ perspective: "1000px" }}
-   >
-     <motion.div
-       className="relative w-full h-full rounded-3xl shadow-2xl cursor-pointer"
-       animate={{ rotateY: isRevealed ? 180 : 0 }}
-       transition={{ duration: 0.8, type: "spring" }}
-       style={{ transformStyle: "preserve-3d" }}
-       onClick={handleReveal}
-     >
-       {/* Front face - Locked */}
-       <div
-         className="absolute inset-0 rounded-3xl bg-gradient-to-br from-zinc-950 to-black border border-white/10 flex flex-col items-center justify-center group hover:border-white/20 hover:scale-105 transition-all duration-500"
-         style={{ backfaceVisibility: "hidden" }}
-       >
-         <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-
-
-         <motion.div
-           animate={canReveal ? { scale: [1, 1.1, 1] } : {}}
-           transition={{ duration: 2, repeat: Infinity }}
-           className="relative z-10"
-         >
-           <Lock size={48} className="text-white/80 mb-4" />
-         </motion.div>
-
-
-         <h3 className="text-2xl font-bold text-white mb-2">
-           Mystery of the Day
-         </h3>
-         <p className="text-white/60 text-base mb-4">{category.name}</p>
-
-
-         {canReveal ? (
-           <motion.div
-             animate={{ opacity: [0.5, 1, 0.5] }}
-             transition={{ duration: 2, repeat: Infinity }}
-             className="text-white/40 text-sm"
-           >
-             Click to reveal
-           </motion.div>
-         ) : (
-           <div className="text-white/40 text-sm">Revealed for today</div>
-         )}
-       </div>
-
-
-       {/* Back face - Revealed */}
-       <div
-         className={`absolute inset-0 rounded-3xl bg-gradient-to-br ${category.bg} border border-white/20 p-8 flex flex-col justify-center shadow-2xl`}
-         style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
-       >
-         <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent rounded-3xl" />
-
-
-         <div className="relative z-10">
-           <h3 className="text-xl font-bold text-white mb-3">
-             {category.name}
-           </h3>
-           <h4 className="text-lg font-semibold text-white/90 mb-4">
-             {todaysMystery.title}
-           </h4>
-
-
-           <p className="text-white/80 text-sm leading-relaxed">
-             {todaysMystery.content}
-           </p>
-         </div>
-       </div>
-     </motion.div>
-   </motion.div>
- );
+          <div className="relative z-10">
+            <h3 className="text-xl font-bold text-white mb-3">{category.name}</h3>
+            <h4 className="text-lg font-semibold text-white/90 mb-4">{todaysMystery.title}</h4>
+            <p className="text-white/80 text-sm leading-relaxed">{todaysMystery.content}</p>
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
 }
+
 
 
 // ========== MAIN HOME COMPONENT ==========
