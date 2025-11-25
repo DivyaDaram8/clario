@@ -1,22 +1,31 @@
+/* =============== Load Roboto Slab first =============== */
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@300;400;500;600;700&display=swap');
+
+/* =============== Tailwind base =============== */
 @import "tailwindcss";
 
-/* html, body, #root {
-  height: 100%;
-} */
+/* =============== Base font for whole site =============== */
+@layer base {
+  html {
+    /* Roboto Slab first, then serif fallback */
+    font-family: "Roboto Slab", serif !important;
+    /* optional: smoother rendering for big headings */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 
-
-.scrollable-grid::-webkit-scrollbar {
-  width: 4px;
+  /* If you want headings specifically heavier: */
+  h1, h2, h3 {
+    font-family: "Roboto Slab", serif !important;
+  }
 }
 
-.scrollable-grid::-webkit-scrollbar-thumb {
-  background: #d1d5db;
-  border-radius: 4px;
+/* =============== Utility for selective application =============== */
+.font-roboto-slab {
+  font-family: "Roboto Slab", serif !important;
 }
 
-.scrollable-grid::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af;
-}
-
-
-
+/* =============== Other styles (keep your scrollbars, etc) =============== */
+.scrollable-grid::-webkit-scrollbar { width: 4px; }
+.scrollable-grid::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
+.scrollable-grid::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
