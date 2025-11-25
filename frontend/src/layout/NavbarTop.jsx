@@ -186,7 +186,7 @@ export default function NavbarTop() {
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <div className="text-white font-semibold tracking-wide text-base md:text-lg cursor-pointer">Clario</div>
+        <div className="text-white font-semibold tracking-wide text-base md:text-lg cursor-pointer">cLarIo</div>
 
         <div className="flex items-center gap-3 relative min-w-[40px] justify-center">
           {/* Play button when not playing */}

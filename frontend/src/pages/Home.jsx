@@ -93,9 +93,9 @@ function GreetingCard() {
   useEffect(() => {
     const hour = new Date().getHours();
     let txt = "";
-    if (hour < 12) txt = "Good Morning,";
-    else if (hour < 17) txt = "Good Afternoon,";
-    else if (hour < 21) txt = "Good Evening,";
+    if (hour < 12) txt = "Good Morning";
+    else if (hour < 17) txt = "Good Afternoon";
+    else if (hour < 21) txt = "Good Evening";
     else txt = "Good Night,";
     setGreeting(txt);
   }, []);
@@ -112,19 +112,31 @@ function GreetingCard() {
       <div className="relative z-10 flex items-center gap-3 md:gap-4 lg:gap-6">
         <div className="relative">
           <div className="absolute inset-0 bg-white/5 rounded-2xl blur-xl" />
-          <img
-            src="https://cdn.pixabay.com/photo/2016/11/19/14/00/code-1839406_1280.jpg"
-            alt="Character"
-            className="relative w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 object-cover rounded-2xl grayscale shadow-2xl border-2 md:border-3 lg:border-4 border-white/20 hover:scale-105 transition-transform duration-500"
-            draggable={false}
-          />
+
+          <picture>
+            <source
+              srcSet="/clario-icons/android-chrome-512x512.png"
+              media="(min-width: 1024px)"
+            />
+            <source
+              srcSet="/clario-icons/android-chrome-192x192.png"
+              media="(min-width: 640px)"
+            />
+            <img
+              src="/clario-icons/favicon-32x32.png"
+              alt="Clario Icon"
+              className="relative w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 object-cover rounded-2xl grayscale shadow-2xl hover:scale-105 transition-transform duration-500 clario-float"
+              draggable={false}
+            />
+          </picture>
         </div>
+
         <div>
           <h1 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-white mb-1 md:mb-2">
             {greeting}{" "}
-            <span className="bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+            {/* <span className="bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
               Clario.
-            </span>
+            </span> */}
           </h1>
           <p className="text-sm md:text-base lg:text-lg text-white/60 font-medium">
             Welcome back to your advanced dashboard.

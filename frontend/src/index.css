@@ -29,3 +29,15 @@
 .scrollable-grid::-webkit-scrollbar { width: 4px; }
 .scrollable-grid::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
 .scrollable-grid::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+
+
+@keyframes float-slow {
+  0%   { transform: translateY(0) rotate(0deg); }
+  50%  { transform: translateY(-10px) rotate(-1deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+
+.clario-float {
+  animation: float-slow 3.8s ease-in-out infinite;
+  will-change: transform;
+}
