@@ -826,10 +826,12 @@ const ExpenseTracker = () => {
        }
 
        .et-container {
-         min-height: 100vh;
-         background: linear-gradient(to bottom right, #000000, #18181b, #171717);
-         display: flex;
-       }
+  min-height: 100vh;
+  width: 100%;
+  background: linear-gradient(to bottom right, #000000, #18181b, #171717);
+  display: flex;
+}
+
 
        .et-main-wrapper {
          flex: 1;
@@ -1771,10 +1773,12 @@ const ExpenseTracker = () => {
 
        /* ========== RESPONSIVE DESIGN ========== */
       
-       /* Large Desktops */
+       /* ========== RESPONSIVE DESIGN ========== */
+      
+       /* Large Desktops (1920px+) */
        @media (min-width: 1920px) {
          .et-content {
-           max-width: 1600px;
+           max-width: 1800px;
          }
         
          .et-title {
@@ -1782,29 +1786,55 @@ const ExpenseTracker = () => {
          }
 
          .et-top-grid {
-           grid-template-columns: 320px 1fr 420px;
+           grid-template-columns: 340px 1fr 440px;
            gap: 2rem;
          }
-       }
 
-       /* Desktop */
-       @media (max-width: 1600px) {
-         .et-content {
-           max-width: 1200px;
+         .et-balance-amount {
+           font-size: 2.5rem;
+         }
+
+         .et-chart-card {
+           height: 400px;
+         }
+
+         .et-categories-card {
+           height: 400px;
          }
        }
 
+       /* Desktop (1400px - 1920px) */
+       @media (max-width: 1600px) {
+         .et-content {
+           max-width: 1400px;
+         }
+       }
+
+       /* Medium Desktop (1200px - 1400px) */
        @media (max-width: 1400px) {
          .et-main-wrapper {
            padding: 2rem 1.5rem;
          }
 
+         .et-content {
+           max-width: 1200px;
+         }
+
          .et-top-grid {
-           grid-template-columns: 1fr;
+           grid-template-columns: 300px 1fr 360px;
+           gap: 1.5rem;
+         }
+       }
+
+       /* Small Desktop / Large Tablet (1024px - 1200px) */
+       @media (max-width: 1200px) {
+         .et-top-grid {
+           grid-template-columns: 1fr 1fr;
            gap: 1.5rem;
          }
 
          .et-left-column {
+           grid-column: 1 / -1;
            flex-direction: row;
            gap: 1.5rem;
          }
@@ -1814,13 +1844,16 @@ const ExpenseTracker = () => {
            flex: 1;
          }
 
-         .et-chart-card,
+         .et-chart-card {
+           height: 400px;
+         }
+
          .et-categories-card {
-           height: 380px;
+           height: 400px;
          }
        }
 
-       /* Tablet */
+       /* Tablet Landscape (900px - 1024px) */
        @media (max-width: 1024px) {
          .et-navbar-left {
            width: 0;
@@ -1834,6 +1867,7 @@ const ExpenseTracker = () => {
          .et-main-wrapper {
            margin-left: 0;
            padding: 2rem 1.5rem;
+           margin-top: 4rem;
          }
 
          .et-title {
@@ -1841,27 +1875,79 @@ const ExpenseTracker = () => {
          }
 
          .et-top-grid {
-           gap: 1.25rem;
+           gap: 1.5rem;
          }
 
          .et-filters {
-           gap: 0.75rem;
+           grid-template-columns: repeat(3, 1fr);
+           gap: 1rem;
          }
        }
 
-       /* Mobile Landscape & Small Tablets */
-       @media (max-width: 768px) {
+       /* Tablet Portrait (768px - 900px) */
+       @media (max-width: 900px) {
          .et-main-wrapper {
            padding: 1.5rem 1rem;
          }
 
+         .et-top-grid {
+           grid-template-columns: 1fr;
+           gap: 1.25rem;
+         }
+
+         .et-left-column {
+           flex-direction: row;
+           gap: 1.25rem;
+         }
+
+         .et-chart-card,
+         .et-categories-card {
+           height: 350px;
+         }
+
+         .et-filters {
+           grid-template-columns: 1fr 1fr;
+           gap: 1rem;
+         }
+
+         .et-filter-group:last-child {
+           grid-column: 1 / -1;
+         }
+       }
+
+       /* Mobile Landscape & Small Tablets (640px - 768px) */
+       @media (max-width: 768px) {
+         .et-navbar-left {
+           display: none;
+         }
+
+         .et-navbar-top {
+           height: 4rem;
+           left: 0;
+         }
+
+         .et-main-wrapper {
+           margin-left: 0;
+           margin-top: 5rem;
+           padding: 1rem 0.875rem;
+           min-height: calc(100vh - 5rem);
+         }
+
+         .et-header {
+           margin-bottom: 1.5rem;
+         }
+
          .et-title {
-           font-size: 1.75rem;
+           font-size: 1.5rem;
          }
 
          .et-left-column {
            flex-direction: column;
            gap: 1rem;
+         }
+
+         .et-balance-amount {
+           font-size: 1.875rem;
          }
 
          .et-top-grid {
@@ -1870,7 +1956,7 @@ const ExpenseTracker = () => {
 
          .et-chart-card,
          .et-categories-card {
-           height: 300px;
+           height: 320px;
          }
 
          .et-filters {
@@ -1878,14 +1964,22 @@ const ExpenseTracker = () => {
            gap: 0.75rem;
          }
 
+         .et-filter-group:last-child {
+           grid-column: 1;
+         }
+
          .et-table-container {
            overflow-x: auto;
            -webkit-overflow-scrolling: touch;
          }
 
+         .et-table {
+           min-width: 600px;
+         }
+
          .et-table th,
          .et-table td {
-           padding: 0.75rem;
+           padding: 0.75rem 0.5rem;
            font-size: 0.8rem;
          }
 
@@ -1899,9 +1993,12 @@ const ExpenseTracker = () => {
            height: 1px;
          }
 
+         .et-modal-overlay {
+           padding: 1rem;
+         }
+
          .et-modal {
            padding: 1.5rem;
-           margin: 1rem;
          }
 
          .et-modal-header h2 {
@@ -1914,21 +2011,42 @@ const ExpenseTracker = () => {
 
          .et-type-btn {
            padding: 1.5rem 1rem;
+           font-size: 1rem;
+         }
+
+         .et-type-icon {
+           font-size: 1.75rem;
          }
        }
 
-       /* Mobile Portrait */
-       @media (max-width: 480px) {
+       /* Mobile Portrait (480px - 640px) */
+       @media (max-width: 640px) {
+         .et-navbar-left {
+           display: none;
+         }
+
+         .et-navbar-top {
+           height: 4rem;
+           left: 0;
+         }
+
          .et-main-wrapper {
+           margin-left: 0;
+           margin-top: 5rem;
            padding: 1rem 0.75rem;
          }
 
          .et-title {
-           font-size: 1.5rem;
+           font-size: 1.375rem;
+           margin-bottom: 0.5rem;
          }
 
          .et-balance-amount {
-           font-size: 1.75rem;
+           font-size: 1.625rem;
+         }
+
+         .et-balance-subtitle {
+           font-size: 0.7rem;
          }
 
          .et-chart-card,
@@ -1940,9 +2058,26 @@ const ExpenseTracker = () => {
            padding: 1rem;
          }
 
+         .et-card-title {
+           font-size: 0.9rem;
+         }
+
+         .et-quote {
+           font-size: 0.8rem;
+         }
+
+         .et-add-btn {
+           padding: 0.625rem 1.25rem;
+           font-size: 0.8rem;
+         }
+
+         .et-table {
+           min-width: 550px;
+         }
+
          .et-table th,
          .et-table td {
-           padding: 0.5rem;
+           padding: 0.625rem 0.375rem;
            font-size: 0.75rem;
          }
 
@@ -1953,40 +2088,54 @@ const ExpenseTracker = () => {
 
          .et-action-btn {
            padding: 0.4rem;
+           font-size: 0.875rem;
          }
 
-         .et-type-buttons {
-           grid-template-columns: 1fr;
+         .et-category-item {
+           padding: 0.4rem;
          }
 
-         .et-modal {
-           padding: 1rem;
-           margin: 0.5rem;
+         .et-category-icon {
+           font-size: 0.9rem;
          }
 
-         .et-form-buttons {
-           flex-direction: column;
+         .et-category-name {
+           font-size: 0.8rem;
          }
 
-         .et-btn-primary,
-         .et-btn-secondary,
-         .et-btn-danger {
-           width: 100%;
+         .et-view-more-btn {
+           padding: 0.625rem;
+           font-size: 0.8rem;
          }
 
-         .et-notification {
-           left: 1rem;
-           right: 1rem;
-           bottom: 1rem;
+         .et-filter-label {
+           font-size: 0.7rem;
          }
 
-         .et-icon-grid {
-           grid-template-columns: repeat(4, 1fr);
+         .et-select,
+         .et-input {
+           padding: 0.625rem 0.875rem;
+           font-size: 0.8rem;
          }
        }
 
-       /* Extra Small Mobile */
-       @media (max-width: 360px) {
+       /* Mobile Portrait Small (375px - 480px) */
+       @media (max-width: 480px) {
+         .et-navbar-left {
+           display: none;
+         }
+
+         .et-navbar-top {
+           height: 4rem;
+           left: 0;
+         }
+
+         .et-main-wrapper {
+           margin-left: 0;
+           margin-top: 5rem;
+           padding: 0.875rem 0.625rem;
+         }
+
          .et-title {
            font-size: 1.25rem;
          }
@@ -1997,11 +2146,207 @@ const ExpenseTracker = () => {
 
          .et-chart-card,
          .et-categories-card {
-           height: 250px;
+           height: 260px;
+         }
+
+         .et-chart-header {
+           flex-direction: column;
+           align-items: flex-start;
+           gap: 0.75rem;
+         }
+
+         .et-chart-controls {
+           width: 100%;
+         }
+
+         .et-chart-tab {
+           flex: 1;
+           padding: 0.5rem;
+         }
+
+         .et-type-buttons {
+           grid-template-columns: 1fr;
+           gap: 0.75rem;
+         }
+
+         .et-type-btn {
+           padding: 1.25rem 1rem;
+         }
+
+         .et-modal-overlay {
+           padding: 0.5rem;
+         }
+
+         .et-modal {
+           padding: 1.25rem;
+           max-height: 85vh;
+         }
+
+         .et-modal-header h2 {
+           font-size: 1.125rem;
+         }
+
+         .et-form-buttons {
+           flex-direction: column;
+           gap: 0.75rem;
+         }
+
+         .et-btn-primary,
+         .et-btn-secondary,
+         .et-btn-danger {
+           width: 100%;
+           padding: 0.75rem;
+         }
+
+         .et-notification {
+           left: 0.75rem;
+           right: 0.75rem;
+           bottom: 0.75rem;
+           font-size: 0.875rem;
+           padding: 0.875rem 1.25rem;
+         }
+
+         .et-icon-grid {
+           grid-template-columns: repeat(5, 1fr);
+           gap: 0.4rem;
+         }
+
+         .et-icon-option {
+           padding: 0.625rem;
+           font-size: 1.125rem;
+         }
+
+         .et-category-details-list {
+           gap: 0.625rem;
+         }
+
+         .et-category-detail-item {
+           padding: 0.875rem;
+         }
+
+         .et-category-detail-icon {
+           font-size: 1.25rem;
+         }
+
+         .et-category-detail-name {
+           font-size: 0.9rem;
+         }
+
+         .et-category-detail-amount {
+           font-size: 1rem;
+         }
+       }
+
+       /* Extra Small Mobile (320px - 375px) */
+       @media (max-width: 375px) {
+         .et-navbar-left {
+           display: none;
+         }
+
+         .et-navbar-top {
+           height: 4rem;
+           left: 0;
+         }
+
+         .et-main-wrapper {
+           margin-left: 0;
+           margin-top: 5rem;
+           padding: 0.75rem 0.5rem;
+         }
+
+         .et-title {
+           font-size: 1.125rem;
+         }
+
+         .et-balance-amount {
+           font-size: 1.375rem;
+         }
+
+         .et-chart-card,
+         .et-categories-card {
+           height: 240px;
+         }
+
+         .et-card {
+           padding: 0.875rem;
+         }
+
+         .et-add-btn {
+           padding: 0.5rem 1rem;
+           font-size: 0.75rem;
+         }
+
+         .et-quote {
+           font-size: 0.75rem;
+         }
+
+         .et-icon-grid {
+           grid-template-columns: repeat(4, 1fr);
+           gap: 0.375rem;
+         }
+
+         .et-icon-option {
+           padding: 0.5rem;
+           font-size: 1rem;
+         }
+
+         .et-table {
+           min-width: 500px;
+         }
+
+         .et-confirm-dialog {
+           padding: 1.5rem;
+         }
+
+         .et-confirm-title {
+           font-size: 1.125rem;
+         }
+
+         .et-confirm-message {
+           font-size: 0.8rem;
+         }
+       }
+
+       /* Extra Small Mobile (< 320px) */
+       @media (max-width: 320px) {
+         .et-navbar-left {
+           display: none;
+         }
+
+         .et-navbar-top {
+           height: 4rem;
+           left: 0;
+         }
+
+         .et-main-wrapper {
+           margin-left: 0;
+           margin-top: 5rem;
+           padding: 0.625rem 0.5rem;
+         }
+
+         .et-title {
+           font-size: 1rem;
+         }
+
+         .et-balance-amount {
+           font-size: 1.25rem;
+         }
+
+         .et-chart-card,
+         .et-categories-card {
+           height: 220px;
+         }
+
+         .et-card {
+           padding: 0.75rem;
          }
 
          .et-icon-grid {
            grid-template-columns: repeat(3, 1fr);
+         }
+
+         .et-modal {
+           padding: 1rem;
          }
        }
      `}</style>
