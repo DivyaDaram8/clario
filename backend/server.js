@@ -7,7 +7,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
-const path = require('path');
+
 
 
 dotenv.config();
@@ -41,12 +41,7 @@ app.use("/api/habits", require("./routes/habitRoutes"));
 app.use("/api/journal", require("./routes/journalRoutes"));
 
 
-app.use(express.static(path.join(__dirname, 'client', 'dist')));
 
-app.get(/.*/, (req, res) => {
-  if (req.path.startsWith('/api')) return res.status(404).end();
-  res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
-});
 
 const PORT = process.env.PORT || 5000;
 
