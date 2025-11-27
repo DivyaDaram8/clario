@@ -43,7 +43,8 @@ app.use("/api/journal", require("./routes/journalRoutes"));
 
 app.use(express.static(path.join(__dirname, 'client', 'dist')));
 
-app.get('*', (req, res) => {
+// SPA fallback — serve index.html for any non-API path
+app.get('/*', (req, res) => {
   if (req.path.startsWith('/api')) return res.status(404).end();
   res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
 });
