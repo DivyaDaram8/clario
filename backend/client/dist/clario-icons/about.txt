@@ -1,6 +1,0 @@
-This favicon was generated using the following font:
-
-- Font Title: Handjet
-- Font Author: undefined
-- Font Source: https://fonts.gstatic.com/s/handjet/v21/oY1n8eXHq7n1OnbQrOY_2FrEwYEMLlcdP1mCtZaLaTutCwcIhGZ0lGU0akFcO3XFHWeaUkUsEHFAH2A.ttf
-- Font License: undefined)
