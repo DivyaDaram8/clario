@@ -720,7 +720,7 @@ export default function Home() {
      <div className="md:hidden absolute inset-0 overflow-y-auto px-4 pt-20 pb-6">
        <div className="flex flex-col gap-6 pb-6">
          {/* Greeting Card */}
-         <div className="h-[400px]">
+         <div className="h-[400px] pt-5">
            <GreetingCard />
          </div>
 
