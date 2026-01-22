@@ -4,7 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import "../styles/Auth.css";
 import { API_URL } from "../api"
-
+import { GoogleLogin } from '@react-oauth/google';
 const Signup = () => {
   const navigate = useNavigate();
   const [form, setForm] = useState({
@@ -30,7 +30,13 @@ const Signup = () => {
       setMessage(`${err.response?.data?.message || "Error occurred"}`);
     }
   };
-
+  const handleGoogleSuccess = async (credentialResponse) => {
+  const res = await axios.post(`${API_URL}/auth/google`, {
+    idToken: credentialResponse.credential,
+  });
+  localStorage.setItem("token", res.data.token); // Matches your api.js logic
+  navigate("/home");
+};
   return (
     <div className="auth-container">
       <div className="auth-card">
@@ -69,6 +75,12 @@ const Signup = () => {
             required
           />
           <button type="submit">Sign Up</button>
+          <div className="google-login-wrapper">
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={() => console.log("Login Failed")}
+            />
+          </div>
         </form>
         {message && <div className="message">{message}</div>}
         

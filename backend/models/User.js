@@ -3,19 +3,18 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema({
-  // Your existing fields
-  name: { type: String, required: true, trim: true },
-  username: { type: String, required: true, unique: true, trim: true, lowercase: true },
-  email: { type: String, required: true, unique: true, lowercase: true },
-  password: { type: String, required: true },
-  
+  name: { type: String, required: true },
+  username: { type: String, required: true, unique: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String }, // Removed required: true
+  googleId: { type: String, unique: true, sparse: true } // Added this
 }, { timestamps: true });
 
 // Your existing pre-save middleware (keeping exactly as you had it)
 userSchema.pre("save", async function(next) {
-  if (!this.isModified("password")) return next();
-  const saltRounds = 10;
-  this.password = await bcrypt.hash(this.password, saltRounds);
+  // Only hash if password exists and is modified
+  if (!this.password || !this.isModified("password")) return next();
+  this.password = await bcrypt.hash(this.password, 10);
   next();
 });
 

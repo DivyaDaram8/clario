@@ -1,7 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { apiRequest } from "../api";
-import NavbarLeft from "../layout/NavbarLeft";
-import NavbarTop from "../layout/NavbarTop";
 import NoteCard from "../components/notes/NoteCard";
 import { Plus } from "lucide-react";
 import "../styles/Note.css";

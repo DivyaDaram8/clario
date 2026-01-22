@@ -4,8 +4,10 @@ import axios from "axios";
 import "../styles/Auth.css";
 import { useNavigate, Link } from "react-router-dom";
 import { API_URL } from "../api"
+import { GoogleLogin } from '@react-oauth/google';
 
 const Login = () => {
+
   const navigate = useNavigate();
   const [form, setForm] = useState({ emailOrUsername: "", password: "" });
   const [message, setMessage] = useState("");
@@ -24,6 +26,14 @@ const Login = () => {
     } catch (err) {
       setMessage(`${err.response?.data?.message || "Error occurred"}`);
     }
+  };
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    const res = await axios.post(`${API_URL}/auth/google`, {
+      idToken: credentialResponse.credential,
+    });
+    localStorage.setItem("token", res.data.token); // Matches your api.js logic
+    navigate("/home");
   };
 
   return (
@@ -48,6 +58,14 @@ const Login = () => {
             required
           />
           <button type="submit">Login</button>
+          <div className="google-login-wrapper">
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={() => console.log("Login Failed")}
+              text="continue_with"
+            />
+          </div>
+
         </form>
         {message && <div className="message">{message}</div>}
         

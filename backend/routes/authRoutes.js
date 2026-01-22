@@ -95,4 +95,41 @@ router.get("/me", protect, (req, res) => {
   res.json(req.user); // req.user was attached by protect middleware (without password)
 });
 
+// 
+
+const { OAuth2Client } = require('google-auth-library');
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+router.post("/google", async (req, res) => {
+  const { idToken } = req.body;
+  try {
+    const ticket = await client.verifyIdToken({
+      idToken,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    const { email, name, sub: googleId } = ticket.getPayload();
+
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      user = await User.create({
+        name,
+        email,
+        username: email.split("@")[0] + Math.floor(Math.random() * 1000),
+        googleId,
+      });
+    }
+
+    res.json({
+      _id: user._id,
+      name: user.name,
+      token: generateToken(user._id), // Uses your existing JWT function
+    });
+  } catch (err) {
+    res.status(400).json({ message: "Google login failed" });
+  }
+});
+
+// 
+
 module.exports = router;
